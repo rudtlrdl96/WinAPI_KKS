@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Level3-1">
+      <UniqueIdentifier>{c44f3d68-d4c1-4ee0-b329-818cd7781b72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Level3-2">
+      <UniqueIdentifier>{cdbb95bd-6754-4da4-90aa-193be0f98549}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Level3-0">
+      <UniqueIdentifier>{009b04dc-4e47-4a66-81bd-1c8e41f91d7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Level3-0\TextActor">
+      <UniqueIdentifier>{80978478-25bf-4104-98a6-326f81885cd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Level3-0\TextActor\SubjectText">
+      <UniqueIdentifier>{2adc49b9-4b1d-42c1-9cab-214ce087c7b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Level3-0\TextActor\VerbText">
+      <UniqueIdentifier>{646d3711-92b9-4633-99af-185611e53882}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Level3-0\TextActor\AdjectiveText">
+      <UniqueIdentifier>{e47d9b70-a9f4-474d-b507-21446470006f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Level3-0\SubjectActor">
+      <UniqueIdentifier>{3641452d-e2a0-4f62-8d28-8dd06a4a7d55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Level3-0\SubjectActor\Subjects">
+      <UniqueIdentifier>{5ba36aae-f2e3-4d2a-ad89-0171a73027a2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Level3-0\UIActor">
+      <UniqueIdentifier>{b808d85e-4264-4cd8-91b5-50fa67f99a4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Level3-0\EffectActor">
+      <UniqueIdentifier>{4f322c4a-c4e1-4b0c-9a91-3889bf2259d6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ContentManager.h">
+      <Filter>Level3-2</Filter>
+    </ClInclude>
+    <ClInclude Include="TextActor.h">
+      <Filter>Level3-0\TextActor</Filter>
+    </ClInclude>
+    <ClInclude Include="SubjectActor.h">
+      <Filter>Level3-0\SubjectActor</Filter>
+    </ClInclude>
+    <ClInclude Include="SubjectManager.h">
+      <Filter>Level3-1</Filter>
+    </ClInclude>
+    <ClInclude Include="TextActorManager.h">
+      <Filter>Level3-1</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ContentManager.cpp">
+      <Filter>Level3-2</Filter>
+    </ClCompile>
+    <ClCompile Include="TextActor.cpp">
+      <Filter>Level3-0\TextActor</Filter>
+    </ClCompile>
+    <ClCompile Include="SubjectActor.cpp">
+      <Filter>Level3-0\SubjectActor</Filter>
+    </ClCompile>
+    <ClCompile Include="SubjectManager.cpp">
+      <Filter>Level3-1</Filter>
+    </ClCompile>
+    <ClCompile Include="TextActorManager.cpp">
+      <Filter>Level3-1</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
