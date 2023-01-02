@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{e986efae-3179-4c26-9c44-541655913f4a}</ProjectGuid>
-    <RootNamespace>babaisyou</RootNamespace>
+    <ProjectGuid>{77dedfff-d9e9-4d85-ad95-5b31c1adb005}</ProjectGuid>
+    <RootNamespace>WinAPP</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -151,6 +151,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="WinMain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\GameContent\GameContent.vcxproj">
       <Project>{3f3a1462-1aa3-4bbf-99f4-a8534cd9b9f6}</Project>
     </ProjectReference>
@@ -163,9 +166,6 @@
     <ProjectReference Include="..\GameEnginePlatform\GameEnginePlatform.vcxproj">
       <Project>{f3f3a512-7765-43c5-8f0f-58693eb29fc7}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="GameMain.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
