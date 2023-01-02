@@ -13,7 +13,7 @@ public:
 	GameEngineDebug& operator=(const GameEngineDebug& _Other) = delete;
 	GameEngineDebug& operator=(GameEngineDebug&& _Other) noexcept = delete;
 
-	static void LeckCheck();
+	static void LeakCheck();
 
 protected:
 
@@ -25,4 +25,4 @@ private:
 };
 
 
-// #define MessageBoxAssert(MsgText) MessageBoxA(nullptr, MsgText, "Error", MB_OK);	assert(false);
+#define MsgAssert(MsgText) MessageBoxA(nullptr, MsgText, "Error", MB_OK);	assert(false);
