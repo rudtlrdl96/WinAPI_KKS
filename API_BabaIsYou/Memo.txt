@@ -46,10 +46,12 @@ UI Actor
 
 备秦具且 府家胶
 
-Subject Move Effect Ok
-Win Subject Effect
-Win Effect
+Subject Move Effect OK
+Win Subject Effect OK
+Win Effect OK
 Win Text Animation
 Fade in out Animation
-
+Lava Effect
+Text Active Effect
+Dead Effect
 
