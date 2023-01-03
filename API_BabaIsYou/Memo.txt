@@ -38,6 +38,7 @@ Stop
 Push
 Sink
 Defeat
+Hot
 Melt
 
 Effect Actor
@@ -45,7 +46,7 @@ UI Actor
 
 备秦具且 府家胶
 
-Subject Move Effect
+Subject Move Effect Ok
 Win Subject Effect
 Win Effect
 Win Text Animation
