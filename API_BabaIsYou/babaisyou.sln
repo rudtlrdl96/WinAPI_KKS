@@ -29,6 +29,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinAPP", "WinAPP\WinAPP.vcx
 		{F3F3A512-7765-43C5-8F0F-58693EB29FC7} = {F3F3A512-7765-43C5-8F0F-58693EB29FC7}
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Doc", "Doc", "{3640C1CC-5DB6-424C-BE41-86B56E810E32}"
+	ProjectSection(SolutionItems) = preProject
+		Memo.txt = Memo.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64

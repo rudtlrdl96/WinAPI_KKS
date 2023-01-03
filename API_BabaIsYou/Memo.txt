@@ -1,0 +1,43 @@
+Subject(주어) Actor 
+[Subject, Text]
+
+Baba
+Flag
+Wall
+Rock
+Water
+Skull
+Lava
+Grass
+블럭
+바닥 타일
+플라워
+
+Verb(동사) Actor
+[Text]
+
+Is
+
+Adjective(형용사) Actor
+[Text]
+
+You
+Win
+Stop
+Push
+Sink
+Defeat
+Melt
+
+Effect Actor
+UI Actor
+
+구해야할 리소스
+
+Subject Move Effect
+Win Subject Effect
+Win Effect
+Win Text Animation
+Fade in out Animation
+
+
