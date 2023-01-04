@@ -1,7 +1,7 @@
 #pragma once
+#include <GameEngineCore/GameEngineActor.h>
 
-
-class SubjectActor
+class SubjectActor : public GameEngineActor
 {
 public:
 	SubjectActor();

@@ -1,7 +1,7 @@
 #pragma once
+#include <GameEngineCore/GameEngineActor.h>
 
-
-class TextActor
+class TextActor : public GameEngineActor
 {
 public:
 	TextActor();

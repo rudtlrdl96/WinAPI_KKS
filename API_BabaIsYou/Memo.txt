@@ -50,9 +50,10 @@ Subject Move Effect OK
 Win Subject Effect OK
 Win Effect OK
 Win Text Animation
+Circle Animation
 Fade in out Animation OK
 Hot Effect OK
 Text Active Effect -> Subject Move Effect Equal OK
-Dead Effect
+Dead Effect OK
 Melt Effect OK
 
