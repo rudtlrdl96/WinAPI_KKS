@@ -7,3 +7,11 @@ WorldMapLevel::WorldMapLevel()
 WorldMapLevel::~WorldMapLevel()
 {
 }
+
+void WorldMapLevel::Loading()
+{
+}
+
+void WorldMapLevel::Update() 
+{
+}
