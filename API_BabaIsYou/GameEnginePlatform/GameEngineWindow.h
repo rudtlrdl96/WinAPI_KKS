@@ -17,6 +17,11 @@ public:
 	static void SettingWindowSize(float4 _Size);
 	static void SettingWindowPos(float4 _Pos);
 
+	static float4 GetScreenSize()
+	{
+		return ScreenSize;
+	}
+
 	static HWND GetHWnd()
 	{
 		return HWnd;

@@ -155,15 +155,19 @@ int GameEngineWindow::WindowLoop(void(*_Start)(), void(*_Loop)(), void(*_End)())
         if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
             // 동기 메세지 있어? 없어 난 갈께.
         {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+
+            // 메세지가 있을때도 게임을 실행합니다.
             if (nullptr != _Loop)
             {
                 _Loop();
             }
-
-            TranslateMessage(&msg);
-            DispatchMessage(&msg);
+            continue;
         }
 
+        // 데드타임
+        // 데드타임에 게임을 실행하는것. 
         if (nullptr != _Loop)
         {
             _Loop();

@@ -47,4 +47,26 @@ public:
 		return static_cast<int>(w);
 	}
 
+	float4 half()
+	{
+		return { x * 0.5f,y * 0.5f,z * 0.5f,w };
+	}
+
+	float4 operator *(const float _Value) const
+	{
+		float4 Return;
+		Return.x = x * _Value;
+		Return.y = y * _Value;
+		Return.z = z * _Value;
+		return Return;
+	}
+
+
+	float4& operator +=(const float4& _Other)
+	{
+		x += _Other.x;
+		y += _Other.y;
+		z += _Other.z;
+		return *this;
+	}
 };

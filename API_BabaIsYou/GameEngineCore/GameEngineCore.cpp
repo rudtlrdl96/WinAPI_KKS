@@ -19,6 +19,8 @@ void GameEngineCore::GlobalUpdate()
 		return;
 	}
 
+	Core->MainLevel->ActorsUpdate();
+	Core->MainLevel->ActorsRender();
 }
 
 void GameEngineCore::GlobalEnd()
@@ -30,6 +32,8 @@ void GameEngineCore::GlobalEnd()
 GameEngineCore::GameEngineCore()
 {
 	GameEngineDebug::LeakCheck();
+	// 나는 자식중에 하나일수밖에 없다.
+	// 나는 절대만들어질수 없기 때문이다.
 	Core = this;
 }
 
@@ -67,4 +71,15 @@ void GameEngineCore::ChangeLevel(const std::string_view& _Name)
 	}
 
 	MainLevel = FindIter->second;
+}
+
+void GameEngineCore::LevelLoading(GameEngineLevel* _Level)
+{
+	if (nullptr == _Level)
+	{
+		MsgAssert("nullptr 인 레벨을 로딩하려고 했습니다.");
+		return;
+	}
+
+	_Level->Loading();
 }
