@@ -49,11 +49,38 @@ UI Actor
 Subject Move Effect OK
 Win Subject Effect OK
 Win Effect OK
-Win Text Animation
+Win Text Animation OK
 Circle Animation
 Fade in out Animation OK
 Hot Effect OK
 Text Active Effect -> Subject Move Effect Equal OK
 Dead Effect OK
 Melt Effect OK
+Sink Effect 
 
+Title Level BGM - menu
+Mep   Level BGM - map
+Puzzle Level BGM - baba
+GameOver BGM - noise
+
+필요한 이펙트 사운드
+
+이동 사운드 - Move_00 ~ 16
+undo 사운드 - Undo_00 ~ 04
+문장 완성 사운드 - TextCompletion_00 ~ 04
+Win 사운드 - Win
+Sink 사운드 - Sink_00 ~ 04
+Defeat 사운드 - Defeat_00 ~ 03 
+
+
+UI 사운드 
+
+버튼 오버랩 사운드 - ButtonOverlap_00 ~ 04
+버튼 클릭 사운드 - ButtonClick_00
+기본 Level 변경 사운드 - LevelEnter
+Map -> Puzzle Level 변경 사운드 - PuzzleEnter
+
+
+
+실행되는 행동이 없을 경우 wait가 실행되지 않는다
+사운드 랜덤실행 시스템
