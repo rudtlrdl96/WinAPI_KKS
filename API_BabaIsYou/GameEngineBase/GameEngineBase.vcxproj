@@ -152,12 +152,36 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="GameEngineDebug.cpp" />
+    <ClCompile Include="GameEngineDirectory.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="GameEngineFile.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="GameEngineMath.cpp" />
+    <ClCompile Include="GameEnginePath.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="GameEngineString.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEngineDebug.h" />
+    <ClInclude Include="GameEngineDirectory.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="GameEngineFile.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="GameEngineMath.h" />
+    <ClInclude Include="GameEnginePath.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="GameEngineString.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

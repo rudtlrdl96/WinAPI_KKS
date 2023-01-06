@@ -87,6 +87,9 @@
     <ClInclude Include="EffectActor.h">
       <Filter>00.Actor\EffectActor</Filter>
     </ClInclude>
+    <ClInclude Include="GridActor.h">
+      <Filter>00.Actor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TextActor.cpp">
@@ -133,6 +136,9 @@
     </ClCompile>
     <ClCompile Include="EffectActor.cpp">
       <Filter>00.Actor\EffectActor</Filter>
+    </ClCompile>
+    <ClCompile Include="GridActor.cpp">
+      <Filter>00.Actor</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

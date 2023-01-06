@@ -1,7 +1,9 @@
 #pragma once
-#include <GameEngineCore/GameEngineActor.h>
+#include <GameEngineBase/GameEngineDebug.h>
+#include <vector>
+#include "GridActor.h"
 
-class TextActor : public GameEngineActor
+class TextActor : public GridActor
 {
 public:
 	TextActor();
@@ -17,8 +19,16 @@ public:
 	TextActor& operator=(const TextActor& _Other) = delete;
 	TextActor& operator=(TextActor&& _Other) noexcept = delete;
 
+
 protected:
 
 private:
 
+	static std::vector<std::vector<TextActor*>> vecTextGrid;
+
+	static void InitTextGrid(const float4& _Size);
+	static void DeleteTextGrid();
+
+	bool Move(const float4& _Dir);
+	void Interaction();
 };

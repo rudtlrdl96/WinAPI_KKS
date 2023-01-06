@@ -1,5 +1,7 @@
 #include "TitleLevel.h"
 
+bool TitleLevel::LoadDoubleCheck = false;
+
 TitleLevel::TitleLevel()
 {
 }

@@ -31,19 +31,23 @@ public:
 	float w = 1.0f;
 	// 마지막이 1인지는 3d 때 배우게 될겁니다.
 
-	int ix() {
+	int ix() const
+	{
 		return static_cast<int>(x);
 	}
 
-	int iy() {
+	int iy() const
+	{
 		return static_cast<int>(y);
 	}
 
-	int iz() {
+	int iz() const
+	{
 		return static_cast<int>(z);
 	}
 
-	int iw() {
+	int iw() const
+	{
 		return static_cast<int>(w);
 	}
 
@@ -61,6 +65,10 @@ public:
 		return Return;
 	}
 
+	float4 operator +(const float4& _Other) const
+	{
+		return float4 {x + _Other.x, y + _Other.y};
+	}
 
 	float4& operator +=(const float4& _Other)
 	{

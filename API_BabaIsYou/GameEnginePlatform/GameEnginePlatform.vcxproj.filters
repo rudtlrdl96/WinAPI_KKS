@@ -2,8 +2,25 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="GameEngineWindow.cpp" />
+    <ClCompile Include="GameEngineImage.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="GameEngineResources.cpp">
+      <Filter>Resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEngineWindow.h" />
+    <ClInclude Include="GameEngineImage.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="GameEngineResources.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{b53ecc2d-56aa-4100-a1a6-18e4ea1ab8ce}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>
