@@ -5,16 +5,10 @@
     <ClCompile Include="GameEngineImage.cpp">
       <Filter>Resources</Filter>
     </ClCompile>
-    <ClCompile Include="GameEngineResources.cpp">
-      <Filter>Resources</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEngineWindow.h" />
     <ClInclude Include="GameEngineImage.h">
-      <Filter>Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="GameEngineResources.h">
       <Filter>Resources</Filter>
     </ClInclude>
   </ItemGroup>

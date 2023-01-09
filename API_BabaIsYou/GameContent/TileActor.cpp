@@ -8,8 +8,10 @@ TileActor::~TileActor()
 {
 }
 
-
-void TileActor::SetTileRender()
+void TileActor::Start()
 {
-	
+}
+
+void TileActor::Update()
+{
 }

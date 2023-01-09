@@ -1,8 +1,66 @@
 #pragma once
+#include <vector>
+#include <string>
+#include <GameEngineBase/GameEngineDebug.h>
 #include <GameEngineCore/GameEngineActor.h>
+#include "ContentMath.h"
 
 class GridActor : public GameEngineActor
 {
+private:
+	class GridData
+	{
+	public:
+		GridData()
+		{
+			vecDatas.reserve(16);
+		}
+
+		bool IsStop() const
+		{
+			for (GridActor* _Node : vecDatas)
+			{
+				if (true == _Node->IsStop())
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		bool IsPush() const
+		{
+			for (GridActor* _Node : vecDatas)
+			{
+				if (true == _Node->IsPush())
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		void AddActorData(GridActor* _ActorData)
+		{
+			if (nullptr == _ActorData)
+			{
+				MsgAssert("nullptr Actor를 추가하려 했습니다");
+			}
+
+			vecDatas.push_back(_ActorData);
+		}
+
+		void Clear()
+		{
+			vecDatas.clear();
+		}
+
+	private:
+		std::vector<GridActor*> vecDatas;
+	};
+
 public:
 	GridActor();
 	~GridActor();
@@ -12,21 +70,42 @@ public:
 	GridActor& operator=(const GridActor& _Other) = delete;
 	GridActor& operator=(GridActor&& _Other) noexcept = delete;
 
-	const float4 GetIndex() const
+	const int2 GetGridPos() const
 	{
-		return float4(static_cast<float>(x), static_cast<float>(y));
+		return GridPos;
 	}
 
-	void SetPos(const size_t _x, const size_t _y)
+	void SetGridPos(const int2& _Pos)
 	{
-		x = _x;
-		y = _y;
+		GridPos.x = _Pos.x;
+		GridPos.y = _Pos.y;
 	}
+
+	bool IsStop() const
+	{
+		return false;
+	}
+
+	bool IsPush() const
+	{
+		return true;
+	}
+
+	bool IsGridOver(const int2& _Pos) const;
+	bool TryMove(const int2& _Dir);
 
 protected:
-	virtual bool Move(const float4& _Dir) = 0;
+	static std::vector<std::vector<GridData>> vecGridData;
+
+	static void InitGrid(const int2& _Size);
+	static void ClearGrid();
+	static void DeleteGrid();
+
+	virtual void MoveStart(const int2& _Start, const int2& _Dest);
+	virtual void MoveEnd(const int2& _Start, const int2& _Dest);
 
 private:
-	size_t x;
-	size_t y;
+	int2 GridPos = {0, 0};
+
+	void Move(const int2& _CurPos, const int2& _NextPos);
 };

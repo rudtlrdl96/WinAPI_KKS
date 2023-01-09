@@ -2,6 +2,7 @@
 #include <GameEngineBase/GameEngineDebug.h>
 #include <GameEnginePlatform/GameEngineWindow.h>
 #include "GameEngineLevel.h"
+#include "GameEngineResources.h"
 
 GameEngineCore* Core;
 
@@ -26,6 +27,8 @@ void GameEngineCore::GlobalUpdate()
 void GameEngineCore::GlobalEnd()
 {
 	Core->End();
+
+	GameEngineResources::GetInst().Relase();
 }
 
 

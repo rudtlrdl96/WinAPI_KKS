@@ -1,12 +1,12 @@
 #pragma once
+#include <string>
+#include <string_view>
 
 // Ό³Έν :
 class GameEngineString
 {
 public:
-	// constrcuter destructer
-	GameEngineString();
-	~GameEngineString();
+	static std::string ToUpper(const std::string_view& _Str);
 
 	// delete Function
 	GameEngineString(const GameEngineString& _Other) = delete;
@@ -17,6 +17,9 @@ public:
 protected:
 
 private:
+	// constrcuter destructer
+	GameEngineString();
+	~GameEngineString();
 
 };
 

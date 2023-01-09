@@ -18,6 +18,7 @@ public:
 	GameEnginePath& operator=(const GameEnginePath& _Other) = delete;
 	GameEnginePath& operator=(GameEnginePath&& _Other) noexcept = delete;
 
+	std::string GetFileName() const;
 	std::string GetPathToString() const;
 
 	void MoveParent();
@@ -33,6 +34,9 @@ public:
 	bool IsRoot();
 
 	bool Move(const std::string_view& _Path);
+
+	void SetPath(const std::string_view& _Path);
+
 
 protected:
 

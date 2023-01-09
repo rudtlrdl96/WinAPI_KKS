@@ -157,6 +157,7 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="GameEngineLevel.cpp" />
+    <ClCompile Include="GameEngineResources.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEngineActor.h" />
@@ -165,6 +166,7 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="GameEngineLevel.h" />
+    <ClInclude Include="GameEngineResources.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GameEngineBase\GameEngineBase.vcxproj">

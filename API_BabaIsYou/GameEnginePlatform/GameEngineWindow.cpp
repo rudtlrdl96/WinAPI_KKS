@@ -1,13 +1,15 @@
 #include "GameEngineWindow.h"
 #include <GameEngineBase/GameEngineDebug.h>
+#include <GameEnginePlatform/GameEngineImage.h>
 
 // LRESULT(CALLBACK* WNDPROC)(HWND, UINT, WPARAM, LPARAM)
 
 HWND GameEngineWindow::HWnd = nullptr;
-HDC GameEngineWindow::DrawHdc = nullptr;
+HDC GameEngineWindow::WindowBackBufferHdc = nullptr;
 float4 GameEngineWindow::WindowSize = { 800, 600 };
 float4 GameEngineWindow::WindowPos = { 100, 100 };
 float4 GameEngineWindow::ScreenSize = { 800, 600 };
+GameEngineImage* GameEngineWindow::BackBufferImage = nullptr;
 
 
 bool IsWindowUpdate = true;
@@ -57,6 +59,7 @@ GameEngineWindow::GameEngineWindow()
 
 GameEngineWindow::~GameEngineWindow()
 {
+
 }
 
 
@@ -106,7 +109,11 @@ void GameEngineWindow::WindowCreate(HINSTANCE _hInstance, const std::string_view
         return;
     }
 
-    DrawHdc = GetDC(HWnd);
+    // 윈도우가 만들어지면서부터 만들어진 색깔의 2차원배열의 수정권한을 얻어오는 것이다.
+    WindowBackBufferHdc = GetDC(HWnd);
+
+    BackBufferImage = new GameEngineImage();
+    BackBufferImage->ImageCreate(WindowBackBufferHdc);
 
     ShowWindow(HWnd, SW_SHOW);
     UpdateWindow(HWnd);
@@ -177,6 +184,12 @@ int GameEngineWindow::WindowLoop(void(*_Start)(), void(*_Loop)(), void(*_End)())
     if (nullptr != _End)
     {
         _End();
+    }
+
+    if (nullptr != BackBufferImage)
+    {
+        delete BackBufferImage;
+        BackBufferImage = nullptr;
     }
 
     return (int)msg.wParam;

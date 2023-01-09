@@ -1,7 +1,5 @@
 #pragma once
 #include "GridActor.h"
-#include <vector>
-#include <list>
 
 class SubjectActor : public GridActor
 {
@@ -17,11 +15,4 @@ public:
 protected:
 
 private:
-	static std::vector<std::vector<std::list<SubjectActor*>>> vecTextGrid;
-
-	static void InitTextGrid(const float4& _Size);
-	static void DeleteTextGrid();
-
-
-	bool Move(const float4& _Dir) override;
 };

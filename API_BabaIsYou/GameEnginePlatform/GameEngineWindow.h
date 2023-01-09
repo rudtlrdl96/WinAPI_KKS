@@ -8,6 +8,7 @@
 // 그 숫자를 핸들이라고 합니다.
 
 // 설명 :
+class GameEngineImage;
 class GameEngineWindow
 {
 public:
@@ -27,9 +28,14 @@ public:
 		return HWnd;
 	}
 
-	static HDC GetDrawHdc()
+	static HDC GetWindowBackBufferHdc()
 	{
-		return DrawHdc;
+		return WindowBackBufferHdc;
+	}
+
+	static GameEngineImage* GetBackBufferImage()
+	{
+		return BackBufferImage;
 	}
 	// 윈도우에 그림을 그릴수 있는 권한.
 
@@ -56,6 +62,7 @@ private:
 	static float4 ScreenSize;
 	static float4 WindowPos;
 	static HWND HWnd;
-	static HDC DrawHdc; // 윈도우에 그림을 그릴수 있는 권한.
+	static HDC WindowBackBufferHdc; // 윈도우에 그림을 그릴수 있는 권한.
+	static GameEngineImage* BackBufferImage;
 };
 

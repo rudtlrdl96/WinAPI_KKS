@@ -35,6 +35,11 @@ GameEnginePath::GameEnginePath(const GameEnginePath& _Other)
 
 }
 
+std::string GameEnginePath::GetFileName() const
+{
+	return Path.filename().string();
+}
+
 
 std::string GameEnginePath::GetPathToString() const
 {
@@ -88,4 +93,9 @@ bool GameEnginePath::IsExistsToPlusString(const std::string_view& _String)
 {
 	std::string Str = GetPathToString() + _String.data();
 	return 0 == _access(Str.c_str(), 0);
+}
+
+void GameEnginePath::SetPath(const std::string_view& _Path)
+{
+	Path = _Path.data();
 }

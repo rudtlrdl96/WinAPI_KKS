@@ -84,3 +84,16 @@ Map -> Puzzle Level 변경 사운드 - PuzzleEnter
 
 실행되는 행동이 없을 경우 wait가 실행되지 않는다
 사운드 랜덤실행 시스템
+
+
+Sprite Bitamp Size
+
+actor 600 x 1000 [25 x 25]
+Logo  1920 x 3240 [1920 x 1080]
+effect 512 x 256 [25 x 25]
+TitleLogo 900 x 1110 [900 x 370]
+Congratualations 480 x 1120 [480 x 80]
+Button 1180 x 230 [590 x 77]
+
+Fade 1280 x 720 [1280 x 720]
+FadeCircle 256 x 256 [256 x 256]

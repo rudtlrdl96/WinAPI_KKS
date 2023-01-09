@@ -51,7 +51,7 @@ public:
 		return static_cast<int>(w);
 	}
 
-	float4 half()
+	float4 half() const
 	{
 		return { x * 0.5f,y * 0.5f,z * 0.5f,w };
 	}
@@ -65,10 +65,16 @@ public:
 		return Return;
 	}
 
-	float4 operator +(const float4& _Other) const
+
+	float4 operator -(const float4 _Value) const
 	{
-		return float4 {x + _Other.x, y + _Other.y};
+		float4 Return;
+		Return.x = x - _Value.x;
+		Return.y = y - _Value.y;
+		Return.z = z - _Value.z;
+		return Return;
 	}
+
 
 	float4& operator +=(const float4& _Other)
 	{

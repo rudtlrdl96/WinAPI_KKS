@@ -29,9 +29,8 @@ GameEnginePath GameEngineDirectory::GetPlusFileName(const std::string_view& _Str
 	std::string PathString = Path.GetPathToString();
 	PathString += "\\";
 	PathString += _String;
-	GameEnginePath NewPath = PathString;
 
-	return NewPath;
+	return GameEnginePath(PathString);
 }
 
 bool GameEngineDirectory::MoveParent()

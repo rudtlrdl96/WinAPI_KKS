@@ -18,9 +18,4 @@ public:
 protected:
 
 private:
-	static std::vector<std::vector<TextActor*>> vecTextGrid;
-
-	static void InitTextGrid(const float4& _Size);
-	static void DeleteTextGrid();
-	bool Move(const float4& _Dir) override;
 };
