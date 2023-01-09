@@ -10,28 +10,6 @@ TextActor::~TextActor()
 {
 }
 
-
-void TextActor::Init()
-{
-
-}
-
-void TextActor::Input()
-{
-
-}
-
-void TextActor::Update()
-{
-
-}
-
-void TextActor::Render()
-{
-
-}
-
-
 void TextActor::InitTextGrid(const float4& _Size)
 {
 	vecTextGrid.resize(_Size.iy());
@@ -81,8 +59,4 @@ bool TextActor::Move(const float4& _Dir)
 	// ¿Ãµø...
 
 	return true;
-}
-
-void TextActor::Interaction()
-{
 }

@@ -1,6 +1,15 @@
 #pragma once
 #include "SubjectActor.h"
 
+enum TILE_STATE
+{
+	NONE	= 0,
+	LEFT	= 1 << 0,
+	RIGHT	= 1 << 1,
+	UP		= 1 << 2,
+	DOWN	= 1 << 3,
+};
+
 class TileActor : public SubjectActor
 {
 public:
@@ -15,5 +24,7 @@ public:
 protected:
 
 private:
+
+	void SetTileRender();
 
 };

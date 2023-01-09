@@ -1,16 +1,13 @@
 #pragma once
 #include "GridActor.h"
+#include <vector>
+#include <list>
 
 class SubjectActor : public GridActor
 {
 public:
 	SubjectActor();
 	~SubjectActor();
-
-	virtual void Init();
-	virtual void Input();
-	virtual void Update();
-	virtual void Render();
 
 	SubjectActor(const SubjectActor& _Other) = delete;
 	SubjectActor(SubjectActor&& _Other) noexcept = delete;
@@ -20,5 +17,11 @@ public:
 protected:
 
 private:
+	static std::vector<std::vector<std::list<SubjectActor*>>> vecTextGrid;
 
+	static void InitTextGrid(const float4& _Size);
+	static void DeleteTextGrid();
+
+
+	bool Move(const float4& _Dir) override;
 };

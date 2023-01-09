@@ -7,3 +7,9 @@ TileActor::TileActor()
 TileActor::~TileActor()
 {
 }
+
+
+void TileActor::SetTileRender()
+{
+	
+}

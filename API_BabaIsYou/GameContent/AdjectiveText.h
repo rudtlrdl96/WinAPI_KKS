@@ -1,6 +1,18 @@
 #pragma once
 #include "TextActor.h"
 
+enum ADJECTIVE_TYPE
+{
+	YOU,
+	WIN,
+	STOP,
+	PUSH,
+	SINK,
+	DEFEAT,
+	HOT,
+	MELT,
+};
+
 class AdjectiveText : public TextActor
 {
 public:
@@ -15,5 +27,5 @@ public:
 protected:
 
 private:
-
+	ADJECTIVE_TYPE Type = ADJECTIVE_TYPE::YOU;
 };

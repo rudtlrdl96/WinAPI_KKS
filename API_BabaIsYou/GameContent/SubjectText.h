@@ -1,6 +1,23 @@
 #pragma once
 #include "TextActor.h"
 
+enum TEXT_SUBJECT_TYPE
+{
+	BABA,
+	KEKE,
+	ROBOT,
+	WALL,
+	WATER,
+	LAVA,
+	GRASS,
+	BRICK,
+	PLANK,
+	FLAG,
+	ROCK,
+	SKULL,
+	FLOWER
+};
+
 class SubjectText : public TextActor
 {
 public:
@@ -15,5 +32,5 @@ public:
 protected:
 
 private:
-
+	TEXT_SUBJECT_TYPE Type = TEXT_SUBJECT_TYPE::BABA;
 };

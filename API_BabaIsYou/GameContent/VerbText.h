@@ -1,6 +1,12 @@
 #pragma once
 #include "TextActor.h"
 
+enum VERB_TYPE
+{
+	IS,
+	AND,
+};
+
 class VerbText : public TextActor
 {
 public:
@@ -15,5 +21,5 @@ public:
 protected:
 
 private:
-
+	VERB_TYPE Type = VERB_TYPE::IS;
 };

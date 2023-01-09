@@ -8,23 +8,7 @@ SubjectActor::~SubjectActor()
 {
 }
 
-
-void SubjectActor::Init()
-{
-
-}
-
-void SubjectActor::Input()
-{
-
-}
-
-void SubjectActor::Update()
-{
-
-}
-
-void SubjectActor::Render()
+bool SubjectActor::Move(const float4& _Dir)
 {
 
 }

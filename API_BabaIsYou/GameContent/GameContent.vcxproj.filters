@@ -90,6 +90,9 @@
     <ClInclude Include="GridActor.h">
       <Filter>00.Actor</Filter>
     </ClInclude>
+    <ClInclude Include="LogoLevel.h">
+      <Filter>01.Level</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TextActor.cpp">
@@ -139,6 +142,9 @@
     </ClCompile>
     <ClCompile Include="GridActor.cpp">
       <Filter>00.Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="LogoLevel.cpp">
+      <Filter>01.Level</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
