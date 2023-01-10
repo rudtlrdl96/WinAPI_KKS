@@ -3,6 +3,7 @@
 #include <GameEnginePlatform/GameEngineImage.h>
 #include <GameEngineCore/GameEngineResources.h>
 #include "LogoUI.h"
+#include "FadeUI.h"
 
 LogoLevel::LogoLevel()
 {
@@ -21,8 +22,10 @@ void LogoLevel::Loading()
 	Dir.Move("Bitmap");
 
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("Logo.BMP"));
+	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("Fade.BMP"));
 
 	CreateActor<LogoUI>();
+	CreateActor<FadeUI>(-1);
 }
 
 void LogoLevel::Update()

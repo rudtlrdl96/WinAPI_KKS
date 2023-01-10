@@ -93,7 +93,11 @@ Logo  1920 x 3240 [1920 x 1080]
 effect 512 x 256 [25 x 25]
 TitleLogo 900 x 1110 [900 x 370]
 Congratualations 480 x 1120 [480 x 80]
+WorldMap 854 x 1383 [854 x 461]
 Button 1180 x 230 [590 x 77]
 
 Fade 1280 x 720 [1280 x 720]
 FadeCircle 256 x 256 [256 x 256]
+
+GridTileSize 32 x 18
+GridActorSize 40 x 40

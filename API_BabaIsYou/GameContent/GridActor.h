@@ -2,10 +2,10 @@
 #include <vector>
 #include <string>
 #include <GameEngineBase/GameEngineDebug.h>
-#include <GameEngineCore/GameEngineActor.h>
 #include "ContentMath.h"
+#include "WiggleActor.h"
 
-class GridActor : public GameEngineActor
+class GridActor : public WiggleActor
 {
 private:
 	class GridData

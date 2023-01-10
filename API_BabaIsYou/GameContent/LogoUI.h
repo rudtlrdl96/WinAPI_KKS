@@ -1,8 +1,7 @@
 #pragma once
-#include <GameEngineCore/GameEngineActor.h>
+#include "WiggleActor.h"
 
-class GameEngineImage;
-class LogoUI : public GameEngineActor
+class LogoUI : public WiggleActor
 {
 public:
 	LogoUI();

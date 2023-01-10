@@ -10,32 +10,8 @@
     <Filter Include="01.Actor">
       <UniqueIdentifier>{009b04dc-4e47-4a66-81bd-1c8e41f91d7c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Actor\TextActor">
-      <UniqueIdentifier>{80978478-25bf-4104-98a6-326f81885cd6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Actor\TextActor\SubjectText">
-      <UniqueIdentifier>{2adc49b9-4b1d-42c1-9cab-214ce087c7b7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Actor\TextActor\VerbText">
-      <UniqueIdentifier>{646d3711-92b9-4633-99af-185611e53882}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Actor\TextActor\AdjectiveText">
-      <UniqueIdentifier>{e47d9b70-a9f4-474d-b507-21446470006f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Actor\SubjectActor">
-      <UniqueIdentifier>{3641452d-e2a0-4f62-8d28-8dd06a4a7d55}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Actor\SubjectActor\Tile">
-      <UniqueIdentifier>{63b3240a-f9cf-48c2-a0da-d75eb4073dd3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Actor\SubjectActor\Character">
-      <UniqueIdentifier>{229cddb3-3406-4bdf-867c-6cd2a7a1d87b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Actor\UIActor">
       <UniqueIdentifier>{b808d85e-4264-4cd8-91b5-50fa67f99a4b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Actor\EffectActor">
-      <UniqueIdentifier>{4f322c4a-c4e1-4b0c-9a91-3889bf2259d6}</UniqueIdentifier>
     </Filter>
     <Filter Include="04.Core">
       <UniqueIdentifier>{cdbb95bd-6754-4da4-90aa-193be0f98549}</UniqueIdentifier>
@@ -43,13 +19,49 @@
     <Filter Include="00.Base">
       <UniqueIdentifier>{4e2af69b-bb58-46ed-b2ee-1b9f08a3ac9e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Actor\GridActor">
+      <UniqueIdentifier>{c123d8a8-4494-4688-bc57-3e594eab8fc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Actor\GridActor\TextActor">
+      <UniqueIdentifier>{80978478-25bf-4104-98a6-326f81885cd6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Actor\GridActor\TextActor\SubjectText">
+      <UniqueIdentifier>{2adc49b9-4b1d-42c1-9cab-214ce087c7b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Actor\GridActor\TextActor\VerbText">
+      <UniqueIdentifier>{646d3711-92b9-4633-99af-185611e53882}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Actor\GridActor\TextActor\AdjectiveText">
+      <UniqueIdentifier>{e47d9b70-a9f4-474d-b507-21446470006f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Actor\GridActor\SubjectActor">
+      <UniqueIdentifier>{3641452d-e2a0-4f62-8d28-8dd06a4a7d55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Actor\GridActor\SubjectActor\Tile">
+      <UniqueIdentifier>{63b3240a-f9cf-48c2-a0da-d75eb4073dd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Actor\GridActor\SubjectActor\Character">
+      <UniqueIdentifier>{229cddb3-3406-4bdf-867c-6cd2a7a1d87b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Actor\GridActor\EffectActor">
+      <UniqueIdentifier>{4f322c4a-c4e1-4b0c-9a91-3889bf2259d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Actor\UIActor\LogoLevel">
+      <UniqueIdentifier>{12da1319-720b-4f27-b76d-a233340921bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Actor\UIActor\TitleLevel">
+      <UniqueIdentifier>{53ee1c5e-fa39-48a2-9c71-2a2509eed659}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Actor\UIActor\WorldMapLevel">
+      <UniqueIdentifier>{49987ed2-3cb4-4796-9326-0b3c52a50b11}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TextActor.h">
-      <Filter>01.Actor\TextActor</Filter>
+      <Filter>01.Actor\GridActor\TextActor</Filter>
     </ClInclude>
     <ClInclude Include="SubjectActor.h">
-      <Filter>01.Actor\SubjectActor</Filter>
+      <Filter>01.Actor\GridActor\SubjectActor</Filter>
     </ClInclude>
     <ClInclude Include="SubjectManager.h">
       <Filter>03.Manager</Filter>
@@ -73,25 +85,22 @@
       <Filter>02.Level</Filter>
     </ClInclude>
     <ClInclude Include="TileActor.h">
-      <Filter>01.Actor\SubjectActor\Tile</Filter>
+      <Filter>01.Actor\GridActor\SubjectActor\Tile</Filter>
     </ClInclude>
     <ClInclude Include="CharacterActor.h">
-      <Filter>01.Actor\SubjectActor\Character</Filter>
+      <Filter>01.Actor\GridActor\SubjectActor\Character</Filter>
     </ClInclude>
     <ClInclude Include="VerbText.h">
-      <Filter>01.Actor\TextActor\VerbText</Filter>
+      <Filter>01.Actor\GridActor\TextActor\VerbText</Filter>
     </ClInclude>
     <ClInclude Include="SubjectText.h">
-      <Filter>01.Actor\TextActor\SubjectText</Filter>
+      <Filter>01.Actor\GridActor\TextActor\SubjectText</Filter>
     </ClInclude>
     <ClInclude Include="AdjectiveText.h">
-      <Filter>01.Actor\TextActor\AdjectiveText</Filter>
+      <Filter>01.Actor\GridActor\TextActor\AdjectiveText</Filter>
     </ClInclude>
     <ClInclude Include="EffectActor.h">
-      <Filter>01.Actor\EffectActor</Filter>
-    </ClInclude>
-    <ClInclude Include="GridActor.h">
-      <Filter>01.Actor</Filter>
+      <Filter>01.Actor\GridActor\EffectActor</Filter>
     </ClInclude>
     <ClInclude Include="LogoLevel.h">
       <Filter>02.Level</Filter>
@@ -99,16 +108,34 @@
     <ClInclude Include="ContentMath.h">
       <Filter>00.Base</Filter>
     </ClInclude>
+    <ClInclude Include="ContentConst.h">
+      <Filter>00.Base</Filter>
+    </ClInclude>
+    <ClInclude Include="WiggleActor.h">
+      <Filter>01.Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="GridActor.h">
+      <Filter>01.Actor\GridActor</Filter>
+    </ClInclude>
     <ClInclude Include="LogoUI.h">
-      <Filter>01.Actor\UIActor</Filter>
+      <Filter>01.Actor\UIActor\LogoLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="FadeUI.h">
+      <Filter>01.Actor\UIActor\LogoLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="TitleLogoUI.h">
+      <Filter>01.Actor\UIActor\TitleLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="MapBackgroundUI.h">
+      <Filter>01.Actor\UIActor\WorldMapLevel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TextActor.cpp">
-      <Filter>01.Actor\TextActor</Filter>
+      <Filter>01.Actor\GridActor\TextActor</Filter>
     </ClCompile>
     <ClCompile Include="SubjectActor.cpp">
-      <Filter>01.Actor\SubjectActor</Filter>
+      <Filter>01.Actor\GridActor\SubjectActor</Filter>
     </ClCompile>
     <ClCompile Include="SubjectManager.cpp">
       <Filter>03.Manager</Filter>
@@ -132,25 +159,22 @@
       <Filter>02.Level</Filter>
     </ClCompile>
     <ClCompile Include="TileActor.cpp">
-      <Filter>01.Actor\SubjectActor\Tile</Filter>
+      <Filter>01.Actor\GridActor\SubjectActor\Tile</Filter>
     </ClCompile>
     <ClCompile Include="CharacterActor.cpp">
-      <Filter>01.Actor\SubjectActor\Character</Filter>
+      <Filter>01.Actor\GridActor\SubjectActor\Character</Filter>
     </ClCompile>
     <ClCompile Include="VerbText.cpp">
-      <Filter>01.Actor\TextActor\VerbText</Filter>
+      <Filter>01.Actor\GridActor\TextActor\VerbText</Filter>
     </ClCompile>
     <ClCompile Include="SubjectText.cpp">
-      <Filter>01.Actor\TextActor\SubjectText</Filter>
+      <Filter>01.Actor\GridActor\TextActor\SubjectText</Filter>
     </ClCompile>
     <ClCompile Include="AdjectiveText.cpp">
-      <Filter>01.Actor\TextActor\AdjectiveText</Filter>
+      <Filter>01.Actor\GridActor\TextActor\AdjectiveText</Filter>
     </ClCompile>
     <ClCompile Include="EffectActor.cpp">
-      <Filter>01.Actor\EffectActor</Filter>
-    </ClCompile>
-    <ClCompile Include="GridActor.cpp">
-      <Filter>01.Actor</Filter>
+      <Filter>01.Actor\GridActor\EffectActor</Filter>
     </ClCompile>
     <ClCompile Include="LogoLevel.cpp">
       <Filter>02.Level</Filter>
@@ -158,8 +182,26 @@
     <ClCompile Include="ContentMath.cpp">
       <Filter>00.Base</Filter>
     </ClCompile>
+    <ClCompile Include="ContentConst.cpp">
+      <Filter>00.Base</Filter>
+    </ClCompile>
+    <ClCompile Include="WiggleActor.cpp">
+      <Filter>01.Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="GridActor.cpp">
+      <Filter>01.Actor\GridActor</Filter>
+    </ClCompile>
     <ClCompile Include="LogoUI.cpp">
-      <Filter>01.Actor\UIActor</Filter>
+      <Filter>01.Actor\UIActor\LogoLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="FadeUI.cpp">
+      <Filter>01.Actor\UIActor\LogoLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="TitleLogoUI.cpp">
+      <Filter>01.Actor\UIActor\TitleLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="MapBackgroundUI.cpp">
+      <Filter>01.Actor\UIActor\WorldMapLevel</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
