@@ -45,9 +45,13 @@ public:
 
 	bool ImageCreate(HDC _Hdc);
 
+	bool ImageCreate(const float4& _Scale);
+
 	bool ImageLoad(const GameEnginePath& _Path);
 
 	bool ImageLoad(const std::string_view& _Path);
+
+	void ImageClear();
 
 	HDC GetImageDC() const
 	{
@@ -61,7 +65,10 @@ public:
 
 	// Copy
 
-	void BitCopy(GameEngineImage* _OtherImage, float4 _Pos, float4 _Scale);
+	void BitCopy(const GameEngineImage* _OtherImage, float4 _Pos, float4 _Scale);
+
+	// 랜더링을 제외할 컬러.
+	void TransCopy(const GameEngineImage* _OtherImage, float4 _CopyPos, float4 _CopySize, float4 _OtherImagePos, float4 _OtherImageSize, int _Color = RGB(255, 0, 255));
 
 protected:
 

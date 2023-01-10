@@ -80,6 +80,20 @@ bool GridActor::TryMove(const int2& _Dir)
 	return true;
 }
 
+
+bool GridActor::CanPush(const int2& _Pos, const int2& _Dir) const
+{
+	int2 NormalizeDir = int2::Normalize(_Dir);
+	int2 CurPos = _Pos;
+
+	//while ()
+	//{
+	//
+	//}
+
+	return true;
+}
+
 bool GridActor::IsGridOver(const int2& _Pos) const
 {
 	if (_Pos.y < 0 || _Pos.y >= vecGridData.size() ||

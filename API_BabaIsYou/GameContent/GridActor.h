@@ -91,6 +91,7 @@ public:
 		return true;
 	}
 
+	bool CanPush(const int2& _Pos, const int2& _Dir) const;
 	bool IsGridOver(const int2& _Pos) const;
 	bool TryMove(const int2& _Dir);
 

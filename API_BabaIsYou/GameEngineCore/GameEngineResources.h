@@ -17,7 +17,7 @@ public:
 	GameEngineResources& operator=(const GameEngineResources& _Other) = delete;
 	GameEngineResources& operator=(GameEngineResources&& _Other) noexcept = delete;
 
-	static GameEngineResources& GetInst()
+	static GameEngineResources& GetInst() 
 	{
 		return Inst;
 	}

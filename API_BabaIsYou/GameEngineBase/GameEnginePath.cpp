@@ -3,7 +3,7 @@
 #include <io.h>
 #include <GameEngineBase/GameEngineDebug.h>
 
-GameEnginePath::GameEnginePath()
+GameEnginePath::GameEnginePath() 
 	: Path(std::filesystem::current_path())
 {
 }
@@ -25,7 +25,7 @@ GameEnginePath::GameEnginePath(GameEnginePath&& _Other)
 
 }
 
-GameEnginePath::~GameEnginePath()
+GameEnginePath::~GameEnginePath() 
 {
 }
 
@@ -46,7 +46,7 @@ std::string GameEnginePath::GetPathToString() const
 	return Path.string();
 }
 
-void GameEnginePath::MoveParent()
+void GameEnginePath::MoveParent() 
 {
 	Path = Path.parent_path();
 }
@@ -59,7 +59,7 @@ void GameEnginePath::MoveParentToChildPath(const std::string_view& _String)
 		{
 			return;
 		}
-
+		
 		MoveParent();
 	}
 

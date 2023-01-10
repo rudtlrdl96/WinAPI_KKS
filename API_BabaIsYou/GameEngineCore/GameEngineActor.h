@@ -22,7 +22,7 @@ public:
 	GameEngineActor& operator=(const GameEngineActor& _Other) = delete;
 	GameEngineActor& operator=(GameEngineActor&& _Other) noexcept = delete;
 
-	float4 GetPos()
+	float4 GetPos() 
 	{
 		return Pos;
 	}
@@ -37,7 +37,6 @@ public:
 		Pos += _MovePos;
 	}
 
-
 protected:
 	// 안구현할수도 있다.
 	// ex) 나무는 Update를 안구현할수도 있다.
@@ -48,10 +47,19 @@ protected:
 	// 키입력을 받거나 인공지능을 점수를 계산하거나 하는 것들을 여기서 처리
 	virtual void Update() {}
 
+	// 순서를 제어 함수를 한번 더실행하고 
+	virtual void LateUpdate() {}
+
 	// 화면에 그려지는 기능들을 여기서 처리
 	virtual void Render() {}
 
 private:
-	float4 Pos = { 0.0f, 0.0f };
+	int Order;
+	float4 Pos = {0.0f, 0.0f};
+
+	void SetOrder(int _Order)
+	{
+		Order = _Order;
+	}
 };
 

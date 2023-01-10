@@ -71,4 +71,32 @@ public:
 	{
 		return (this->x != _Other.x && this->y != _Other.y);
 	}
+
+	static int2 Normalize(const int2& _Dir)
+	{
+		int2 ReturnValue = _Dir;
+		ReturnValue.normalize();
+		return ReturnValue;
+	}
+
+	void normalize()
+	{		
+		if (x > 0)
+		{
+			x = 1;
+		}
+		else if (x < 0)
+		{
+			x = -1;
+		}
+
+		if (y > 0)
+		{
+			y = 1;
+		}
+		else if (y < 0)
+		{
+			y = -1;
+		}
+	}
 };

@@ -22,6 +22,7 @@ void LogoUI::Update()
 }
 
 void LogoUI::Render()
-{
-	GameEngineWindow::GetBackBufferImage()->BitCopy(LogoImage, {0.0f, 0.0f}, { 1920, 1080 });
+{ 
+	GameEngineWindow::GetDoubleBufferImage()->TransCopy(
+		LogoImage, float4::Zero, GameEngineWindow::GetScreenSize(), float4::Zero, {1920, 1080}); 
 }

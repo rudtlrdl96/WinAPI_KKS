@@ -1,15 +1,15 @@
 #include "GameEngineString.h"
 
-GameEngineString::GameEngineString()
+GameEngineString::GameEngineString() 
 {
 }
 
-GameEngineString::~GameEngineString()
+GameEngineString::~GameEngineString() 
 {
 }
 
 
-std::string GameEngineString::ToUpper(const std::string_view& _Str)
+std::string GameEngineString::ToUpper(const std::string_view& _Str) 
 {
 	std::string Text = _Str.data();
 

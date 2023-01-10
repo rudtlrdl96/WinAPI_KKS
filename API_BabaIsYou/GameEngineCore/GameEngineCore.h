@@ -32,7 +32,7 @@ public:
 
 protected:
 	template<typename LevelType>
-	void CreateLevel(const std::string_view& _Name)
+	void CreateLevel(const std::string_view& _Name) 
 	{
 		// Title을 만들었는데
 		// 또 Title을 만들겠다고 한 상황

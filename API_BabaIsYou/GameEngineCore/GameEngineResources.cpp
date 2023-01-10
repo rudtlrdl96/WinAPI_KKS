@@ -6,11 +6,11 @@
 
 GameEngineResources GameEngineResources::Inst;
 
-GameEngineResources::GameEngineResources()
+GameEngineResources::GameEngineResources() 
 {
 }
 
-GameEngineResources::~GameEngineResources()
+GameEngineResources::~GameEngineResources() 
 {
 }
 
