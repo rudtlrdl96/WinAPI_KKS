@@ -55,6 +55,9 @@
     <Filter Include="01.Actor\UIActor\WorldMapLevel">
       <UniqueIdentifier>{49987ed2-3cb4-4796-9326-0b3c52a50b11}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Actor\UIActor\Defalut">
+      <UniqueIdentifier>{d37356ce-fe9d-44f7-8df3-c6941b10fd8b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TextActor.h">
@@ -120,14 +123,20 @@
     <ClInclude Include="LogoUI.h">
       <Filter>01.Actor\UIActor\LogoLevel</Filter>
     </ClInclude>
-    <ClInclude Include="FadeUI.h">
-      <Filter>01.Actor\UIActor\LogoLevel</Filter>
-    </ClInclude>
     <ClInclude Include="TitleLogoUI.h">
       <Filter>01.Actor\UIActor\TitleLevel</Filter>
     </ClInclude>
     <ClInclude Include="MapBackgroundUI.h">
       <Filter>01.Actor\UIActor\WorldMapLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="WiggleManager.h">
+      <Filter>03.Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="BackgroundBoxUI.h">
+      <Filter>01.Actor\UIActor\Defalut</Filter>
+    </ClInclude>
+    <ClInclude Include="FadeUI.h">
+      <Filter>01.Actor\UIActor\Defalut</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -194,14 +203,20 @@
     <ClCompile Include="LogoUI.cpp">
       <Filter>01.Actor\UIActor\LogoLevel</Filter>
     </ClCompile>
-    <ClCompile Include="FadeUI.cpp">
-      <Filter>01.Actor\UIActor\LogoLevel</Filter>
-    </ClCompile>
     <ClCompile Include="TitleLogoUI.cpp">
       <Filter>01.Actor\UIActor\TitleLevel</Filter>
     </ClCompile>
     <ClCompile Include="MapBackgroundUI.cpp">
       <Filter>01.Actor\UIActor\WorldMapLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="WiggleManager.cpp">
+      <Filter>03.Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="BackgroundBoxUI.cpp">
+      <Filter>01.Actor\UIActor\Defalut</Filter>
+    </ClCompile>
+    <ClCompile Include="FadeUI.cpp">
+      <Filter>01.Actor\UIActor\Defalut</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

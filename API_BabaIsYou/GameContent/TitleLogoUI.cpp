@@ -1,4 +1,5 @@
 #include "TitleLogoUI.h"
+#include <GameEnginePlatform/GameEngineWindow.h>
 
 TitleLogoUI::TitleLogoUI()
 {
@@ -10,8 +11,8 @@ TitleLogoUI::~TitleLogoUI()
 
 void TitleLogoUI::Start()
 {
-	SetPos({ 340, 95 });
 	TitleLogoImage = GameEngineResources::GetInst().ImageFind("TitleLogo.BMP");
+	SetPos(GameEngineWindow::GetScreenSize().half() - float4{0.0f, 135.0f});
 }
 
 void TitleLogoUI::Render()

@@ -6,11 +6,11 @@
 // 다른 lib를 사용하겠다.
 #pragma comment(lib, "msimg32.lib")
 
-GameEngineImage::GameEngineImage() 
+GameEngineImage::GameEngineImage()
 {
 }
 
-GameEngineImage::~GameEngineImage() 
+GameEngineImage::~GameEngineImage()
 {
 	if (nullptr != BitMap)
 	{
@@ -92,7 +92,7 @@ bool GameEngineImage::ImageLoad(const GameEnginePath& _Path)
 
 #define TEST(Value) Value
 
-bool GameEngineImage::ImageLoad(const std::string_view& _Path) 
+bool GameEngineImage::ImageLoad(const std::string_view& _Path)
 {
 	//HDC ImageDC;
 	//HBITMAP BitMap;
@@ -109,7 +109,7 @@ bool GameEngineImage::ImageLoad(const std::string_view& _Path)
 	if (nullptr == BitMap)
 	{
 		std::string Path = _Path.data();
-		MsgAssert(Path + " 이미지 로드에 실패했습니다." );
+		MsgAssert(Path + " 이미지 로드에 실패했습니다.");
 		return false;
 	}
 
@@ -140,12 +140,12 @@ void GameEngineImage::ImageScaleCheck()
 
 
 // Copy
-void GameEngineImage::BitCopy(const GameEngineImage* _OtherImage, float4 _Pos, float4 _Scale)
+void GameEngineImage::BitCopy(const GameEngineImage* _OtherImage, float4 _CenterPos, float4 _Scale)
 {
 	BitBlt(
 		ImageDC, // 복사 당할 이미지
-		_Pos.ix() , // 위치 
-		_Pos.iy() ,
+		_CenterPos.ix() - _Scale.hix(), // 위치 
+		_CenterPos.iy() - _Scale.hiy(),
 		_Scale.ix(),
 		_Scale.iy(),
 		_OtherImage->GetImageDC(), // 복사할 이미지
@@ -155,18 +155,54 @@ void GameEngineImage::BitCopy(const GameEngineImage* _OtherImage, float4 _Pos, f
 	);
 }
 
-void GameEngineImage::TransCopy(const GameEngineImage* _OtherImage, float4 _CopyPos, float4 _CopySize, float4 _OtherImagePos, float4 _OtherImageSize, int _Color)
+// 구현쪽에서는 디폴트 인자를 표시할 필요가 없습니다.
+void GameEngineImage::TransCopy(const GameEngineImage* _OtherImage, int _CutIndex, float4 _CopyCenterPos, float4 _CopySize, int _Color/* = RGB(255, 0, 255)*/)
 {
-	// 기본지원 함수가 아닙니다.
-	TransparentBlt(ImageDC,
-		_CopyPos.ix(),
-		_CopyPos.iy(),
-		_CopySize.ix(),
+	if (false == _OtherImage->IsCut)
+	{
+		MsgAssert(" 잘리지 않은 이미지로 cut출력 함수를 사용하려고 했습니다.");
+		return;
+	}
+
+	ImageCutData Data = _OtherImage->GetCutData(_CutIndex);
+
+	TransCopy(_OtherImage, _CopyCenterPos, _CopySize, Data.GetStartPos(), Data.GetScale(), _Color);
+}
+
+void GameEngineImage::TransCopy(const GameEngineImage* _OtherImage, float4 _CopyCenterPos, float4 _CopySize, float4 _OtherImagePos, float4 _OtherImageSize, int _Color)
+{
+
+	TransparentBlt(ImageDC, // 여기에 그려라.
+		_CopyCenterPos.ix() - _CopySize.hix(), // 여기를 시작으로
+		_CopyCenterPos.iy() - _CopySize.hiy(),
+		_CopySize.ix(), // 이 크기로
 		_CopySize.iy(),
 		_OtherImage->GetImageDC(),
-		_OtherImagePos.ix(),
+		_OtherImagePos.ix(),// 이미지의 x y에서부터
 		_OtherImagePos.iy(),
-		_OtherImageSize.ix(),
+		_OtherImageSize.ix(), // 이미지의 x y까지의 위치를
 		_OtherImageSize.iy(),
 		_Color);
+}
+
+void GameEngineImage::Cut(int X, int Y)
+{
+	ImageCutData Data;
+
+	Data.SizeX = static_cast<float>(GetImageScale().ix() / X);
+	Data.SizeY = static_cast<float>(GetImageScale().iy() / Y);
+
+	for (size_t i = 0; i < Y; i++)
+	{
+		for (size_t i = 0; i < X; i++)
+		{
+			ImageCutDatas.push_back(Data);
+			Data.StartX += Data.SizeX;
+		}
+
+		Data.StartX = 0.0f;
+		Data.StartY += Data.SizeY;
+	}
+
+	IsCut = true;
 }

@@ -3,7 +3,7 @@
 #include <GameEngineCore/GameEngineResources.h>
 
 #include "TitleLogoUI.h"
-#include "FadeUI.h"
+#include "BackgroundBoxUI.h"
 
 bool TitleLevel::LoadDoubleCheck = false;
 
@@ -26,7 +26,7 @@ void TitleLevel::Loading()
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("TitleLogo.BMP"));
 
 	CreateActor<TitleLogoUI>();
-	CreateActor<FadeUI>(-1);
+	CreateActor<BackgroundBoxUI>(-1);
 }
 
 void TitleLevel::Update()

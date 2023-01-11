@@ -1,4 +1,5 @@
 #pragma once
+#include <GameEngineBase/GameEngineMath.h>
 
 class int2
 {
@@ -100,3 +101,10 @@ public:
 		}
 	}
 };
+
+static float4 Lerp(const float4& _Start, const float4& _Dest, float _Time)
+{
+	float4 ReturnPos = _Start;
+	ReturnPos += (_Dest - _Start) * _Time;
+	return ReturnPos;
+}

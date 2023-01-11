@@ -23,7 +23,7 @@ public:
 		return ScreenSize;
 	}
 
-	static HWND GetHWnd() 
+	static HWND GetHWnd()
 	{
 		return HWnd;
 	}

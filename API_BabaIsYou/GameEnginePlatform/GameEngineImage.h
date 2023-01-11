@@ -1,7 +1,9 @@
 #pragma once
 #include <Windows.h>
 #include <string_view>
+#include <vector>
 #include <GameEngineBase/GameEngineMath.h>
+#include <GameEngineBase/GameEngineDebug.h>
 
 // 이미지란
 // => 컴퓨터에서 뭔가 파일이나 크기를 가지고 있다면
@@ -27,6 +29,23 @@
 // 배열에 대한 뭔가를 할수 있는 권한을 주는데 그게 HDC이다.
 // HDC는 그래서 색깔의 배열과 연결되어 있고. 그걸 제어할수 있게 도와주는 통로이다.
 
+struct ImageCutData
+{
+	float StartX = 0.0f;
+	float StartY = 0.0f;
+	float SizeX = 0.0f;
+	float SizeY = 0.0f;
+
+	float4 GetStartPos()
+	{
+		return { StartX, StartY };
+	}
+
+	float4 GetScale()
+	{
+		return { SizeX, SizeY };
+	}
+};
 
 // 설명 :
 class GameEnginePath;
@@ -63,12 +82,51 @@ public:
 		return float4{ static_cast<float>(Info.bmWidth), static_cast<float>(Info.bmHeight) };
 	}
 
+	bool IsImageCutting()
+	{
+		return IsCut;
+	}
+
+	bool IsCutIndexValid(int _Index) const
+	{
+		if (0 > _Index)
+		{
+			return false;
+		}
+
+		if (ImageCutDatas.size() <= _Index)
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+	ImageCutData GetCutData(int _Index) const
+	{
+		if (false == IsCutIndexValid(_Index))
+		{
+			MsgAssert("유효하지 않은 컷 인덱스 입니다.");
+		}
+
+		return ImageCutDatas[_Index];
+	}
+
+
+
+	void Cut(int X, int Y);
+
 	// Copy
 
 	void BitCopy(const GameEngineImage* _OtherImage, float4 _Pos, float4 _Scale);
 
 	// 랜더링을 제외할 컬러.
-	void TransCopy(const GameEngineImage* _OtherImage, float4 _CopyPos, float4 _CopySize, float4 _OtherImagePos, float4 _OtherImageSize, int _Color = RGB(255, 0, 255));
+	// 당연히 느립니다.
+	// 크기조절이 느리기 때문에
+	void TransCopy(const GameEngineImage* _OtherImage, float4 _CopyCenterPos, float4 _CopySize, float4 _OtherImagePos, float4 _OtherImageSize, int _Color = RGB(255, 0, 255));
+
+	// 디폴트 인자는 선언에서만 가능합니다.
+	void TransCopy(const GameEngineImage* _OtherImage, int _CutIndex, float4 _CopyCenterPos, float4 _CopySize, int _Color = RGB(255, 0, 255));
 
 protected:
 
@@ -77,6 +135,9 @@ private:
 	HBITMAP BitMap = nullptr;
 	HBITMAP OldBitMap = nullptr;
 	BITMAP Info = BITMAP();
+	bool IsCut = false;
+
+	std::vector<ImageCutData> ImageCutDatas;
 
 	void ImageScaleCheck();
 

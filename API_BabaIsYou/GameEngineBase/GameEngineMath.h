@@ -38,24 +38,44 @@ public:
 		return static_cast<int>(x);
 	}
 
-	int iy() const 
+	int iy() const
 	{
 		return static_cast<int>(y);
 	}
 
-	int iz() const 
+	int iz() const
 	{
 		return static_cast<int>(z);
 	}
 
-	int iw() const 
+	int iw() const
 	{
 		return static_cast<int>(w);
 	}
 
+	int hix() const
+	{
+		return static_cast<int>(x * 0.5f);
+	}
+
+	int hiy() const
+	{
+		return static_cast<int>(y * 0.5f);
+	}
+
+	int hiz() const
+	{
+		return static_cast<int>(z * 0.5f);
+	}
+
+	int hiw() const
+	{
+		return static_cast<int>(w * 0.5f);
+	}
+
 	float4 half() const
 	{
-		return {x * 0.5f,y * 0.5f,z * 0.5f,w};
+		return { x * 0.5f,y * 0.5f,z * 0.5f,w };
 	}
 
 	bool IsZero() const
@@ -83,7 +103,7 @@ public:
 	}
 
 
-	float4& operator +=(const float4& _Other) 
+	float4& operator +=(const float4& _Other)
 	{
 		x += _Other.x;
 		y += _Other.y;

@@ -166,6 +166,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="GameEngineString.cpp" />
+    <ClCompile Include="GameEngineTime.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameEngineDebug.h" />
@@ -183,6 +187,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="GameEngineString.h" />
+    <ClInclude Include="GameEngineTime.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

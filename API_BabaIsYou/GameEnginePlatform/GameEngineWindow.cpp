@@ -6,7 +6,7 @@
 
 HWND GameEngineWindow::HWnd = nullptr;
 HDC GameEngineWindow::WindowBackBufferHdc = nullptr;
-float4 GameEngineWindow::WindowSize = {800, 600};
+float4 GameEngineWindow::WindowSize = { 800, 600 };
 float4 GameEngineWindow::WindowPos = { 100, 100 };
 float4 GameEngineWindow::ScreenSize = { 800, 600 };
 GameEngineImage* GameEngineWindow::BackBufferImage = nullptr;
@@ -25,7 +25,7 @@ LRESULT CALLBACK MessageFunction(HWND _hWnd, UINT _message, WPARAM _wParam, LPAR
         int a = 0;
         break;
     }
-        // 내 윈도우가 선택되었다.
+    // 내 윈도우가 선택되었다.
     case WM_SETFOCUS:
     {
         int a = 0;
@@ -55,13 +55,13 @@ LRESULT CALLBACK MessageFunction(HWND _hWnd, UINT _message, WPARAM _wParam, LPAR
     return 0;
 }
 
-GameEngineWindow::GameEngineWindow() 
+GameEngineWindow::GameEngineWindow()
 {
 }
 
-GameEngineWindow::~GameEngineWindow() 
+GameEngineWindow::~GameEngineWindow()
 {
-    
+
 }
 
 void GameEngineWindow::WindowCreate(HINSTANCE _hInstance, const std::string_view& _TitleName, float4 _Size, float4 _Pos)
@@ -137,7 +137,7 @@ void GameEngineWindow::DoubleBufferRender()
 {
     //static GameEngineImage* BackBufferImage;
     //static GameEngineImage* DoubleBufferImage;
-    BackBufferImage->BitCopy(DoubleBufferImage, { 0,0 }, WindowSize);
+    BackBufferImage->BitCopy(DoubleBufferImage, WindowSize.half(), WindowSize);
 }
 
 int GameEngineWindow::WindowLoop(void(*_Start)(), void(*_Loop)(), void(*_End)())
@@ -149,7 +149,7 @@ int GameEngineWindow::WindowLoop(void(*_Start)(), void(*_Loop)(), void(*_End)())
     {
         _Start();
     }
-    
+
 
     MSG msg;
 
@@ -176,7 +176,7 @@ int GameEngineWindow::WindowLoop(void(*_Start)(), void(*_Loop)(), void(*_End)())
         // 메세지가 있든 없든 리턴됩니다.
         // 쌓여있는 메세지를 삭제하라는 명령입니다.
         if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-        // 동기 메세지 있어? 없어 난 갈께.
+            // 동기 메세지 있어? 없어 난 갈께.
         {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
@@ -187,7 +187,7 @@ int GameEngineWindow::WindowLoop(void(*_Start)(), void(*_Loop)(), void(*_End)())
                 _Loop();
             }
             continue;
-        } 
+        }
 
         // 데드타임
         // 데드타임에 게임을 실행하는것. 
@@ -227,7 +227,7 @@ void GameEngineWindow::SettingWindowSize(float4 _Size)
     // 내가 원하는 크기를 넣으면 타이틀바까지 고려한 크기를 리턴주는 함수.
     AdjustWindowRect(&Rc, WS_OVERLAPPEDWINDOW, FALSE);
 
-    WindowSize = { static_cast<float>(Rc.right - Rc.left), static_cast<float>(Rc.bottom - Rc.top)};
+    WindowSize = { static_cast<float>(Rc.right - Rc.left), static_cast<float>(Rc.bottom - Rc.top) };
     // 0을 넣어주면 기존의 크기를 유지한다.
     SetWindowPos(HWnd, nullptr, WindowPos.ix(), WindowPos.iy(), WindowSize.ix(), WindowSize.iy(), SWP_NOZORDER);
 

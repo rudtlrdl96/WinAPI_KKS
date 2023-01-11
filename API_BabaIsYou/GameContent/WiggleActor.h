@@ -15,8 +15,6 @@ public:
 	WiggleActor& operator=(const WiggleActor& _Other) = delete;
 	WiggleActor& operator=(WiggleActor&& _Other) noexcept = delete;
 
-	static void Wiggle();
-
 	static size_t GetWiggleIndex()
 	{
 		return WiggleIndex;
@@ -26,5 +24,7 @@ protected:
 
 private:
 	static size_t WiggleIndex;
+	static void Wiggle();
 
+	friend class WiggleManager;
 };
