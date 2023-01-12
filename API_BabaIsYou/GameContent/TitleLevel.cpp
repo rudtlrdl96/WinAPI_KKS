@@ -3,7 +3,7 @@
 #include <GameEngineCore/GameEngineResources.h>
 
 #include "TitleLogoUI.h"
-#include "BackgroundBoxUI.h"
+#include "BlackBoxUI.h"
 
 bool TitleLevel::LoadDoubleCheck = false;
 
@@ -23,10 +23,10 @@ void TitleLevel::Loading()
 	Dir.Move("ContentsResources");
 	Dir.Move("Bitmap");
 
-	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("TitleLogo.BMP"));
+	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("TitleLogo.BMP"))->Cut(1, 3);
 
 	CreateActor<TitleLogoUI>();
-	CreateActor<BackgroundBoxUI>(-1);
+	CreateActor<BlackBoxUI>();
 }
 
 void TitleLevel::Update()

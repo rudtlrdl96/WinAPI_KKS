@@ -8,7 +8,7 @@ public:
 	~BackgroundBoxUI();
 
 	void Start() override;
-	void Render() override;
+	void Render(float _DT) override;
 
 	BackgroundBoxUI(const BackgroundBoxUI& _Other) = delete;
 	BackgroundBoxUI(BackgroundBoxUI&& _Other) noexcept = delete;

@@ -58,6 +58,9 @@
     <Filter Include="01.Actor\UIActor\Defalut">
       <UniqueIdentifier>{d37356ce-fe9d-44f7-8df3-c6941b10fd8b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Actor\UIActor\PuzzleLevel">
+      <UniqueIdentifier>{4300bea6-c886-450e-8858-9897d439b858}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TextActor.h">
@@ -141,6 +144,9 @@
     <ClInclude Include="BlackBoxUI.h">
       <Filter>01.Actor\UIActor\Defalut</Filter>
     </ClInclude>
+    <ClInclude Include="CongratulationsUI.h">
+      <Filter>01.Actor\UIActor\PuzzleLevel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TextActor.cpp">
@@ -223,6 +229,9 @@
     </ClCompile>
     <ClCompile Include="BlackBoxUI.cpp">
       <Filter>01.Actor\UIActor\Defalut</Filter>
+    </ClCompile>
+    <ClCompile Include="CongratulationsUI.cpp">
+      <Filter>01.Actor\UIActor\PuzzleLevel</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

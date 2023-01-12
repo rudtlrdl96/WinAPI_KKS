@@ -12,6 +12,6 @@ void TileActor::Start()
 {
 }
 
-void TileActor::Update()
+void TileActor::Update(float _DT)
 {
 }

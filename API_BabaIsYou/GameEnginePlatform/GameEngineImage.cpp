@@ -6,11 +6,11 @@
 // 다른 lib를 사용하겠다.
 #pragma comment(lib, "msimg32.lib")
 
-GameEngineImage::GameEngineImage()
+GameEngineImage::GameEngineImage() 
 {
 }
 
-GameEngineImage::~GameEngineImage()
+GameEngineImage::~GameEngineImage() 
 {
 	if (nullptr != BitMap)
 	{
@@ -92,7 +92,7 @@ bool GameEngineImage::ImageLoad(const GameEnginePath& _Path)
 
 #define TEST(Value) Value
 
-bool GameEngineImage::ImageLoad(const std::string_view& _Path)
+bool GameEngineImage::ImageLoad(const std::string_view& _Path) 
 {
 	//HDC ImageDC;
 	//HBITMAP BitMap;
@@ -109,7 +109,7 @@ bool GameEngineImage::ImageLoad(const std::string_view& _Path)
 	if (nullptr == BitMap)
 	{
 		std::string Path = _Path.data();
-		MsgAssert(Path + " 이미지 로드에 실패했습니다.");
+		MsgAssert(Path + " 이미지 로드에 실패했습니다." );
 		return false;
 	}
 
@@ -166,7 +166,7 @@ void GameEngineImage::TransCopy(const GameEngineImage* _OtherImage, int _CutInde
 
 	ImageCutData Data = _OtherImage->GetCutData(_CutIndex);
 
-	TransCopy(_OtherImage, _CopyCenterPos, _CopySize, Data.GetStartPos(), Data.GetScale(), _Color);
+	TransCopy(_OtherImage,  _CopyCenterPos, _CopySize, Data.GetStartPos(), Data.GetScale(), _Color);
 }
 
 void GameEngineImage::TransCopy(const GameEngineImage* _OtherImage, float4 _CopyCenterPos, float4 _CopySize, float4 _OtherImagePos, float4 _OtherImageSize, int _Color)
@@ -185,22 +185,47 @@ void GameEngineImage::TransCopy(const GameEngineImage* _OtherImage, float4 _Copy
 		_Color);
 }
 
-void GameEngineImage::Cut(int X, int Y)
+void GameEngineImage::Cut(int _X, int _Y)
 {
 	ImageCutData Data;
 
-	Data.SizeX = static_cast<float>(GetImageScale().ix() / X);
-	Data.SizeY = static_cast<float>(GetImageScale().iy() / Y);
+	Data.SizeX = static_cast<float>(GetImageScale().ix() / _X);
+	Data.SizeY = static_cast<float>(GetImageScale().iy() / _Y);
 
-	for (size_t i = 0; i < Y; i++)
+	for (size_t i = 0; i < _Y; i++)
 	{
-		for (size_t i = 0; i < X; i++)
+		for (size_t i = 0; i < _X; i++)
 		{
 			ImageCutDatas.push_back(Data);
 			Data.StartX += Data.SizeX;
 		}
 
 		Data.StartX = 0.0f;
+		Data.StartY += Data.SizeY;
+	}
+
+	IsCut = true;
+}
+
+void GameEngineImage::Cut(float4 _Start, float4 _End, int _X, int _Y)
+{
+	ImageCutData Data;
+
+	Data.SizeX = static_cast<float>((_End.x - _Start.x) / _X);
+	Data.SizeY = static_cast<float>((_End.y - _Start.y) / _Y);
+
+	Data.StartX = _Start.x;
+	Data.StartY = _Start.y;
+
+	for (size_t i = 0; i < _Y; i++)
+	{
+		for (size_t i = 0; i < _X; i++)
+		{
+			ImageCutDatas.push_back(Data);
+			Data.StartX += Data.SizeX;
+		}
+
+		Data.StartX = _Start.x;
 		Data.StartY += Data.SizeY;
 	}
 

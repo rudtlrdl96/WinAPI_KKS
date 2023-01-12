@@ -8,7 +8,6 @@ public:
 	~MapBackgroundUI();
 
 	void Start() override;
-	void Render() override;
 
 	MapBackgroundUI(const MapBackgroundUI& _Other) = delete;
 	MapBackgroundUI(MapBackgroundUI&& _Other) noexcept = delete;
@@ -18,6 +17,5 @@ public:
 protected:
 
 private:
-	GameEngineImage* MapBackgroundImage = nullptr;
 
 };

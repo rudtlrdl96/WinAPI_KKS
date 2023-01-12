@@ -1,4 +1,6 @@
 #include "BlackBoxUI.h"
+#include <GameEnginePlatform/GameEngineWindow.h>
+#include <GameEngineCore/GameEngineRender.h>
 
 BlackBoxUI::BlackBoxUI()
 {
@@ -9,16 +11,14 @@ BlackBoxUI::~BlackBoxUI()
 }
 void BlackBoxUI::Start()
 {
-	BoxImage = GameEngineResources::GetInst().ImageFind("Fade_Black.BMP");
+	{
+		GameEngineRender* BoxRender = CreateRender("Fade_Black.BMP", -10);
+		BoxRender->SetScale(GameEngineWindow::GetScreenSize());
+	}
+
 	SetPos(GameEngineWindow::GetScreenSize().half());
 }
 
-void BlackBoxUI::Render()
+void BlackBoxUI::Render(float _DT)
 {
-	GameEngineWindow::GetDoubleBufferImage()->TransCopy(
-		BoxImage,
-		GetPos(),
-		GameEngineWindow::GetScreenSize(),
-		float4::Zero,
-		BoxImage->GetImageScale());
 }

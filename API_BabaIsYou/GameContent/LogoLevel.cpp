@@ -22,19 +22,17 @@ void LogoLevel::Loading()
 	Dir.Move("ContentsResources");
 	Dir.Move("Bitmap");
 
-	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("Logo.BMP"));
+	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("Logo.BMP"))->Cut(1, 3);
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("Fade.BMP"));
+	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("FadeAnim.BMP"))->Cut(1, 10);
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("Fade_Black.BMP"));
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("FadeCircle.BMP"));
 
 	CreateActor<FadeUI>(1);
-	CreateActor<LogoUI>();
+	CreateActor<LogoUI>(0);
 	CreateActor<BlackBoxUI>(-1);
-
-	FadeUI::FadeIn();
 }
 
 void LogoLevel::Update()
 {
-
 }

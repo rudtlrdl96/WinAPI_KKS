@@ -5,9 +5,11 @@
 // Ό³Έν :
 class GameEngineCore;
 class GameEngineActor;
+class GameEngineRender;
 class GameEngineLevel
 {
 	friend GameEngineCore;
+	friend GameEngineRender;
 
 public:
 	// constrcuter destructer
@@ -55,11 +57,17 @@ private:
 	// 
 	std::map<int, std::list<GameEngineActor*>> Actors;
 
-	void ActorsUpdate();
-	void ActorsRender();
+	void ActorsUpdate(float _DeltaTime);
+	void ActorsRender(float _DeltaTime);
 
 
 	void ActorStart(GameEngineActor* _Actor, int _Order);
+
+
+	std::map<int, std::list<GameEngineRender*>> Renders;
+
+	void PushRender(GameEngineRender* _Render);
+
 
 };
 

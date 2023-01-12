@@ -8,7 +8,6 @@ public:
 	~TitleLogoUI();
 
 	void Start() override;
-	void Render() override;
 
 	TitleLogoUI(const TitleLogoUI& _Other) = delete;
 	TitleLogoUI(TitleLogoUI&& _Other) noexcept = delete;
@@ -18,6 +17,5 @@ public:
 protected:
 
 private:
-	GameEngineImage* TitleLogoImage = nullptr;
 
 };

@@ -14,7 +14,7 @@ void BackgroundBoxUI::Start()
 	SetPos(GameEngineWindow::GetScreenSize().half());
 }
 
-void BackgroundBoxUI::Render()
+void BackgroundBoxUI::Render(float _DT)
 {
 	GameEngineWindow::GetDoubleBufferImage()->TransCopy(
 		BoxImage,

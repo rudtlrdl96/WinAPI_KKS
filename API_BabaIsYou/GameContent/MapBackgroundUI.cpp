@@ -1,4 +1,6 @@
 #include "MapBackgroundUI.h"
+#include <GameEngineCore/GameEngineRender.h>
+#include <GameEnginePlatform/GameEngineWindow.h>
 
 MapBackgroundUI::MapBackgroundUI()
 {
@@ -10,16 +12,10 @@ MapBackgroundUI::~MapBackgroundUI()
 
 void MapBackgroundUI::Start()
 {
-	MapBackgroundImage = GameEngineResources::GetInst().ImageFind("WorldMap.BMP");
-
-	SetPos(GameEngineWindow::GetScreenSize().half());
-}
-
-void MapBackgroundUI::Render()
-{
-	GameEngineWindow::GetDoubleBufferImage()->TransCopy(
-		MapBackgroundImage,
-		GetPos(), GameEngineWindow::GetScreenSize() - float4{90, 70},
-		{ 0, static_cast<float>(461 * (GetWiggleIndex())) },
-		{ 854, 461 });
+	{
+		GameEngineRender* Render = CreateRender("WorldMap.BMP", 0);
+	
+		Render->SetPosition(GameEngineWindow::GetScreenSize().half());
+		Render->SetScale(GameEngineWindow::GetScreenSize() - float4{ 90, 70 });
+	}
 }

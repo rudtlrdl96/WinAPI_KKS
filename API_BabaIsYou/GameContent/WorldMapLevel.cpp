@@ -21,7 +21,7 @@ void WorldMapLevel::Loading()
 	Dir.Move("ContentsResources");
 	Dir.Move("Bitmap");
 
-	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("WorldMap.BMP"));
+	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("WorldMap.BMP"))->Cut(1, 3);
 
 	CreateActor<MapBackgroundUI>();
 }

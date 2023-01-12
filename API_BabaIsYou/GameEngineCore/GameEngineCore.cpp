@@ -3,16 +3,22 @@
 #include <GameEnginePlatform/GameEngineWindow.h>
 #include "GameEngineLevel.h"
 #include "GameEngineResources.h"
+#include <GameEngineBase/GameEngineTime.h>
 
 GameEngineCore* Core;
 
 void GameEngineCore::GlobalStart() 
 {
 	Core->Start();
+
+	GameEngineTime::GlobalTime.Reset();
 }
 
 void GameEngineCore::GlobalUpdate() 
 {
+	// 프레임 시작할때 한번 델타타임을 정하고
+	float TimeDeltaTime = GameEngineTime::GlobalTime.TimeCheck();
+
 	Core->Update();
 	if (nullptr == Core->MainLevel)
 	{
@@ -20,9 +26,9 @@ void GameEngineCore::GlobalUpdate()
 		return;
 	}
 
-	Core->MainLevel->ActorsUpdate();
+	Core->MainLevel->ActorsUpdate(TimeDeltaTime);
 	GameEngineWindow::DoubleBufferClear();
-	Core->MainLevel->ActorsRender();
+	Core->MainLevel->ActorsRender(TimeDeltaTime);
 	GameEngineWindow::DoubleBufferRender();
 }
 
@@ -30,7 +36,7 @@ void GameEngineCore::GlobalEnd()
 {
 	Core->End();
 
-	GameEngineResources::GetInst().Relase();
+	GameEngineResources::GetInst().Release();
 }
 
 
