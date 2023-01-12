@@ -1,12 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="03.Manager">
-      <UniqueIdentifier>{c44f3d68-d4c1-4ee0-b329-818cd7781b72}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.Level">
-      <UniqueIdentifier>{d7686fd6-ca73-40bf-a2c6-f61ea7339eb8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Actor">
       <UniqueIdentifier>{009b04dc-4e47-4a66-81bd-1c8e41f91d7c}</UniqueIdentifier>
     </Filter>
@@ -61,6 +55,12 @@
     <Filter Include="01.Actor\UIActor\PuzzleLevel">
       <UniqueIdentifier>{4300bea6-c886-450e-8858-9897d439b858}</UniqueIdentifier>
     </Filter>
+    <Filter Include="03.Level">
+      <UniqueIdentifier>{d7686fd6-ca73-40bf-a2c6-f61ea7339eb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Manager">
+      <UniqueIdentifier>{c44f3d68-d4c1-4ee0-b329-818cd7781b72}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TextActor.h">
@@ -70,25 +70,22 @@
       <Filter>01.Actor\GridActor\SubjectActor</Filter>
     </ClInclude>
     <ClInclude Include="SubjectManager.h">
-      <Filter>03.Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="TextActorManager.h">
-      <Filter>03.Manager</Filter>
+      <Filter>02.Manager</Filter>
     </ClInclude>
     <ClInclude Include="ContentCore.h">
       <Filter>04.Core</Filter>
     </ClInclude>
     <ClInclude Include="TitleLevel.h">
-      <Filter>02.Level</Filter>
+      <Filter>03.Level</Filter>
     </ClInclude>
     <ClInclude Include="WorldMapLevel.h">
-      <Filter>02.Level</Filter>
+      <Filter>03.Level</Filter>
     </ClInclude>
     <ClInclude Include="PuzzleLevel.h">
-      <Filter>02.Level</Filter>
+      <Filter>03.Level</Filter>
     </ClInclude>
     <ClInclude Include="EndingLevel.h">
-      <Filter>02.Level</Filter>
+      <Filter>03.Level</Filter>
     </ClInclude>
     <ClInclude Include="TileActor.h">
       <Filter>01.Actor\GridActor\SubjectActor\Tile</Filter>
@@ -109,7 +106,7 @@
       <Filter>01.Actor\GridActor\EffectActor</Filter>
     </ClInclude>
     <ClInclude Include="LogoLevel.h">
-      <Filter>02.Level</Filter>
+      <Filter>03.Level</Filter>
     </ClInclude>
     <ClInclude Include="ContentMath.h">
       <Filter>00.Base</Filter>
@@ -133,7 +130,7 @@
       <Filter>01.Actor\UIActor\WorldMapLevel</Filter>
     </ClInclude>
     <ClInclude Include="WiggleManager.h">
-      <Filter>03.Manager</Filter>
+      <Filter>02.Manager</Filter>
     </ClInclude>
     <ClInclude Include="BackgroundBoxUI.h">
       <Filter>01.Actor\UIActor\Defalut</Filter>
@@ -147,6 +144,9 @@
     <ClInclude Include="CongratulationsUI.h">
       <Filter>01.Actor\UIActor\PuzzleLevel</Filter>
     </ClInclude>
+    <ClInclude Include="RuleManager.h">
+      <Filter>02.Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TextActor.cpp">
@@ -156,25 +156,22 @@
       <Filter>01.Actor\GridActor\SubjectActor</Filter>
     </ClCompile>
     <ClCompile Include="SubjectManager.cpp">
-      <Filter>03.Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="TextActorManager.cpp">
-      <Filter>03.Manager</Filter>
+      <Filter>02.Manager</Filter>
     </ClCompile>
     <ClCompile Include="ContentCore.cpp">
       <Filter>04.Core</Filter>
     </ClCompile>
     <ClCompile Include="TitleLevel.cpp">
-      <Filter>02.Level</Filter>
+      <Filter>03.Level</Filter>
     </ClCompile>
     <ClCompile Include="WorldMapLevel.cpp">
-      <Filter>02.Level</Filter>
+      <Filter>03.Level</Filter>
     </ClCompile>
     <ClCompile Include="PuzzleLevel.cpp">
-      <Filter>02.Level</Filter>
+      <Filter>03.Level</Filter>
     </ClCompile>
     <ClCompile Include="EndingLevel.cpp">
-      <Filter>02.Level</Filter>
+      <Filter>03.Level</Filter>
     </ClCompile>
     <ClCompile Include="TileActor.cpp">
       <Filter>01.Actor\GridActor\SubjectActor\Tile</Filter>
@@ -195,7 +192,7 @@
       <Filter>01.Actor\GridActor\EffectActor</Filter>
     </ClCompile>
     <ClCompile Include="LogoLevel.cpp">
-      <Filter>02.Level</Filter>
+      <Filter>03.Level</Filter>
     </ClCompile>
     <ClCompile Include="ContentMath.cpp">
       <Filter>00.Base</Filter>
@@ -219,7 +216,7 @@
       <Filter>01.Actor\UIActor\WorldMapLevel</Filter>
     </ClCompile>
     <ClCompile Include="WiggleManager.cpp">
-      <Filter>03.Manager</Filter>
+      <Filter>02.Manager</Filter>
     </ClCompile>
     <ClCompile Include="BackgroundBoxUI.cpp">
       <Filter>01.Actor\UIActor\Defalut</Filter>
@@ -232,6 +229,9 @@
     </ClCompile>
     <ClCompile Include="CongratulationsUI.cpp">
       <Filter>01.Actor\UIActor\PuzzleLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="RuleManager.cpp">
+      <Filter>02.Manager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

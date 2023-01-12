@@ -1,6 +1,6 @@
 #pragma once
 
-class WiggleManager
+class WiggleManager sealed
 {
 private:
 	WiggleManager();

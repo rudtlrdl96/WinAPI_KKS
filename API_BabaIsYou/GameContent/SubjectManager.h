@@ -1,7 +1,7 @@
 #pragma once
 
 
-class SubjectManager
+class SubjectManager sealed
 {
 public:
 	SubjectManager();

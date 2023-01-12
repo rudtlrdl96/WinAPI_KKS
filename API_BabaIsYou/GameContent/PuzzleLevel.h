@@ -3,6 +3,8 @@
 #include <string>
 #include <string_view>
 
+class SubjectManager;
+class RuleManager;
 class PuzzleLevel : public GameEngineLevel
 {
 public:
@@ -14,11 +16,15 @@ public:
 	PuzzleLevel& operator=(const PuzzleLevel& _Other) = delete;
 	PuzzleLevel& operator=(PuzzleLevel&& _Other) noexcept = delete;
 
-	void LoadPuzzleData(const std::string_view& _PuzzleName);
+	static void SetPuzzleMapName(const std::string_view& _MapName);
+	void LoadPuzzleData();
 
 protected:
 	void Loading() override;
 	void Update() override;
 private:
 	static std::string LoadPuzzleName;
+
+	SubjectManager* SubjectMgr = nullptr;
+	RuleManager* RuleMgr = nullptr;
 };

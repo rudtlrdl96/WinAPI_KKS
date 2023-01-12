@@ -27,7 +27,7 @@ void ContentCore::Start()
 	CreateLevel<PuzzleLevel>("Puzzle");
 	CreateLevel<EndingLevel>("Ending");
 
-	ChangeLevel("Worldmap");
+	ChangeLevel("Puzzle");
 }
 
 void ContentCore::Update()
