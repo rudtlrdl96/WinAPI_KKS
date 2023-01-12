@@ -3,8 +3,8 @@
 #include <GameEnginePlatform/GameEngineImage.h>
 #include <GameEngineCore/GameEngineResources.h>
 #include "LogoUI.h"
-#include "BackgroundBoxUI.h"
 #include "FadeUI.h"
+#include "BlackBoxUI.h"
 
 LogoLevel::LogoLevel()
 {
@@ -24,13 +24,14 @@ void LogoLevel::Loading()
 
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("Logo.BMP"));
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("Fade.BMP"));
+	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("Fade_Black.BMP"));
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("FadeCircle.BMP"));
 
 	CreateActor<FadeUI>(1);
 	CreateActor<LogoUI>();
-	CreateActor<BackgroundBoxUI>(-1);
+	CreateActor<BlackBoxUI>(-1);
 
-	FadeUI::FadeOut();
+	FadeUI::FadeIn();
 }
 
 void LogoLevel::Update()

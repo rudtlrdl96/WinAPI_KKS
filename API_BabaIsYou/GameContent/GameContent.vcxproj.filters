@@ -138,6 +138,9 @@
     <ClInclude Include="FadeUI.h">
       <Filter>01.Actor\UIActor\Defalut</Filter>
     </ClInclude>
+    <ClInclude Include="BlackBoxUI.h">
+      <Filter>01.Actor\UIActor\Defalut</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TextActor.cpp">
@@ -216,6 +219,9 @@
       <Filter>01.Actor\UIActor\Defalut</Filter>
     </ClCompile>
     <ClCompile Include="FadeUI.cpp">
+      <Filter>01.Actor\UIActor\Defalut</Filter>
+    </ClCompile>
+    <ClCompile Include="BlackBoxUI.cpp">
       <Filter>01.Actor\UIActor\Defalut</Filter>
     </ClCompile>
   </ItemGroup>

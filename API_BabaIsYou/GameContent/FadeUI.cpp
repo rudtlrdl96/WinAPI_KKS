@@ -19,15 +19,47 @@ void FadeUI::Start()
 {
 	CircleImage = GameEngineResources::GetInst().ImageFind("FadeCircle.BMP");
 	BoxImage = GameEngineResources::GetInst().ImageFind("Fade.BMP");
+		
+	float4 ScreenSize = GameEngineWindow::GetScreenSize();
+	float4 ScreenCenter = GameEngineWindow::GetScreenSize().half();
+
+	PushFade(BoxImage, { -(ScreenCenter.x + 100.0f), ScreenCenter.y }, {-(ScreenCenter.x + 100.0f), 0.0f}, ScreenSize, ScreenSize);
+	PushFade(BoxImage, { ScreenSize.x + ScreenCenter.x + 100.0f, ScreenCenter.y }, { ScreenCenter.x + 100.0f, 0.0f}, ScreenSize, ScreenSize);
+	PushFade(BoxImage, { ScreenCenter.x, -(ScreenCenter.y + 100.0f) }, {0.0f, -(ScreenCenter.y + 100.0f)}, ScreenSize, ScreenSize);
+	PushFade(BoxImage, { ScreenCenter.x, ScreenSize.y + ScreenCenter.y + 100.0f }, {0.0f, ScreenCenter.y + 100.0f}, ScreenSize, ScreenSize);
+
+	float4 BitmapSize = { 256.0f, 256.0f };
+
+	PushFade(CircleImage, { 670.0f, -250.0f }, float4::Zero, BitmapSize, { 300.0f, 300.0f });
+	PushFade(CircleImage, { 900.0f, -250.0f }, float4::Zero, BitmapSize, { 300.0f, 300.0f });
+	PushFade(CircleImage, { 470.0f, -250.0f }, float4::Zero, BitmapSize, { 300.0f, 300.0f });
+
+	PushFade(CircleImage, { 610.0f, 970.0f }, float4::Zero, BitmapSize, { 300.0f, 300.0f });
+	//vecFadePos.push_back(LerpFadeData(CircleImage, {BoxHalfSize.x, -128.0f}, ScreenCenter, { 200.0f, 200.0f }, {256.0f, 256.0f}));
+	//vecFadePos.push_back(LerpFadeData(CircleImage, {BoxHalfSize.x, ScreenSize.y + 128.0f}, ScreenCenter, { 200.0f, 200.0f }, { 256.0f, 256.0f }));
+}
+
+void FadeUI::PushFade(GameEngineImage* _Image, const float4& _Start, const float4& _Interval, const float4& _BitmapSize, const float4& _Scale)
+{
+	if (nullptr == _Image)
+	{
+		MsgAssert("Null Image를 등록하려 했습니다");
+		return;
+	}
 
 	float4 ScreenSize = GameEngineWindow::GetScreenSize();
 	float4 ScreenCenter = GameEngineWindow::GetScreenSize().half();
-	float4 BoxHalfSize = { 640.0f, 360.0f };
 
-	vecBoxPos.push_back(std::make_pair(float4{ -BoxHalfSize.x, ScreenCenter.y}, ScreenCenter));
-	vecBoxPos.push_back(std::make_pair(float4{ ScreenSize.x + BoxHalfSize.x, ScreenCenter.y }, ScreenCenter));
-	vecBoxPos.push_back(std::make_pair(float4{ ScreenCenter.x, -BoxHalfSize.y}, ScreenCenter));
-	vecBoxPos.push_back(std::make_pair(float4{ ScreenCenter.x, ScreenSize.y + BoxHalfSize.y}, ScreenCenter));
+	LerpFadeData LerpData;
+
+	LerpData.Image = _Image;
+	LerpData.Start = _Start;
+	LerpData.BitSize = _BitmapSize;
+	LerpData.Scale = _Scale;
+
+	LerpData.Dest = ScreenCenter + _Interval;
+
+	vecFadePos.push_back(LerpData);
 }
 
 void FadeUI::Update()
@@ -41,8 +73,8 @@ void FadeUI::Update()
 	case FadeUI::FADEIN:
 	case FadeUI::FADEOUT:
 	{
-		// Todo : DeltaTime
-		FadeScale += 0.005f;
+		// Todo : DeltaTime&
+		FadeScale += 0.0005f;
 
 		if (FadeScale >= 1.0f)
 		{
@@ -66,33 +98,39 @@ void FadeUI::Render()
 	}
 	case FadeUI::FADEIN:
 	{
-		for (const std::pair<float4, float4>& LerpData : vecBoxPos)
+		for (const LerpFadeData& LerpData : vecFadePos)
 		{
+			if (nullptr == LerpData.Image)
+			{
+				MsgAssert("Null Image를 출력하려 했습니다");
+				return;
+			}
+
 			GameEngineWindow::GetDoubleBufferImage()->TransCopy(
-				BoxImage,
-				Lerp(LerpData.first, LerpData.second, FadeScale),
-				{1280.0f, 720.0f},
+				LerpData.Image,
+				Lerp(LerpData.Start, LerpData.Dest, FadeScale),
+				LerpData.Scale,
 				float4::Zero,
-				{1280.0f, 720.0f});
+				LerpData.BitSize);
 		}
-
-		//for (size_t i = 0; i < vecCirclePos.size(); i++)
-		//{
-		//
-		//}
-
 		break;
 	}
 	case FadeUI::FADEOUT:
 	{
-		for (const std::pair<float4, float4>& LerpData : vecBoxPos)
+		for (const LerpFadeData& LerpData : vecFadePos)
 		{
+			if (nullptr == LerpData.Image)
+			{
+				MsgAssert("Null Image를 출력하려 했습니다");
+				return;
+			}
+
 			GameEngineWindow::GetDoubleBufferImage()->TransCopy(
-				BoxImage,
-				Lerp(LerpData.second, LerpData.first, FadeScale),
-				{ 1280.0f, 720.0f },
+				LerpData.Image,
+				Lerp(LerpData.Dest, LerpData.Start, FadeScale),
+				LerpData.Scale,
 				float4::Zero,
-				{ 1280.0f, 720.0f });
+				LerpData.BitSize);
 		}
 		break;
 	}

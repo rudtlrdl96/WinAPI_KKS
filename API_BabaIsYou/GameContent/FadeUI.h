@@ -12,6 +12,17 @@ private:
 		FADEIN	= 1,
 		FADEOUT	= 2,
 	};
+
+	class LerpFadeData
+	{
+	public:
+		GameEngineImage* Image = nullptr;
+
+		float4 Start = float4::Zero;
+		float4 Dest = float4::Zero;
+		float4 Scale = float4::Zero;
+		float4 BitSize = float4::Zero;
+	};
 public:
 	FadeUI();
 	~FadeUI();
@@ -38,6 +49,7 @@ private:
 	GameEngineImage* CircleImage = nullptr;
 	GameEngineImage* BoxImage = nullptr;
 
-	std::vector<std::pair<float4, float4>> vecBoxPos;
-	std::vector<std::pair<float4, float4>> vecCirclePos;
+	std::vector<LerpFadeData> vecFadePos;
+
+	void PushFade(GameEngineImage* _Image, const float4& _Start, const float4& _Interval, const float4& _BitmapSize, const float4& _Scale);
 };
