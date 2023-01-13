@@ -7,3 +7,7 @@ CongratulationsUI::CongratulationsUI()
 CongratulationsUI::~CongratulationsUI()
 {
 }
+
+void CongratulationsUI::Start()
+{
+}

@@ -147,6 +147,9 @@
     <ClInclude Include="RuleManager.h">
       <Filter>02.Manager</Filter>
     </ClInclude>
+    <ClInclude Include="WiggleRender.h">
+      <Filter>00.Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TextActor.cpp">
@@ -232,6 +235,9 @@
     </ClCompile>
     <ClCompile Include="RuleManager.cpp">
       <Filter>02.Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="WiggleRender.cpp">
+      <Filter>00.Base</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

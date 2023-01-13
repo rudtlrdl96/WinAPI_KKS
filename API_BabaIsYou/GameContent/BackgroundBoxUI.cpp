@@ -1,4 +1,6 @@
 #include "BackgroundBoxUI.h"
+#include <GameEnginePlatform/GameEngineWindow.h>
+#include "ContentConst.h"
 
 BackgroundBoxUI::BackgroundBoxUI()
 {
@@ -10,16 +12,8 @@ BackgroundBoxUI::~BackgroundBoxUI()
 
 void BackgroundBoxUI::Start()
 {
-	BoxImage = GameEngineResources::GetInst().ImageFind("Fade.BMP");
-	SetPos(GameEngineWindow::GetScreenSize().half());
-}
-
-void BackgroundBoxUI::Render(float _DT)
-{
-	GameEngineWindow::GetDoubleBufferImage()->TransCopy(
-		BoxImage,
-		GetPos(),
+	InitRender("Fade.BMP",
+		GameEngineWindow::GetScreenSize().half(),
 		GameEngineWindow::GetScreenSize(),
-		float4::Zero,
-		BoxImage->GetImageScale());
+		0, 1, RENDER_ORDER::BACKGROUND);
 }

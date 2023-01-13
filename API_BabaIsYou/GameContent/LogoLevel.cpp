@@ -28,7 +28,7 @@ void LogoLevel::Loading()
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("Fade_Black.BMP"));
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("FadeCircle.BMP"));
 
-	CreateActor<FadeUI>(1);
+	//CreateActor<FadeUI>(1);
 	CreateActor<LogoUI>(0);
 	CreateActor<BlackBoxUI>(-1);
 }

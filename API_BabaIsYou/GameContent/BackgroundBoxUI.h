@@ -18,5 +18,4 @@ public:
 protected:
 
 private:
-	GameEngineImage* BoxImage = nullptr;
 };

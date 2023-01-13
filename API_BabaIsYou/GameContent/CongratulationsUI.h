@@ -1,11 +1,15 @@
 #pragma once
 #include "WiggleActor.h"
+#include <vector>
 
-class CongratulationsUI
+class GameEngineRender;
+class CongratulationsUI : public WiggleActor
 {
 public:
 	CongratulationsUI();
 	~CongratulationsUI();
+
+	void Start() override;
 
 	CongratulationsUI(const CongratulationsUI& _Other) = delete;
 	CongratulationsUI(CongratulationsUI&& _Other) noexcept = delete;
@@ -15,5 +19,5 @@ public:
 protected:
 
 private:
-
+	std::vector<GameEngineRender*> vecCircleRenders;
 };

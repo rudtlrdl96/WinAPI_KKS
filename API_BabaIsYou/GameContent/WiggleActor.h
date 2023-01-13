@@ -1,9 +1,8 @@
 #pragma once
 #include <GameEngineCore/GameEngineActor.h>
-#include <GameEnginePlatform/GameEngineWindow.h>
-#include <GameEnginePlatform/GameEngineImage.h>
-#include <GameEngineCore/GameEngineResources.h>
+#include <string_view>
 
+class WiggleRender;
 class WiggleActor : public GameEngineActor
 {
 public:
@@ -21,10 +20,13 @@ public:
 	}
 
 protected:
+	void InitRender(const std::string_view& _FileName, const float4& _Pos, const float4& _Scale, int _StartIndex, int _AnimLength, int _Order = 0, int _Interval = -1);
 
 private:
 	static size_t WiggleIndex;
 	static void Wiggle();
+
+	WiggleRender* Render;
 
 	friend class WiggleManager;
 };

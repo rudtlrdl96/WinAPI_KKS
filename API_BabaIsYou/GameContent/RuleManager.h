@@ -40,5 +40,5 @@ public:
 protected:
 
 private:
-	std::map<RuleKey, int> mapRules
+	std::map<RuleKey, int> mapRules;
 };

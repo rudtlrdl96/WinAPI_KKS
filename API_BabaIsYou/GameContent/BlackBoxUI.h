@@ -8,7 +8,6 @@ public:
 	~BlackBoxUI();
 
 	void Start() override;
-	void Render(float _DT) override;
 
 	BlackBoxUI(const BlackBoxUI& _Other) = delete;
 	BlackBoxUI(BlackBoxUI&& _Other) noexcept = delete;
