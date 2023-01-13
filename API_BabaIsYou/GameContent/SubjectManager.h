@@ -11,7 +11,8 @@ public:
 	SubjectManager(SubjectManager&& _Other) noexcept = delete;
 	SubjectManager& operator=(const SubjectManager& _Other) = delete;
 	SubjectManager& operator=(SubjectManager&& _Other) noexcept = delete;
-
+	
+	void InitGrid();
 protected:
 
 private:

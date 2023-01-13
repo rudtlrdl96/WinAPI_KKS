@@ -178,6 +178,10 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="ContentAnim.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="ContentConst.h">
       <SubType>
       </SubType>
@@ -266,10 +270,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="WiggleManager.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="WiggleRender.h">
       <SubType>
       </SubType>
@@ -293,6 +293,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="CongratulationsUI.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="ContentAnim.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -381,10 +385,6 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="WiggleActor.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="WiggleManager.cpp">
       <SubType>
       </SubType>
     </ClCompile>

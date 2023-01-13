@@ -15,8 +15,6 @@ WiggleRender::WiggleRender(GameEngineRender* _WiggleRender, int _StartIndex, int
 		MsgAssert("Nullptr Render를 추가하려 했습니다");
 		return;
 	}
-
-	SetRenderIndex();
 }
 
 WiggleRender::~WiggleRender()
@@ -27,8 +25,7 @@ WiggleRender::~WiggleRender()
 void WiggleRender::SetRenderIndex()
 {
 	CurIndex = StartIndex + CurAnim + (CurWiggle * Interval);
-
-	// Todo : Render의 Index 설정 기능
+	Render->SetFrame(CurIndex);
 }
 
 void WiggleRender::Wiggle()

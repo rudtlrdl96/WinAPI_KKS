@@ -6,6 +6,7 @@
 #include <Windows.h>
 // User
 #include <GameEngineBase/GameEngineMath.h>
+#include "GameEngineObject.h"
 
 // 화면에 존재하고 위치가 있어야하는 모든것들의 기본기능을 지원해줄 겁니다.
 // 그려져야 한다.
@@ -13,7 +14,7 @@
 // 설명 :
 class GameEngineLevel;
 class GameEngineRender;
-class GameEngineActor
+class GameEngineActor : public GameEngineObject
 {
 	friend GameEngineLevel;
 

@@ -1,12 +1,12 @@
 #pragma once
 #include <GameEnginePlatform/GameEngineImage.h>
-
+#include "GameEngineObject.h"
 // 랜더링에 관련된 기능을 모두 집약한다.
 
 // 설명 :
 class GameEngineActor;
 class GameEngineLevel;
-class GameEngineRender
+class GameEngineRender : public GameEngineObject
 {
 	friend GameEngineActor;
 	friend GameEngineLevel;
@@ -34,10 +34,34 @@ public:
 		Scale = _Scale;
 	}
 
+	void SetFrame(int _Frame);
+
+	inline GameEngineImage* GetImage()
+	{
+		return Image;
+	}
+
 	inline int GetOrder() 
 	{
 		return Order;
 	}
+
+	inline int GetFrame()
+	{
+		return Frame;
+	}
+
+
+	inline float4 GetPosition()
+	{
+		return Position;
+	}
+
+	inline float4 GetScale()
+	{
+		return Scale;
+	}
+
 
 protected:
 

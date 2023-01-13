@@ -1,5 +1,8 @@
 #pragma once
 
+#include <GameEngineBase/GameEngineMath.h>
+#include "ContentMath.h"
+
 enum RENDER_ORDER
 {
 	BACKGROUND,
@@ -17,6 +20,10 @@ class ContentConst
 public:
 	static const int WIGGLE_MAXTICK;
 	static const float WIGGLE_TIME;
+	static const float MOVE_SPEED;
+
+	static const int2 GridSize;
+	static const float4 PuzzleActorSize;
 
 public:
 	ContentConst(const ContentConst& _Other) = delete;

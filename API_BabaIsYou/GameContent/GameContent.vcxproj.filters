@@ -129,9 +129,6 @@
     <ClInclude Include="MapBackgroundUI.h">
       <Filter>01.Actor\UIActor\WorldMapLevel</Filter>
     </ClInclude>
-    <ClInclude Include="WiggleManager.h">
-      <Filter>02.Manager</Filter>
-    </ClInclude>
     <ClInclude Include="BackgroundBoxUI.h">
       <Filter>01.Actor\UIActor\Defalut</Filter>
     </ClInclude>
@@ -148,6 +145,9 @@
       <Filter>02.Manager</Filter>
     </ClInclude>
     <ClInclude Include="WiggleRender.h">
+      <Filter>00.Base</Filter>
+    </ClInclude>
+    <ClInclude Include="ContentAnim.h">
       <Filter>00.Base</Filter>
     </ClInclude>
   </ItemGroup>
@@ -218,9 +218,6 @@
     <ClCompile Include="MapBackgroundUI.cpp">
       <Filter>01.Actor\UIActor\WorldMapLevel</Filter>
     </ClCompile>
-    <ClCompile Include="WiggleManager.cpp">
-      <Filter>02.Manager</Filter>
-    </ClCompile>
     <ClCompile Include="BackgroundBoxUI.cpp">
       <Filter>01.Actor\UIActor\Defalut</Filter>
     </ClCompile>
@@ -237,6 +234,9 @@
       <Filter>02.Manager</Filter>
     </ClCompile>
     <ClCompile Include="WiggleRender.cpp">
+      <Filter>00.Base</Filter>
+    </ClCompile>
+    <ClCompile Include="ContentAnim.cpp">
       <Filter>00.Base</Filter>
     </ClCompile>
   </ItemGroup>

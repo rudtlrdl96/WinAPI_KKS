@@ -7,6 +7,8 @@ public:
 	CharacterActor();
 	~CharacterActor();
 
+	void Start() override;
+
 	CharacterActor(const CharacterActor& _Other) = delete;
 	CharacterActor(CharacterActor&& _Other) noexcept = delete;
 	CharacterActor& operator=(const CharacterActor& _Other) = delete;

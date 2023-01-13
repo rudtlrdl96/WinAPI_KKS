@@ -1,11 +1,11 @@
 #include "TitleLevel.h"
 #include <GameEngineBase/GameEngineDirectory.h>
+#include <GameEnginePlatform/GameEngineInput.h>
 #include <GameEngineCore/GameEngineResources.h>
+#include <GameEngineCore/GameEngineCore.h>
 
 #include "TitleLogoUI.h"
 #include "BlackBoxUI.h"
-
-bool TitleLevel::LoadDoubleCheck = false;
 
 TitleLevel::TitleLevel()
 {
@@ -27,8 +27,17 @@ void TitleLevel::Loading()
 
 	CreateActor<TitleLogoUI>();
 	CreateActor<BlackBoxUI>();
+
+	if (false == GameEngineInput::IsKey("LevelChange"))
+	{
+		GameEngineInput::CreateKey("LevelChange", VK_SPACE);
+	}
 }
 
-void TitleLevel::Update()
+void TitleLevel::Update(float _DT)
 {
+	if (true == GameEngineInput::IsDown("LevelChange"))
+	{
+		GameEngineCore::GetInst()->ChangeLevel("Worldmap");
+	}
 }

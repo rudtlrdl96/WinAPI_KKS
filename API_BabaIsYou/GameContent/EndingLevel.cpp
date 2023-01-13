@@ -12,6 +12,6 @@ void EndingLevel::Loading()
 {
 }
 
-void EndingLevel::Update()
+void EndingLevel::Update(float _DT)
 {
 }

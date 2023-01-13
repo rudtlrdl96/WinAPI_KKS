@@ -65,6 +65,9 @@ public:
 	GridActor();
 	~GridActor();
 
+	void Start() override;
+	void Update(float _DT) override;
+
 	GridActor(const GridActor& _Other) = delete;
 	GridActor(GridActor&& _Other) noexcept = delete;
 	GridActor& operator=(const GridActor& _Other) = delete;
@@ -75,10 +78,19 @@ public:
 		return GridPos;
 	}
 
+	const int2 GetPrevPos() const
+	{
+		return PrevPos;
+	}
+
+	void SetPrevPos(const int2& _Pos)
+	{
+		PrevPos = _Pos;
+	}
+
 	void SetGridPos(const int2& _Pos)
 	{
-		GridPos.x = _Pos.x;
-		GridPos.y = _Pos.y;
+		GridPos = _Pos;
 	}
 
 	bool IsStop() const
@@ -91,22 +103,26 @@ public:
 		return true;
 	}
 
+	static void InitGrid(const int2& _GridSize, const float4& _ActorSize);
+	static void ClearGrid();
+	static void DeleteGrid();
+
+	static float4 GetScreenPos(const int2& _Pos);
+
 	bool CanPush(const int2& _Pos, const int2& _Dir) const;
 	bool IsGridOver(const int2& _Pos) const;
 	bool TryMove(const int2& _Dir);
 
 protected:
-	static std::vector<std::vector<GridData>> vecGridData;
-
-	static void InitGrid(const int2& _Size);
-	static void ClearGrid();
-	static void DeleteGrid();
-
-	virtual void MoveStart(const int2& _Start, const int2& _Dest);
-	virtual void MoveEnd(const int2& _Start, const int2& _Dest);
 
 private:
+	static std::vector<std::vector<GridData>> vecGridData;
+	static float4 ActorSize;
+
+	int2 PrevPos = {0, 0};
 	int2 GridPos = {0, 0};
 
-	void Move(const int2& _CurPos, const int2& _NextPos);
+	float MoveProgress = 0.0f;
+
+	void Move(const int2& _NextPos);
 };

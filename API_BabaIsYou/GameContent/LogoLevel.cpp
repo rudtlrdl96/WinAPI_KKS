@@ -1,10 +1,17 @@
 #include "LogoLevel.h"
 #include <GameEngineBase/GameEngineDirectory.h>
 #include <GameEnginePlatform/GameEngineImage.h>
+#include <GameEnginePlatform/GameEngineInput.h>
+#include <GameEngineCore/GameEngineCore.h>
 #include <GameEngineCore/GameEngineResources.h>
 #include "LogoUI.h"
 #include "FadeUI.h"
 #include "BlackBoxUI.h"
+
+void NextScene()
+{
+	GameEngineCore::GetInst()->ChangeLevel("Title");
+}
 
 LogoLevel::LogoLevel()
 {
@@ -28,11 +35,22 @@ void LogoLevel::Loading()
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("Fade_Black.BMP"));
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("FadeCircle.BMP"));
 
-	//CreateActor<FadeUI>(1);
+	CreateActor<FadeUI>(1);
 	CreateActor<LogoUI>(0);
 	CreateActor<BlackBoxUI>(-1);
+
+	if (false == GameEngineInput::IsKey("LevelChange"))
+	{
+		GameEngineInput::CreateKey("LevelChange", VK_SPACE);
+	}
+
+	FadeUI::FadeOut(this, nullptr);
 }
 
-void LogoLevel::Update()
+void LogoLevel::Update(float _DT)
 {
+	if (true == GameEngineInput::IsDown("LevelChange"))
+	{
+		FadeUI::FadeIn(this, NextScene);
+	}
 }

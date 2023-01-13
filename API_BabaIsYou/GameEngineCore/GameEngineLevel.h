@@ -45,7 +45,11 @@ public:
 
 protected:
 	virtual void Loading() = 0;
-	virtual void Update() = 0;
+	virtual void Update(float _DeltaTime) = 0;
+	// 내가 이제 다른 레벨로 교체된다.
+	virtual void LevelChangeEnd(GameEngineLevel* _NextLevel) = 0;
+	// 내가 이제 새로운 눈에 보이는 레벨이 될거다.
+	virtual void LevelChangeStart(GameEngineLevel* _PrevLevel) = 0;
 
 private:
 	// 컨텐츠를 알아서도 안되지만

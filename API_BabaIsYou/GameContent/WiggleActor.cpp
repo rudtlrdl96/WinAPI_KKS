@@ -9,8 +9,6 @@
 #include "ContentConst.h"
 #include "WiggleRender.h"
 
-size_t WiggleActor::WiggleIndex = 0;
-
 WiggleActor::WiggleActor() :
 	Render(nullptr)
 {
@@ -22,6 +20,22 @@ WiggleActor::~WiggleActor()
 	{
 		delete Render;
 		Render = nullptr;
+	}
+}
+
+void WiggleActor::Update(float _DT)
+{
+	if (nullptr == Render)
+	{
+		return;
+	}
+
+	ProgressTime += _DT;
+
+	if (ProgressTime >= ContentConst::WIGGLE_TIME)
+	{
+		ProgressTime = 0.0f;
+		Render->Wiggle();
 	}
 }
 
@@ -54,15 +68,5 @@ void WiggleActor::InitRender(const std::string_view& _FileName, const float4& _P
 	else
 	{
 		Render->ActiveWiggle();
-	}
-}
-
-void WiggleActor::Wiggle()
-{
-	++WiggleIndex;
-
-	if (ContentConst::WIGGLE_MAXTICK <= WiggleIndex)
-	{
-		WiggleIndex = 0;
 	}
 }

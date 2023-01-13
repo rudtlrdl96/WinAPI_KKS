@@ -25,7 +25,6 @@ public:
 
 protected:
 	void Start() override;
-	void Update(float _DT) override;
 	
 	// 모튼 타일 클래스는 반드시 방향에따른 비트맵 데이터 필수 생성
 	virtual void SetBitmap() = 0;

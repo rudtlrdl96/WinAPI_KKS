@@ -1,7 +1,9 @@
 #include "GridActor.h"
 #include <GameEngineBase/GameEngineDebug.h>
+#include "ContentConst.h"
 
 std::vector<std::vector<GridActor::GridData>> GridActor::vecGridData;
+float4 GridActor::ActorSize = float4::Zero;
 
 GridActor::GridActor()
 {
@@ -11,14 +13,42 @@ GridActor::~GridActor()
 {
 }
 
-void GridActor::InitGrid(const int2& _Size)
+void GridActor::Start()
 {
-	vecGridData.resize(_Size.y);
+	//InitRender();
+}
+
+void GridActor::Update(float _DT)
+{
+	WiggleActor::Update(_DT);
+
+	if (GetGridPos() != GetPrevPos())
+	{
+		MoveProgress += _DT * ContentConst::MOVE_SPEED;
+
+		SetPos(Lerp(GetScreenPos(GetPrevPos()), GetScreenPos(GetGridPos()), MoveProgress));
+
+		if (MoveProgress >= 1.0f)
+		{
+			SetPos(GetScreenPos(GetGridPos()));
+			MoveProgress = 0.0f;
+			SetPrevPos(GetPrevPos());
+
+			Move(GetGridPos() + int2{1, 0});
+		}
+	}
+}
+
+void GridActor::InitGrid(const int2& _GridSize, const float4& _ActorSize)
+{
+	vecGridData.resize(_GridSize.y);
 
 	for (size_t y = 0; y < vecGridData.size(); y++)
 	{
-		vecGridData[y].resize(_Size.x);
+		vecGridData[y].resize(_GridSize.x);
 	}
+
+	ActorSize = _ActorSize;
 }
 
 void GridActor::ClearGrid()
@@ -42,14 +72,14 @@ void GridActor::DeleteGrid()
 	vecGridData.clear();
 }
 
-void GridActor::MoveStart(const int2& _Start, const int2& _Dest)
+float4 GridActor::GetScreenPos(const int2& _Pos)
 {
+	float4 ScreenPos;
 
-}
+	ScreenPos.x = ActorSize.x * _Pos.x;
+	ScreenPos.y = ActorSize.y * _Pos.y;
 
-void GridActor::MoveEnd(const int2& _Start, const int2& _Dest)
-{
-
+	return ScreenPos;
 }
 
 bool GridActor::TryMove(const int2& _Dir)
@@ -60,7 +90,6 @@ bool GridActor::TryMove(const int2& _Dir)
 		return false;
 	}
 	
-	int2 CurPos = GetGridPos();
 	int2 NextPos = GetGridPos() + _Dir;
 	
 	// 그리드 초과
@@ -75,7 +104,7 @@ bool GridActor::TryMove(const int2& _Dir)
 		return false;
 	}
 	
-	Move(CurPos, NextPos);
+	Move(NextPos);
 
 	return true;
 }
@@ -85,11 +114,7 @@ bool GridActor::CanPush(const int2& _Pos, const int2& _Dir) const
 {
 	int2 NormalizeDir = int2::Normalize(_Dir);
 	int2 CurPos = _Pos;
-
-	//while ()
-	//{
-	//
-	//}
+	
 
 	return true;
 }
@@ -107,9 +132,8 @@ bool GridActor::IsGridOver(const int2& _Pos) const
 	}
 }
 
-void GridActor::Move(const int2& _CurPos, const int2& _NextPos)
+void GridActor::Move(const int2& _NextPos)
 {
-	MoveStart(_CurPos, _NextPos);
+	SetPrevPos(GetGridPos());
 	SetGridPos(_NextPos);
-	MoveEnd(_CurPos, _NextPos);
 }

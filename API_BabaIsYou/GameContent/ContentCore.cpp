@@ -1,13 +1,12 @@
 #include "ContentCore.h"
+
+#include <GameEnginePlatform/GameEngineWindow.h>
+
 #include "TitleLevel.h"
 #include "WorldMapLevel.h"
 #include "PuzzleLevel.h"
 #include "EndingLevel.h"
 #include "LogoLevel.h"
-
-#include "WiggleManager.h"
-
-#include <GameEnginePlatform/GameEngineWindow.h>
 
 ContentCore::ContentCore()
 {
@@ -27,12 +26,12 @@ void ContentCore::Start()
 	CreateLevel<PuzzleLevel>("Puzzle");
 	CreateLevel<EndingLevel>("Ending");
 
-	ChangeLevel("Worldmap");
+	ChangeLevel("Logo");
 }
 
 void ContentCore::Update()
 {
-	WiggleManager::Update();
+
 }
 
 void ContentCore::End()

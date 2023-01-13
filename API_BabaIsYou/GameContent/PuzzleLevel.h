@@ -21,7 +21,9 @@ public:
 
 protected:
 	void Loading() override;
-	void Update() override;
+	void Update(float _DT) override;
+	void LevelChangeEnd(GameEngineLevel* _NextLevel) override {}
+	void LevelChangeStart(GameEngineLevel* _PrevLevel) override {}
 private:
 	static std::string LoadPuzzleName;
 
