@@ -71,7 +71,7 @@ public:
 
 	bool operator!=(const int2& _Other) const
 	{
-		return (this->x != _Other.x && this->y != _Other.y);
+		return (this->x != _Other.x || this->y != _Other.y);
 	}
 
 	static int2 Normalize(const int2& _Dir)

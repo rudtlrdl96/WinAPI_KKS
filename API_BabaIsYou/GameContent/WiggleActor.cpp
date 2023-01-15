@@ -39,7 +39,7 @@ void WiggleActor::Update(float _DT)
 	}
 }
 
-void WiggleActor::InitRender(const std::string_view& _FileName, const float4& _Pos, const float4& _Scale, int _StartIndex, int _AnimLength, int _Order,  int _Interval)
+void WiggleActor::InitRender(const std::string_view& _FileName, const float4& _Pos, const float4& _Scale, int _StartIndex, int _AnimLength, int _Order,  int _BitmapInterval)
 {
 	if (nullptr != Render)
 	{
@@ -58,10 +58,9 @@ void WiggleActor::InitRender(const std::string_view& _FileName, const float4& _P
 	TempRender->SetPosition(_Pos);
 	TempRender->SetScale(_Scale);
 
-	Render = new WiggleRender(TempRender, _StartIndex, _AnimLength, _Interval);
+	Render = new WiggleRender(TempRender, _StartIndex, _AnimLength, _BitmapInterval);
 
-
-	if (0 >= _Interval)
+	if (0 >= _BitmapInterval)
 	{
 		Render->DisableWiggle();
 	}
@@ -74,9 +73,27 @@ void WiggleActor::InitRender(const std::string_view& _FileName, const float4& _P
 void WiggleActor::SetFrame(int _Frame)
 {
 	Render->SetStartIndex(_Frame);
+	Render->SetRenderIndex();
 }
 
 void WiggleActor::SetLength(int _Length)
 {
 	Render->SetAnimLength(_Length);
+	Render->SetRenderIndex();
+}
+
+
+void WiggleActor::SetDirInterval(size_t _DirInterval)
+{
+	Render->SetDirInterval(_DirInterval);
+}
+
+void WiggleActor::NextAnim()
+{
+	Render->NextAnim();
+}
+
+void WiggleActor::SetAnimDir(const int2& _Dir)
+{
+	Render->SetAnimDir(_Dir);
 }

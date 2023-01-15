@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <string_view>
+#include "ContentMath.h"
 
 class GameEngineRender;
 class WiggleRender
@@ -38,6 +39,9 @@ public:
 		AnimLength = _Length;
 	}
 
+	void SetDirInterval(size_t _DirInterval);
+	void SetAnimDir(const int2& _Dir);
+
 protected:
 
 private:
@@ -48,6 +52,9 @@ private:
 	int StartIndex = 0;
 	int AnimLength = 1;
 	int Interval = 0;
+
+	size_t DirIndex = 0;
+	size_t DirInterval = 0;
 
 	bool IsWiggle = false;
 	GameEngineRender* Render = nullptr;

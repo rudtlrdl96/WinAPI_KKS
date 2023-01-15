@@ -1,5 +1,6 @@
 #include "PuzzleLevel.h"
 #include <GameEngineBase/GameEngineDirectory.h>
+#include <GameEnginePlatform/GameEngineInput.h>
 #include <GameEngineCore/GameEngineResources.h>
 
 #include "FadeUI.h"
@@ -44,6 +45,23 @@ void PuzzleLevel::Loading()
 		ActorMgr = new ActorManager(this);
 	}
 
+
+	if (false == GameEngineInput::IsKey("ArrowUp"))
+	{
+		GameEngineInput::CreateKey("ArrowUp", VK_UP);
+	}
+	if (false == GameEngineInput::IsKey("ArrowDown"))
+	{
+		GameEngineInput::CreateKey("ArrowDown", VK_DOWN);
+	}
+	if (false == GameEngineInput::IsKey("ArrowLeft"))
+	{
+		GameEngineInput::CreateKey("ArrowLeft", VK_LEFT);
+	}
+	if (false == GameEngineInput::IsKey("ArrowRight"))
+	{
+		GameEngineInput::CreateKey("ArrowRight", VK_RIGHT);
+	}
 }
 
 void PuzzleLevel::Update(float _DT)

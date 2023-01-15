@@ -24,7 +24,7 @@ WiggleRender::~WiggleRender()
 
 void WiggleRender::SetRenderIndex()
 {
-	CurIndex = StartIndex + CurAnim + (CurWiggle * Interval);
+	CurIndex = StartIndex + CurAnim + (CurWiggle * Interval) + static_cast<int>(DirIndex);
 	Render->SetFrame(CurIndex);
 }
 
@@ -53,6 +53,34 @@ void WiggleRender::NextAnim()
 	if (CurAnim >= AnimLength)
 	{
 		CurAnim = 0;
+	}
+
+	SetRenderIndex();
+}
+
+
+void WiggleRender::SetDirInterval(size_t _DirInterval)
+{
+	DirInterval = _DirInterval;
+}
+
+void WiggleRender::SetAnimDir(const int2& _Dir)
+{
+	if (int2::Right == _Dir)
+	{
+		DirIndex = 0;
+	}
+	else if (int2::Up == _Dir)
+	{
+		DirIndex = DirInterval;
+	}
+	else if (int2::Left == _Dir)
+	{
+		DirIndex = DirInterval * 2;
+	}
+	else if (int2::Down == _Dir)
+	{
+		DirIndex = DirInterval * 3;
 	}
 
 	SetRenderIndex();
