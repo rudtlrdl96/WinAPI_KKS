@@ -16,5 +16,5 @@ void TitleLogoUI::Start()
 	InitRender("TitleLogo.BMP",
 		GameEngineWindow::GetScreenSize().half() - float4{ 0.0f, 135.0f },
 		{ 600, 250 },
-		0, 1, RENDER_ORDER::UIIMAGE, 1);
+		0, 1, static_cast<int>(RENDER_ORDER::UIIMAGE), 1);
 }

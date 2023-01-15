@@ -28,6 +28,16 @@ public:
 		IsWiggle = false;
 	}
 
+	inline void SetStartIndex(int _Index)
+	{
+		StartIndex = _Index;
+	}
+
+	inline void SetAnimLength(int _Length)
+	{
+		AnimLength = _Length;
+	}
+
 protected:
 
 private:

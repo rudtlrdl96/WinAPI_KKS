@@ -8,7 +8,7 @@
 #include "ContentConst.h"
 #include "ContentAnim.h"
 
-std::vector<FadeUI*> FadeUI::vecFades;
+std::map<GameEngineLevel*, FadeUI*> FadeUI::mapFades;
 void (*FadeUI::FuncPtr)(void) = nullptr;
 
 FadeUI::FadeUI()
@@ -17,32 +17,50 @@ FadeUI::FadeUI()
 
 FadeUI::~FadeUI()
 {
-	if (nullptr != FadeRender)
-	{
-		delete FadeRender;
-		FadeRender = nullptr;
-	}
 }
 
 void FadeUI::Start()
 {
-	vecFades.push_back(this);
-
-	GameEngineRender* TempRender = CreateRender("FadeAnim.BMP", RENDER_ORDER::FADE);
-	TempRender->SetPosition(GameEngineWindow::GetScreenSize().half());
-	TempRender->SetScale(GameEngineWindow::GetScreenSize());
-
-	FadeRender = new ContentAnim(TempRender, 0, 10);
-
-	Off();
+	mapFades.insert(std::make_pair(GetLevel(), this));
+	FadeRender = CreateRender("FadeAnim.BMP", RENDER_ORDER::FADE);
+	FadeRender->SetPosition(GameEngineWindow::GetScreenSize().half());
+	FadeRender->SetScale(GameEngineWindow::GetScreenSize());
 }
 
 void FadeUI::Update(float _Time)
 {
-	FadeRender->UpdateAnim(_Time);
-	ProgressTime += _Time;
+	ProgressTime += _Time / FadeTime;
 
-	if (ProgressTime >= 1.0f)
+	if (1.0f <= ProgressTime)
+	{
+		ProgressTime = 1.0f;
+		DelayTime += _Time;
+
+		if (FADE_STATE::FADEOUT == State)
+		{
+			Off();
+		}
+	}
+
+	switch (State)
+	{
+	case FADE_STATE::NONE:
+	{
+		MsgAssert("잘못된 FadeUI Enum State 입니다");
+	}
+		return;
+	case FADE_STATE::FADEIN:
+		FadeRender->SetFrame(static_cast<int>(34 * ProgressTime));
+		break;
+	case FADE_STATE::FADEOUT:
+		FadeRender->SetFrame(static_cast<int>(34 - (34 * ProgressTime)));
+		break;
+	default:
+		MsgAssert("잘못된 FadeUI Enum State 입니다");
+		return;
+	}
+
+	if (0.4f <= DelayTime)
 	{
 		if (nullptr != FuncPtr)
 		{
@@ -61,21 +79,19 @@ void FadeUI::FadeIn(GameEngineLevel* _ParentLevel, void (*_Func)(void))
 		return;
 	}
 
-	for (FadeUI* FadeActor : vecFades)
-	{
-		if (FadeActor == nullptr)
-		{
-			MsgAssert("삭제된 페이트 액터를 참조하려 합니다.");
-			continue;
-		}
+	FadeUI* FadeActor = mapFades[_ParentLevel];
 
-		if (FadeActor->GetLevel() == _ParentLevel)
-		{
-			FadeActor->ProgressTime = 0.0f;
-			FadeActor->FadeRender->SetProgress(0.0f);
-			FadeActor->FadeRender->DisableFilp();
-			FadeActor->On();
-		}
+	if (FadeActor == nullptr)
+	{
+		MsgAssert("삭제된 페이트 액터를 참조하려 합니다.");
+	}
+
+	if (FadeActor->GetLevel() == _ParentLevel)
+	{
+		FadeActor->State = FADE_STATE::FADEIN;
+		FadeActor->DelayTime = 0.0f;
+		FadeActor->ProgressTime = 0.0f;
+		FadeActor->On();
 	}
 
 	FuncPtr = _Func;
@@ -89,21 +105,21 @@ void FadeUI::FadeOut(GameEngineLevel* _ParentLevel, void (*_Func)(void))
 		return;
 	}
 
-	for (FadeUI* FadeActor : vecFades)
+	FadeUI* FadeActor = mapFades[_ParentLevel];
+
+	if (FadeActor == nullptr)
 	{
-		if (FadeActor == nullptr)
-		{
- 			MsgAssert("삭제된 페이트 액터를 참조하려 합니다.");
-			continue;
-		}
-		if (FadeActor->GetLevel() == _ParentLevel)
-		{
-			FadeActor->ProgressTime = 0.0f;
-			FadeActor->FadeRender->SetProgress(1.0f);
-			FadeActor->FadeRender->ActiveFilp();
-			FadeActor->On();
-		}
+		MsgAssert("삭제된 페이트 액터를 참조하려 합니다.");
 	}
+
+	if (FadeActor->GetLevel() == _ParentLevel)
+	{
+		FadeActor->State = FADE_STATE::FADEOUT;
+		FadeActor->DelayTime = 0.0f;
+		FadeActor->ProgressTime = 0.0f;
+		FadeActor->On();
+	}
+
 
 	FuncPtr = _Func;
 }

@@ -5,6 +5,8 @@
 #include <GameEngineCore/GameEngineResources.h>
 #include <GameEngineCore/GameEngineCore.h>
 #include "MapBackgroundUI.h"
+#include "FadeUI.h"
+#include "ContentFunc.h"
 
 WorldMapLevel::WorldMapLevel()
 {
@@ -24,8 +26,8 @@ void WorldMapLevel::Loading()
 
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("WorldMap.BMP"))->Cut(1, 3);
 
+	CreateActor<FadeUI>();
 	CreateActor<MapBackgroundUI>();
-
 
 	if (false == GameEngineInput::IsKey("LevelChange"))
 	{
@@ -37,6 +39,12 @@ void WorldMapLevel::Update(float _DT)
 {
 	if (true == GameEngineInput::IsDown("LevelChange"))
 	{
-		GameEngineCore::GetInst()->ChangeLevel("Worldmap");
+		FadeUI::FadeIn(this, ContentFunc::ChangePuzzleLevel);
 	}
+}
+
+
+void WorldMapLevel::LevelChangeStart(GameEngineLevel* _PrevLevel)
+{
+	FadeUI::FadeOut(this, nullptr);
 }

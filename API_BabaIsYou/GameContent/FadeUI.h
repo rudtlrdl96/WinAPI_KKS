@@ -1,6 +1,14 @@
 #pragma once
 #include <GameEngineCore/GameEngineActor.h>
 #include <vector>
+#include <map>
+
+enum class FADE_STATE
+{
+	NONE,
+	FADEIN,
+	FADEOUT
+};
 
 class GameEngineRender;
 class ContentAnim;
@@ -24,10 +32,14 @@ public:
 protected:
 
 private:
-	static std::vector<FadeUI*> vecFades;
+	static std::map<GameEngineLevel*, FadeUI*> mapFades;
 	static void (*FuncPtr)(void) ;
 
-	ContentAnim* FadeRender = nullptr;
+	GameEngineRender* FadeRender = nullptr;
 	
+	float DelayTime = 0.0f;
+	float FadeTime = 0.5f;
 	float ProgressTime = 0.0f;
+
+	FADE_STATE State = FADE_STATE::NONE;
 };

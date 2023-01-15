@@ -16,5 +16,5 @@ void MapBackgroundUI::Start()
 	InitRender("WorldMap.BMP",
 		GameEngineWindow::GetScreenSize().half(),
 		GameEngineWindow::GetScreenSize() - float4{ 90, 70 },
-		0, 1, RENDER_ORDER::WORLDMAP, 1);
+		0, 1, static_cast<int>(RENDER_ORDER::WORLDMAP), 1);
 }

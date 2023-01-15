@@ -16,30 +16,6 @@
     <Filter Include="01.Actor\GridActor">
       <UniqueIdentifier>{c123d8a8-4494-4688-bc57-3e594eab8fc7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Actor\GridActor\TextActor">
-      <UniqueIdentifier>{80978478-25bf-4104-98a6-326f81885cd6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Actor\GridActor\TextActor\SubjectText">
-      <UniqueIdentifier>{2adc49b9-4b1d-42c1-9cab-214ce087c7b7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Actor\GridActor\TextActor\VerbText">
-      <UniqueIdentifier>{646d3711-92b9-4633-99af-185611e53882}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Actor\GridActor\TextActor\AdjectiveText">
-      <UniqueIdentifier>{e47d9b70-a9f4-474d-b507-21446470006f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Actor\GridActor\SubjectActor">
-      <UniqueIdentifier>{3641452d-e2a0-4f62-8d28-8dd06a4a7d55}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Actor\GridActor\SubjectActor\Tile">
-      <UniqueIdentifier>{63b3240a-f9cf-48c2-a0da-d75eb4073dd3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Actor\GridActor\SubjectActor\Character">
-      <UniqueIdentifier>{229cddb3-3406-4bdf-867c-6cd2a7a1d87b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Actor\GridActor\EffectActor">
-      <UniqueIdentifier>{4f322c4a-c4e1-4b0c-9a91-3889bf2259d6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Actor\UIActor\LogoLevel">
       <UniqueIdentifier>{12da1319-720b-4f27-b76d-a233340921bd}</UniqueIdentifier>
     </Filter>
@@ -61,15 +37,12 @@
     <Filter Include="02.Manager">
       <UniqueIdentifier>{c44f3d68-d4c1-4ee0-b329-818cd7781b72}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Actor\EffectActor">
+      <UniqueIdentifier>{4f322c4a-c4e1-4b0c-9a91-3889bf2259d6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="TextActor.h">
-      <Filter>01.Actor\GridActor\TextActor</Filter>
-    </ClInclude>
-    <ClInclude Include="SubjectActor.h">
-      <Filter>01.Actor\GridActor\SubjectActor</Filter>
-    </ClInclude>
-    <ClInclude Include="SubjectManager.h">
+    <ClInclude Include="ActorManager.h">
       <Filter>02.Manager</Filter>
     </ClInclude>
     <ClInclude Include="ContentCore.h">
@@ -87,23 +60,8 @@
     <ClInclude Include="EndingLevel.h">
       <Filter>03.Level</Filter>
     </ClInclude>
-    <ClInclude Include="TileActor.h">
-      <Filter>01.Actor\GridActor\SubjectActor\Tile</Filter>
-    </ClInclude>
-    <ClInclude Include="CharacterActor.h">
-      <Filter>01.Actor\GridActor\SubjectActor\Character</Filter>
-    </ClInclude>
-    <ClInclude Include="VerbText.h">
-      <Filter>01.Actor\GridActor\TextActor\VerbText</Filter>
-    </ClInclude>
-    <ClInclude Include="SubjectText.h">
-      <Filter>01.Actor\GridActor\TextActor\SubjectText</Filter>
-    </ClInclude>
-    <ClInclude Include="AdjectiveText.h">
-      <Filter>01.Actor\GridActor\TextActor\AdjectiveText</Filter>
-    </ClInclude>
     <ClInclude Include="EffectActor.h">
-      <Filter>01.Actor\GridActor\EffectActor</Filter>
+      <Filter>01.Actor\EffectActor</Filter>
     </ClInclude>
     <ClInclude Include="LogoLevel.h">
       <Filter>03.Level</Filter>
@@ -129,20 +87,17 @@
     <ClInclude Include="MapBackgroundUI.h">
       <Filter>01.Actor\UIActor\WorldMapLevel</Filter>
     </ClInclude>
-    <ClInclude Include="BackgroundBoxUI.h">
+    <ClInclude Include="GrayBackUI.h">
       <Filter>01.Actor\UIActor\Defalut</Filter>
     </ClInclude>
     <ClInclude Include="FadeUI.h">
       <Filter>01.Actor\UIActor\Defalut</Filter>
     </ClInclude>
-    <ClInclude Include="BlackBoxUI.h">
+    <ClInclude Include="BlackBackUI.h">
       <Filter>01.Actor\UIActor\Defalut</Filter>
     </ClInclude>
     <ClInclude Include="CongratulationsUI.h">
       <Filter>01.Actor\UIActor\PuzzleLevel</Filter>
-    </ClInclude>
-    <ClInclude Include="RuleManager.h">
-      <Filter>02.Manager</Filter>
     </ClInclude>
     <ClInclude Include="WiggleRender.h">
       <Filter>00.Base</Filter>
@@ -150,15 +105,12 @@
     <ClInclude Include="ContentAnim.h">
       <Filter>00.Base</Filter>
     </ClInclude>
+    <ClInclude Include="ContentFunc.h">
+      <Filter>00.Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="TextActor.cpp">
-      <Filter>01.Actor\GridActor\TextActor</Filter>
-    </ClCompile>
-    <ClCompile Include="SubjectActor.cpp">
-      <Filter>01.Actor\GridActor\SubjectActor</Filter>
-    </ClCompile>
-    <ClCompile Include="SubjectManager.cpp">
+    <ClCompile Include="ActorManager.cpp">
       <Filter>02.Manager</Filter>
     </ClCompile>
     <ClCompile Include="ContentCore.cpp">
@@ -176,23 +128,8 @@
     <ClCompile Include="EndingLevel.cpp">
       <Filter>03.Level</Filter>
     </ClCompile>
-    <ClCompile Include="TileActor.cpp">
-      <Filter>01.Actor\GridActor\SubjectActor\Tile</Filter>
-    </ClCompile>
-    <ClCompile Include="CharacterActor.cpp">
-      <Filter>01.Actor\GridActor\SubjectActor\Character</Filter>
-    </ClCompile>
-    <ClCompile Include="VerbText.cpp">
-      <Filter>01.Actor\GridActor\TextActor\VerbText</Filter>
-    </ClCompile>
-    <ClCompile Include="SubjectText.cpp">
-      <Filter>01.Actor\GridActor\TextActor\SubjectText</Filter>
-    </ClCompile>
-    <ClCompile Include="AdjectiveText.cpp">
-      <Filter>01.Actor\GridActor\TextActor\AdjectiveText</Filter>
-    </ClCompile>
     <ClCompile Include="EffectActor.cpp">
-      <Filter>01.Actor\GridActor\EffectActor</Filter>
+      <Filter>01.Actor\EffectActor</Filter>
     </ClCompile>
     <ClCompile Include="LogoLevel.cpp">
       <Filter>03.Level</Filter>
@@ -218,25 +155,25 @@
     <ClCompile Include="MapBackgroundUI.cpp">
       <Filter>01.Actor\UIActor\WorldMapLevel</Filter>
     </ClCompile>
-    <ClCompile Include="BackgroundBoxUI.cpp">
+    <ClCompile Include="GrayBackUI.cpp">
       <Filter>01.Actor\UIActor\Defalut</Filter>
     </ClCompile>
     <ClCompile Include="FadeUI.cpp">
       <Filter>01.Actor\UIActor\Defalut</Filter>
     </ClCompile>
-    <ClCompile Include="BlackBoxUI.cpp">
+    <ClCompile Include="BlackBackUI.cpp">
       <Filter>01.Actor\UIActor\Defalut</Filter>
     </ClCompile>
     <ClCompile Include="CongratulationsUI.cpp">
       <Filter>01.Actor\UIActor\PuzzleLevel</Filter>
     </ClCompile>
-    <ClCompile Include="RuleManager.cpp">
-      <Filter>02.Manager</Filter>
-    </ClCompile>
     <ClCompile Include="WiggleRender.cpp">
       <Filter>00.Base</Filter>
     </ClCompile>
     <ClCompile Include="ContentAnim.cpp">
+      <Filter>00.Base</Filter>
+    </ClCompile>
+    <ClCompile Include="ContentFunc.cpp">
       <Filter>00.Base</Filter>
     </ClCompile>
   </ItemGroup>

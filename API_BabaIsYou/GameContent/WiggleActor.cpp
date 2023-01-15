@@ -70,3 +70,13 @@ void WiggleActor::InitRender(const std::string_view& _FileName, const float4& _P
 		Render->ActiveWiggle();
 	}
 }
+
+void WiggleActor::SetFrame(int _Frame)
+{
+	Render->SetStartIndex(_Frame);
+}
+
+void WiggleActor::SetLength(int _Length)
+{
+	Render->SetAnimLength(_Length);
+}

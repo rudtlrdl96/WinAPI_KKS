@@ -4,6 +4,7 @@
 class int2
 {
 public:
+	static const int2 Zero;
 	static const int2 Left;
 	static const int2 Right;
 	static const int2 Up;

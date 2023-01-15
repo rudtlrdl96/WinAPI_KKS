@@ -162,15 +162,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AdjectiveText.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="BlackBoxUI.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="CharacterActor.h">
+    <ClInclude Include="BlackBackUI.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -187,6 +179,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="ContentCore.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="ContentFunc.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -210,7 +206,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="BackgroundBoxUI.h">
+    <ClInclude Include="GrayBackUI.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -230,27 +226,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="RuleManager.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="SubjectActor.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="SubjectManager.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="SubjectText.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="TextActor.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="TileActor.h">
+    <ClInclude Include="ActorManager.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -259,10 +235,6 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="TitleLogoUI.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="VerbText.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -280,15 +252,7 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="AdjectiveText.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="BlackBoxUI.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="CharacterActor.cpp">
+    <ClCompile Include="BlackBackUI.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -305,6 +269,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="ContentCore.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="ContentFunc.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -328,7 +296,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="BackgroundBoxUI.cpp">
+    <ClCompile Include="GrayBackUI.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -348,27 +316,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="RuleManager.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="SubjectActor.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="SubjectManager.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="SubjectText.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="TextActor.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="TileActor.cpp">
+    <ClCompile Include="ActorManager.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -377,10 +325,6 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="TitleLogoUI.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="VerbText.cpp">
       <SubType>
       </SubType>
     </ClCompile>

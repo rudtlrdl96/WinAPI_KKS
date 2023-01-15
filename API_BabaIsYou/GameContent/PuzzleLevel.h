@@ -3,8 +3,7 @@
 #include <string>
 #include <string_view>
 
-class SubjectManager;
-class RuleManager;
+class ActorManager;
 class PuzzleLevel : public GameEngineLevel
 {
 public:
@@ -22,11 +21,10 @@ public:
 protected:
 	void Loading() override;
 	void Update(float _DT) override;
+	void LevelChangeStart(GameEngineLevel* _PrevLevel) override;
 	void LevelChangeEnd(GameEngineLevel* _NextLevel) override {}
-	void LevelChangeStart(GameEngineLevel* _PrevLevel) override {}
 private:
 	static std::string LoadPuzzleName;
 
-	SubjectManager* SubjectMgr = nullptr;
-	RuleManager* RuleMgr = nullptr;
+	ActorManager* ActorMgr = nullptr;
 };

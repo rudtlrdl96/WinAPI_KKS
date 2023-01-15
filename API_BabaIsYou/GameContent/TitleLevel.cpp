@@ -4,8 +4,10 @@
 #include <GameEngineCore/GameEngineResources.h>
 #include <GameEngineCore/GameEngineCore.h>
 
+#include "FadeUI.h"
 #include "TitleLogoUI.h"
-#include "BlackBoxUI.h"
+#include "BlackBackUI.h"
+#include "ContentFunc.h"
 
 TitleLevel::TitleLevel()
 {
@@ -13,6 +15,11 @@ TitleLevel::TitleLevel()
 
 TitleLevel::~TitleLevel()
 {
+}
+
+void ChangeLevel()
+{
+
 }
 
 void TitleLevel::Loading()
@@ -25,8 +32,9 @@ void TitleLevel::Loading()
 
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("TitleLogo.BMP"))->Cut(1, 3);
 
+	CreateActor<FadeUI>();
 	CreateActor<TitleLogoUI>();
-	CreateActor<BlackBoxUI>();
+	CreateActor<BlackBackUI>();
 
 	if (false == GameEngineInput::IsKey("LevelChange"))
 	{
@@ -38,6 +46,11 @@ void TitleLevel::Update(float _DT)
 {
 	if (true == GameEngineInput::IsDown("LevelChange"))
 	{
-		GameEngineCore::GetInst()->ChangeLevel("Worldmap");
+		FadeUI::FadeIn(this, ContentFunc::ChangeWorldmapLevel);
 	}
+}
+
+void TitleLevel::LevelChangeStart(GameEngineLevel* _NextLevel)
+{
+	FadeUI::FadeOut(this, nullptr);
 }

@@ -1,128 +1,63 @@
 #pragma once
 #include <vector>
+#include <map>
 #include <string>
 #include <GameEngineBase/GameEngineDebug.h>
 #include "ContentMath.h"
+#include "ContentConst.h"
 #include "WiggleActor.h"
 
+enum class ACTOR_RENDER
+{
+	STATIC,
+	DYNAMIC,
+	CHARACTER,
+	TILE,
+	BELT,
+};
+
+enum class ACTOR_DEFINE
+{
+	ACTOR,
+	SUBJECT_TEXT,
+	VERB_TEXT,
+	DEFINE_TEXT,
+};
+
+class GameEngineLevel;
 class GridActor : public WiggleActor
 {
-private:
-	class GridData
-	{
-	public:
-		GridData()
-		{
-			vecDatas.reserve(16);
-		}
-
-		bool IsStop() const
-		{
-			for (GridActor* _Node : vecDatas)
-			{
-				if (true == _Node->IsStop())
-				{
-					return true;
-				}
-			}
-
-			return false;
-		}
-
-		bool IsPush() const
-		{
-			for (GridActor* _Node : vecDatas)
-			{
-				if (true == _Node->IsPush())
-				{
-					return true;
-				}
-			}
-
-			return false;
-		}
-
-		void AddActorData(GridActor* _ActorData)
-		{
-			if (nullptr == _ActorData)
-			{
-				MsgAssert("nullptr Actor를 추가하려 했습니다");
-			}
-
-			vecDatas.push_back(_ActorData);
-		}
-
-		void Clear()
-		{
-			vecDatas.clear();
-		}
-
-	private:
-		std::vector<GridActor*> vecDatas;
-	};
-
 public:
 	GridActor();
 	~GridActor();
 
 	void Start() override;
-	void Update(float _DT) override;
 
 	GridActor(const GridActor& _Other) = delete;
 	GridActor(GridActor&& _Other) noexcept = delete;
 	GridActor& operator=(const GridActor& _Other) = delete;
 	GridActor& operator=(GridActor&& _Other) noexcept = delete;
 
-	const int2 GetGridPos() const
-	{
-		return GridPos;
-	}
+	static GridActor* GetActor(TEMP_ACTOR_TYPE _Type);
 
-	const int2 GetPrevPos() const
-	{
-		return PrevPos;
-	}
+	static void InitGridActor(GameEngineLevel* _PuzzleLevel, const int2& _GridSize, const float4& _ActorSize);
+	static void ClearGridActor();
+	static void DeleteGridActor();
 
-	void SetPrevPos(const int2& _Pos)
-	{
-		PrevPos = _Pos;
-	}
-
-	void SetGridPos(const int2& _Pos)
-	{
-		GridPos = _Pos;
-	}
-
-	bool IsStop() const
-	{
-		return false;
-	}
-
-	bool IsPush() const
-	{
-		return true;
-	}
-
-	static void InitGrid(const int2& _GridSize, const float4& _ActorSize);
-	static void ClearGrid();
-	static void DeleteGrid();
-
-	static float4 GetScreenPos(const int2& _Pos);
-
-	bool CanPush(const int2& _Pos, const int2& _Dir) const;
-	bool IsGridOver(const int2& _Pos) const;
-	bool TryMove(const int2& _Dir);
+	void LoadData(TEMP_ACTOR_TYPE _Actor);
+	void SetGrid(const int2& _Pos);
 
 protected:
 
 private:
-	static std::vector<std::vector<GridData>> vecGridData;
+	static GameEngineLevel* PuzzleLevel;
+	static std::vector<GridActor*> vecObjectPool;
+	static size_t ReturnActorIndex;
+	static int2 GridSize;
 	static float4 ActorSize;
+	
+	ACTOR_DEFINE ActorType = ACTOR_DEFINE::ACTOR;
+	ACTOR_RENDER RenderType = ACTOR_RENDER::STATIC;
 
-	int2 PrevPos = {0, 0};
-	int2 GridPos = {0, 0};
-
-	float MoveProgress = 0.0f;
-
-	void Move(const int2& _NextPos);
+	int2 GridPos = int2::Zero;
 };

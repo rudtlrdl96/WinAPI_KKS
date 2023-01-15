@@ -15,7 +15,7 @@ public:
 protected:
 	void Loading() override;
 	void Update(float _DT) override;
-	void LevelChangeStart(GameEngineLevel* _NextLevel) override {}
+	void LevelChangeStart(GameEngineLevel* _NextLevel) override;
 	void LevelChangeEnd(GameEngineLevel* _NextLevel) override {}
 private:
 

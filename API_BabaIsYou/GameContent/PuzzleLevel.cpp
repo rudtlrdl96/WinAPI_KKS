@@ -2,9 +2,9 @@
 #include <GameEngineBase/GameEngineDirectory.h>
 #include <GameEngineCore/GameEngineResources.h>
 
-#include "SubjectManager.h"
-#include "RuleManager.h"
-#include "CharacterActor.h"
+#include "FadeUI.h"
+#include "ActorManager.h"
+#include "GrayBackUI.h"
 
 std::string PuzzleLevel::LoadPuzzleName = "";
 
@@ -14,16 +14,10 @@ PuzzleLevel::PuzzleLevel()
 
 PuzzleLevel::~PuzzleLevel()
 {
-	if (nullptr != SubjectMgr)
+	if (nullptr != ActorMgr)
 	{
-		delete SubjectMgr;
-		SubjectMgr = nullptr;
-	}
-
-	if (nullptr != RuleMgr)
-	{
-		delete RuleMgr;
-		RuleMgr = nullptr;
+		delete ActorMgr;
+		ActorMgr = nullptr;
 	}
 }
 
@@ -42,20 +36,14 @@ void PuzzleLevel::Loading()
 
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("actor.BMP"))->Cut(24, 40);
 
+	CreateActor<FadeUI>();
+	CreateActor<GrayBackUI>();
 
-	if (nullptr == SubjectMgr)
+	if (nullptr == ActorMgr)
 	{
-		SubjectMgr = new SubjectManager;
-		SubjectMgr->InitGrid();
-	}
-	if (nullptr == RuleMgr)
-	{
-		RuleMgr = new RuleManager;
+		ActorMgr = new ActorManager(this);
 	}
 
-	LoadPuzzleData();
-
-	CreateActor<CharacterActor>();
 }
 
 void PuzzleLevel::Update(float _DT)
@@ -63,7 +51,19 @@ void PuzzleLevel::Update(float _DT)
 	int a = 0;
 }
 
+void PuzzleLevel::LevelChangeStart(GameEngineLevel* _NextLevel)
+{
+	LoadPuzzleData();
+	FadeUI::FadeOut(this, nullptr);
+}
+
 void PuzzleLevel::LoadPuzzleData()
 {
+	if (nullptr == ActorMgr)
+	{
+		MsgAssert("ActorManager가 초기화 되지 않았습니다");
+		return;
+	}
 
+	ActorMgr->LoadData(LoadPuzzleName);
 }

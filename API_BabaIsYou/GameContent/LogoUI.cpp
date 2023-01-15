@@ -16,5 +16,5 @@ void LogoUI::Start()
 	InitRender("Logo.BMP",
 		GameEngineWindow::GetScreenSize().half(),
 		GameEngineWindow::GetScreenSize(),
-		0, 1, RENDER_ORDER::UIIMAGE, 1);
+		0, 1, static_cast<int>(RENDER_ORDER::UIIMAGE), 1);
 }

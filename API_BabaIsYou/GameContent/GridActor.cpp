@@ -1,9 +1,15 @@
 #include "GridActor.h"
 #include <GameEngineBase/GameEngineDebug.h>
+#include <GameEngineCore/GameEngineLevel.h>
 #include "ContentConst.h"
 
-std::vector<std::vector<GridActor::GridData>> GridActor::vecGridData;
+GameEngineLevel* GridActor::PuzzleLevel = nullptr;
+std::vector<GridActor*> GridActor::vecObjectPool;
+size_t GridActor::ReturnActorIndex = 0;
+int2 GridActor::GridSize = int2::Zero;
 float4 GridActor::ActorSize = float4::Zero;
+
+
 
 GridActor::GridActor()
 {
@@ -15,125 +21,123 @@ GridActor::~GridActor()
 
 void GridActor::Start()
 {
-	//InitRender();
+	InitRender("actor.BMP", float4::Zero, ContentConst::ACTOR_SIZE, 0, 4, 10, 24);
+	vecObjectPool.push_back(this);
+	Off();
 }
 
-void GridActor::Update(float _DT)
+
+GridActor* GridActor::GetActor(TEMP_ACTOR_TYPE _Type)
 {
-	WiggleActor::Update(_DT);
-
-	if (GetGridPos() != GetPrevPos())
+	if (ReturnActorIndex >= vecObjectPool.size())
 	{
-		MoveProgress += _DT * ContentConst::MOVE_SPEED;
+		MsgAssert("Object Pool 사이즈를 초과했습니다.");
+		return nullptr;
+	}
 
-		SetPos(Lerp(GetScreenPos(GetPrevPos()), GetScreenPos(GetGridPos()), MoveProgress));
+	if (nullptr == vecObjectPool[ReturnActorIndex])
+	{
+		MsgAssert("vecObjectPool 벡터에 nullptr Actor가 존재합니다.");
+		return nullptr;
+	}
 
-		if (MoveProgress >= 1.0f)
+	vecObjectPool[ReturnActorIndex]->On();
+	return vecObjectPool[ReturnActorIndex++];
+}
+
+void GridActor::InitGridActor(GameEngineLevel* _PuzzleLevel, const int2& _GridSize, const float4& _ActorSize)
+{
+	if (nullptr != PuzzleLevel)
+	{
+		MsgAssert("InitGridActor를 중복 호출 하였습니다");
+		return;
+	}
+
+	if (nullptr == _PuzzleLevel)
+	{
+		MsgAssert("nullptr PuzzleLevel이 인자로 입력되었습니다.");
+		return;
+	}
+
+	PuzzleLevel = _PuzzleLevel;
+	GridSize = _GridSize;
+	ActorSize = _ActorSize;	
+	vecObjectPool.reserve(GridSize.x * GridSize.y);
+
+	for (size_t i = 0; i < vecObjectPool.capacity(); i++)
+	{
+		PuzzleLevel->CreateActor<GridActor>();
+	}
+}
+
+void GridActor::ClearGridActor()
+{
+	for (size_t i = 0; i < vecObjectPool.size(); i++)
+	{
+		if (nullptr == vecObjectPool[i])
 		{
-			SetPos(GetScreenPos(GetGridPos()));
-			MoveProgress = 0.0f;
-			SetPrevPos(GetPrevPos());
-
-			Move(GetGridPos() + int2{1, 0});
+			MsgAssert("vecObjectPool 벡터에 nullptr Actor가 존재합니다.");
+			return;
 		}
+
+		vecObjectPool[i]->Off();
 	}
+
+	ReturnActorIndex = 0;
 }
 
-void GridActor::InitGrid(const int2& _GridSize, const float4& _ActorSize)
+void GridActor::DeleteGridActor()
 {
-	vecGridData.resize(_GridSize.y);
-
-	for (size_t y = 0; y < vecGridData.size(); y++)
-	{
-		vecGridData[y].resize(_GridSize.x);
-	}
-
-	ActorSize = _ActorSize;
-}
-
-void GridActor::ClearGrid()
-{
-	for (size_t y = 0; y < vecGridData.size(); y++)
-	{
-		for (size_t x = 0; x < vecGridData[y].size(); x++)
-		{
-			vecGridData[y][x].Clear();
-		}
-	}
-}
-
-void GridActor::DeleteGrid()
-{
-	for (size_t y = 0; y < vecGridData.size(); y++)
-	{
-		vecGridData[y].clear();
-	}
-
-	vecGridData.clear();
-}
-
-float4 GridActor::GetScreenPos(const int2& _Pos)
-{
-	float4 ScreenPos;
-
-	ScreenPos.x = ActorSize.x * _Pos.x;
-	ScreenPos.y = ActorSize.y * _Pos.y;
-
-	return ScreenPos;
-}
-
-bool GridActor::TryMove(const int2& _Dir)
-{
-	if (0 == vecGridData.size())
-	{
-		MsgAssert("vecTextGrid를 초기화 하지 않고 이동하려 했습니다.");
-		return false;
-	}
-	
-	int2 NextPos = GetGridPos() + _Dir;
-	
-	// 그리드 초과
-	if (true == IsGridOver(NextPos))
-	{
-		return false;
-	}
-
-	// Stop Check
-	if (true == vecGridData[NextPos.y][NextPos.x].IsStop())
-	{
-		return false;
-	}
-	
-	Move(NextPos);
-
-	return true;
+	vecObjectPool.clear();
+	ReturnActorIndex = 0;
 }
 
 
-bool GridActor::CanPush(const int2& _Pos, const int2& _Dir) const
+void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 {
-	int2 NormalizeDir = int2::Normalize(_Dir);
-	int2 CurPos = _Pos;
-	
+	if (_Actor < TEMP_ACTOR_TYPE::BABA || _Actor >= TEMP_ACTOR_TYPE::COUNT)
+	{
+		MsgAssert("잘못된 Actor Type이 입력되었습니다.");
+		return;
+	}
 
-	return true;
+	// Todo : File Save/Load 시스템이 완성된 후 데이터베이스 로드
+
+	if (TEMP_ACTOR_TYPE::BABA == _Actor)
+	{
+		SetFrame(1);
+		SetLength(4);
+		ActorType = ACTOR_DEFINE::ACTOR;
+		RenderType = ACTOR_RENDER::CHARACTER;
+	}
+
+	if (TEMP_ACTOR_TYPE::BABA_TEXT == _Actor)
+	{
+		SetFrame(0);
+		SetLength(1);
+		ActorType = ACTOR_DEFINE::SUBJECT_TEXT;
+		RenderType = ACTOR_RENDER::STATIC;
+	}
+
+	if (TEMP_ACTOR_TYPE::IS_TEXT == _Actor)
+	{
+		SetFrame(792);
+		SetLength(1);
+		ActorType = ACTOR_DEFINE::VERB_TEXT;
+		RenderType = ACTOR_RENDER::STATIC;
+	}
+
+	if (TEMP_ACTOR_TYPE::YOU_TEXT == _Actor)
+	{
+		SetFrame(864);
+		SetLength(1);
+		ActorType = ACTOR_DEFINE::DEFINE_TEXT;
+		RenderType = ACTOR_RENDER::STATIC;
+	}
 }
 
-bool GridActor::IsGridOver(const int2& _Pos) const
+void GridActor::SetGrid(const int2& _Pos)
 {
-	if (_Pos.y < 0 || _Pos.y >= vecGridData.size() ||
-		_Pos.x < 0 || _Pos.x >= vecGridData[0].size())
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-void GridActor::Move(const int2& _NextPos)
-{
-	SetPrevPos(GetGridPos());
-	SetGridPos(_NextPos);
+	GridPos = _Pos;
+	SetPos({GridPos.x * ContentConst::ACTOR_SIZE.x, GridPos.y * ContentConst::ACTOR_SIZE.y});
 }
