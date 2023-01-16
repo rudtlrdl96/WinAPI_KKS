@@ -34,23 +34,17 @@ void LogoLevel::Loading()
 	CreateActor<FadeUI>(1);
 	CreateActor<LogoUI>(0);
 	CreateActor<BlackBackUI>(-1);
-
-	if (false == GameEngineInput::IsKey("LevelChange"))
-	{
-		GameEngineInput::CreateKey("LevelChange", VK_SPACE);
-	}
 }
 
 void LogoLevel::Update(float _DT)
 {
-	if (true == GameEngineInput::IsDown("LevelChange"))
+	if (true == GameEngineInput::IsAnyKey())
 	{
-		FadeUI::FadeIn(this, ContentFunc::ChangeTitleLevel);
+		FadeUI::ActiveFade(FADE_STATE::FADEIN, this, ContentFunc::ChangeTitleLevel);
 	}
 }
 
-
 void LogoLevel::LevelChangeStart(GameEngineLevel* _NextLevel)
 {
-	FadeUI::FadeOut(this, nullptr);
+	FadeUI::ActiveFade(FADE_STATE::FADEOUT, this, nullptr);
 }

@@ -6,7 +6,6 @@
 
 #include "ContentMath.h"
 #include "ContentConst.h"
-#include "ContentAnim.h"
 
 std::map<GameEngineLevel*, FadeUI*> FadeUI::mapFades;
 void (*FadeUI::FuncPtr)(void) = nullptr;
@@ -22,56 +21,94 @@ FadeUI::~FadeUI()
 void FadeUI::Start()
 {
 	mapFades.insert(std::make_pair(GetLevel(), this));
-	FadeRender = CreateRender("FadeAnim.BMP", RENDER_ORDER::FADE);
+	FadeRender = CreateRender(RENDER_ORDER::FADE);
+
+	FadeRender->CreateAnimation(
+		{ .AnimationName = "FadeIn", .ImageName = "FadeAnim.BMP", .Start = 0, .End = 34, .InterTime = FadeTime / 34, .Loop = false});
+	
+	
+	std::vector<int> FadeOutAnimIndex;
+	FadeOutAnimIndex.reserve(35);
+
+	for (int i = 34; i >= 0; --i)
+	{
+		FadeOutAnimIndex.push_back(i);
+	}
+
+	FadeRender->CreateAnimation(
+		{ .AnimationName = "FadeOut", .ImageName = "FadeAnim.BMP", .InterTime = FadeTime / 34, .Loop = false, .FrameIndex = FadeOutAnimIndex});
+
+	FadeRender->ChangeAnimation("FadeIn");
+
 	FadeRender->SetPosition(GameEngineWindow::GetScreenSize().half());
 	FadeRender->SetScale(GameEngineWindow::GetScreenSize());
+	FadeRender->Off();
+
+	BoxRender = CreateRender("Background_Gray.BMP", RENDER_ORDER::FADE);
+	
+	BoxRender->SetPosition(GameEngineWindow::GetScreenSize().half());
+	BoxRender->SetScale(GameEngineWindow::GetScreenSize());
+	
+	BoxRender->Off();
 }
 
 void FadeUI::Update(float _Time)
 {
-	ProgressTime += _Time / FadeTime;
+	ProgressTime += _Time;
 
-	if (1.0f <= ProgressTime)
+	if (FadeTime <= ProgressTime)
 	{
-		ProgressTime = 1.0f;
-		DelayTime += _Time;
-
-		if (FADE_STATE::FADEOUT == State)
+		switch (State)
 		{
+		case FADE_STATE::FADEIN:
+		{
+			BoxRender->On();
+			DelayTime += _Time;
+
+			if (0.3f <= DelayTime)
+			{
+				if (nullptr != FuncPtr)
+				{
+					FuncPtr();
+				}
+			}
+		}
+			break;
+		case FADE_STATE::FADEOUT:
+		{
+			if (nullptr != FuncPtr)
+			{
+				FuncPtr();
+			}
 			Off();
 		}
-	}
-
-	switch (State)
-	{
-	case FADE_STATE::NONE:
-	{
-		MsgAssert("잘못된 FadeUI Enum State 입니다");
-	}
 		return;
-	case FADE_STATE::FADEIN:
-		FadeRender->SetFrame(static_cast<int>(34 * ProgressTime));
-		break;
-	case FADE_STATE::FADEOUT:
-		FadeRender->SetFrame(static_cast<int>(34 - (34 * ProgressTime)));
-		break;
-	default:
-		MsgAssert("잘못된 FadeUI Enum State 입니다");
-		return;
-	}
-
-	if (0.4f <= DelayTime)
-	{
-		if (nullptr != FuncPtr)
-		{
-			FuncPtr();
 		}
-
-		FuncPtr = nullptr;
 	}
+
 }
 
-void FadeUI::FadeIn(GameEngineLevel* _ParentLevel, void (*_Func)(void))
+void FadeUI::SetState(FADE_STATE _State)
+{
+	State = _State;
+
+	if (FADE_STATE::FADEIN == State)
+	{
+		FadeRender->ChangeAnimation("FadeIn");
+	}
+	else if (FADE_STATE::FADEOUT == State)
+	{
+		FadeRender->ChangeAnimation("FadeOut");
+	}
+
+	ProgressTime = 0.0f;
+	DelayTime = 0.0f;
+	BoxRender->Off();
+	FadeRender->On();
+	On();
+}
+
+void FadeUI::ActiveFade(FADE_STATE _State, GameEngineLevel* _ParentLevel, void (*_Func)(void))
 {
 	if (nullptr == _ParentLevel)
 	{
@@ -88,38 +125,8 @@ void FadeUI::FadeIn(GameEngineLevel* _ParentLevel, void (*_Func)(void))
 
 	if (FadeActor->GetLevel() == _ParentLevel)
 	{
-		FadeActor->State = FADE_STATE::FADEIN;
-		FadeActor->DelayTime = 0.0f;
-		FadeActor->ProgressTime = 0.0f;
-		FadeActor->On();
+		FadeActor->SetState(_State);
 	}
-
-	FuncPtr = _Func;
-}
-
-void FadeUI::FadeOut(GameEngineLevel* _ParentLevel, void (*_Func)(void))
-{
-	if (nullptr == _ParentLevel)
-	{
-		MsgAssert("Nullptr Level을 참조하려 했습니다.");
-		return;
-	}
-
-	FadeUI* FadeActor = mapFades[_ParentLevel];
-
-	if (FadeActor == nullptr)
-	{
-		MsgAssert("삭제된 페이트 액터를 참조하려 합니다.");
-	}
-
-	if (FadeActor->GetLevel() == _ParentLevel)
-	{
-		FadeActor->State = FADE_STATE::FADEOUT;
-		FadeActor->DelayTime = 0.0f;
-		FadeActor->ProgressTime = 0.0f;
-		FadeActor->On();
-	}
-
 
 	FuncPtr = _Func;
 }

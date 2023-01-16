@@ -7,38 +7,53 @@
 #include "ContentConst.h"
 #include "WiggleActor.h"
 
-enum class ACTOR_RENDER
-{
-	STATIC,
-	DYNAMIC,
-	CHARACTER,
-	TILE,
-	BELT,
-};
-
-enum class ACTOR_DEFINE
-{
-	ACTOR,
-	SUBJECT_TEXT,
-	VERB_TEXT,
-	DEFINE_TEXT,
-};
-
-enum class DEFINE_INFO
-{
-	YOU = 1 << 0,
-	PUSH = 1 << 1,
-	STOP = 1 << 2,
-};
-
 class GameEngineLevel;
 class GridActor : public WiggleActor
 {
+public:
+	enum class ACTOR_RENDER
+	{
+		STATIC,
+		DYNAMIC,
+		CHARACTER,
+		TILE,
+		BELT,
+	};
+
+	enum class ACTOR_DEFINE
+	{
+		ACTOR,
+		SUBJECT_TEXT,
+		VERB_TEXT,
+		DEFINE_TEXT,
+	};
+
+	enum class DEFINE_INFO
+	{
+		NONE = 0,
+		YOU = 1 << 0,
+		PUSH = 1 << 1,
+		STOP = 1 << 2,
+	};
+
+	enum class BEHAVIOR
+	{
+		MOVE_LEFT,
+		MOVE_RIGHT,
+		MOVE_UP,
+		MOVE_DOWN,
+		SINK,
+		DEFEAT,
+		MELT,
+		WIN
+	};
+
 private:
 	class GridData
 	{
 	public:
 		std::vector<GridActor*> vecDatas;
+		bool PushDoubleCheck = false;
 
 		void push_back(GridActor* _Actor)
 		{
@@ -47,43 +62,37 @@ private:
 
 		void clear()
 		{
+			PushDoubleCheck = false;
 			vecDatas.clear();
-		}
-
-		bool IsStop()
-		{
-			for (GridActor* Data : vecDatas)
-			{
-				if (true == Data->IsDefine(DEFINE_INFO::STOP))
-				{
-					return true;
-				}
-			}
-
-			return false;
 		}
 
 		void Push(const int2& _Dir)
 		{
+			if (true == PushDoubleCheck)
+			{
+				return;
+			}
+
 			for (GridActor* Data : vecDatas)
 			{
 				if (true == Data->IsDefine(DEFINE_INFO::PUSH))
 				{
 					Data->Push(_Dir);
+					PushDoubleCheck = true;
 				}
 			}
 		}
 
-		bool IsPush()
+		size_t GetDefine()
 		{
+			size_t Info = static_cast<size_t>(DEFINE_INFO::NONE);
+
 			for (GridActor* Data : vecDatas)
 			{
-				if (true == Data->IsDefine(DEFINE_INFO::PUSH))
-				{
-					return true;
-				}
+				Info |= Data->GetDefine();
 			}
-			return false;
+
+			return Info;
 		}
 	};
 
@@ -131,16 +140,28 @@ private:
 	ACTOR_DEFINE ActorType = ACTOR_DEFINE::ACTOR;
 	ACTOR_RENDER RenderType = ACTOR_RENDER::STATIC;
 
+	std::vector<BEHAVIOR> vecBehaviors;
+	std::list<int2> vecWaitInputs;
+
 	int2 PrevPos = int2::Zero;
 	int2 GridPos = int2::Zero;
 
-	size_t DefineData = 0;
+	size_t DefineData = static_cast<size_t>(DEFINE_INFO::NONE);
 
 	bool IsMove = false;
 	float MoveProgress = 0.0f;
 
+	inline size_t GetDefine()
+	{
+		return DefineData;
+	}
+
 	bool Move(const int2& _NextPos);
+	void UndoMove(const int2& _NextPos);
 	void PushDir(const int2& _Dir);
 	void Push(const int2& _Dir);
 	bool CanMove(const int2& _NextPos);
+
+	void Undo();
+
 };

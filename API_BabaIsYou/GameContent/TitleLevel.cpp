@@ -46,11 +46,11 @@ void TitleLevel::Update(float _DT)
 {
 	if (true == GameEngineInput::IsDown("LevelChange"))
 	{
-		FadeUI::FadeIn(this, ContentFunc::ChangeWorldmapLevel);
+		FadeUI::ActiveFade(FADE_STATE::FADEIN, this, ContentFunc::ChangeWorldmapLevel);
 	}
 }
 
 void TitleLevel::LevelChangeStart(GameEngineLevel* _NextLevel)
 {
-	FadeUI::FadeOut(this, nullptr);
+	FadeUI::ActiveFade(FADE_STATE::FADEOUT, this, nullptr);
 }

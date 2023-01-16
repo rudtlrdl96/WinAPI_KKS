@@ -7,7 +7,7 @@ class GameEngineRender;
 class WiggleRender
 {
 public:
-	WiggleRender(GameEngineRender* _WiggleRender, int _StartIndex, int _AnimLength, int _Interval);
+	WiggleRender(GameEngineRender* _WiggleRender, int _StartIndex, int _AnimLength, int _BitmapInterval);
 	~WiggleRender();
 
 	void SetRenderIndex();
@@ -51,7 +51,7 @@ private:
 
 	int StartIndex = 0;
 	int AnimLength = 1;
-	int Interval = 0;
+	int BitmapInterval = 0;
 
 	size_t DirIndex = 0;
 	size_t DirInterval = 0;

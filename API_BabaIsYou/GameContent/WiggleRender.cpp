@@ -2,10 +2,10 @@
 #include <GameEngineCore/GameEngineRender.h>
 #include <GameEngineBase/GameEngineDebug.h>
 
-WiggleRender::WiggleRender(GameEngineRender* _WiggleRender, int _StartIndex, int _AnimLength, int _Interval) :
+WiggleRender::WiggleRender(GameEngineRender* _WiggleRender, int _StartIndex, int _AnimLength, int _BitmapInterval) :
 	Render(_WiggleRender),
 	AnimLength(_AnimLength),
-	Interval(_Interval),
+	BitmapInterval(_BitmapInterval),
 	StartIndex(_StartIndex),
 	CurIndex(_StartIndex),
 	IsWiggle(false)
@@ -24,7 +24,7 @@ WiggleRender::~WiggleRender()
 
 void WiggleRender::SetRenderIndex()
 {
-	CurIndex = StartIndex + CurAnim + (CurWiggle * Interval) + static_cast<int>(DirIndex);
+	CurIndex = StartIndex + CurAnim + (CurWiggle * BitmapInterval) + static_cast<int>(DirIndex);
 	Render->SetFrame(CurIndex);
 }
 

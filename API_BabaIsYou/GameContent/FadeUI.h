@@ -26,9 +26,8 @@ public:
 	FadeUI& operator=(const FadeUI& _Other) = delete;
 	FadeUI& operator=(FadeUI&& _Other) noexcept = delete;
 
-	static void FadeIn(GameEngineLevel* _ParentLevel, void (*_Func)(void));
-	static void FadeOut(GameEngineLevel* _ParentLevel, void (*_Func)(void));
-
+	void SetState(FADE_STATE _State);
+	static void ActiveFade(FADE_STATE _State, GameEngineLevel* _ParentLevel, void (*_Func)(void));
 protected:
 
 private:
@@ -36,6 +35,7 @@ private:
 	static void (*FuncPtr)(void) ;
 
 	GameEngineRender* FadeRender = nullptr;
+	GameEngineRender* BoxRender = nullptr;
 	
 	float DelayTime = 0.0f;
 	float FadeTime = 0.5f;

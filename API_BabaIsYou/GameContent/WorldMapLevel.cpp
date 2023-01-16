@@ -39,12 +39,12 @@ void WorldMapLevel::Update(float _DT)
 {
 	if (true == GameEngineInput::IsDown("LevelChange"))
 	{
-		FadeUI::FadeIn(this, ContentFunc::ChangePuzzleLevel);
+		FadeUI::ActiveFade(FADE_STATE::FADEIN,this, ContentFunc::ChangePuzzleLevel);
 	}
 }
 
 
 void WorldMapLevel::LevelChangeStart(GameEngineLevel* _PrevLevel)
 {
-	FadeUI::FadeOut(this, nullptr);
+	FadeUI::ActiveFade(FADE_STATE::FADEOUT, this, nullptr);
 }

@@ -170,10 +170,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="ContentAnim.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="ContentConst.h">
       <SubType>
       </SubType>
@@ -257,10 +253,6 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="CongratulationsUI.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="ContentAnim.cpp">
       <SubType>
       </SubType>
     </ClCompile>

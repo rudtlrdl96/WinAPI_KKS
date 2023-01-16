@@ -102,9 +102,6 @@
     <ClInclude Include="WiggleRender.h">
       <Filter>00.Base</Filter>
     </ClInclude>
-    <ClInclude Include="ContentAnim.h">
-      <Filter>00.Base</Filter>
-    </ClInclude>
     <ClInclude Include="ContentFunc.h">
       <Filter>00.Base</Filter>
     </ClInclude>
@@ -168,9 +165,6 @@
       <Filter>01.Actor\UIActor\PuzzleLevel</Filter>
     </ClCompile>
     <ClCompile Include="WiggleRender.cpp">
-      <Filter>00.Base</Filter>
-    </ClCompile>
-    <ClCompile Include="ContentAnim.cpp">
       <Filter>00.Base</Filter>
     </ClCompile>
     <ClCompile Include="ContentFunc.cpp">

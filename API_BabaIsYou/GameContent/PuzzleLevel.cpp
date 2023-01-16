@@ -72,7 +72,7 @@ void PuzzleLevel::Update(float _DT)
 void PuzzleLevel::LevelChangeStart(GameEngineLevel* _NextLevel)
 {
 	LoadPuzzleData();
-	FadeUI::FadeOut(this, nullptr);
+	FadeUI::ActiveFade(FADE_STATE::FADEOUT, this, nullptr);
 }
 
 void PuzzleLevel::LoadPuzzleData()

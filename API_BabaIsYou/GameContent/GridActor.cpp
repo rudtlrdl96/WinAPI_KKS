@@ -127,6 +127,7 @@ bool GridActor::IsOver(const int2& _GridPos)
 
 GridActor::GridActor()
 {
+	vecBehaviors.reserve(32);
 }
 
 GridActor::~GridActor()
@@ -178,10 +179,40 @@ void GridActor::LateUpdate(float _DT)
 			MoveDir = int2::Right;
 		}
 
-		if (int2::Zero != MoveDir)
+		if (int2::Zero != MoveDir && 3 > vecWaitInputs.size())
 		{
+			vecWaitInputs.push_back(MoveDir);
+		}
+
+		if (0 < vecWaitInputs.size() && false == IsMove)
+		{
+			MoveDir = vecWaitInputs.front();
+			vecWaitInputs.pop_front();
+
 			if (true == Move(GridPos + MoveDir))
 			{
+				if (int2::Left == MoveDir)
+				{
+					vecBehaviors.push_back(BEHAVIOR::MOVE_LEFT);
+				}
+				else if (int2::Right == MoveDir)
+				{
+					vecBehaviors.push_back(BEHAVIOR::MOVE_RIGHT);
+				}
+				else if (int2::Up == MoveDir)
+				{
+					vecBehaviors.push_back(BEHAVIOR::MOVE_UP);
+				}
+				else if (int2::Down == MoveDir)
+				{
+					vecBehaviors.push_back(BEHAVIOR::MOVE_DOWN);
+				}
+				else
+				{
+					MsgAssert("잘못된 방향으로 액터가 움직였습니다.");
+					return;
+				}
+
 				NextAnim();
 				SetAnimDir(MoveDir);
 			}
@@ -210,6 +241,9 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 		return;
 	}
 
+	vecBehaviors.clear();
+	vecWaitInputs.clear();
+
 	// Todo : File Save/Load 시스템이 완성된 후 데이터베이스 로드
 
 	// 속성 값 초기화
@@ -225,6 +259,7 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 		
 		// Todo : 테스트용 임시 호출 추후 데이터시스템이 생성되면 삭제
 		AddDefine(DEFINE_INFO::YOU);
+		AddDefine(DEFINE_INFO::PUSH);
 	}
 
 	if (TEMP_ACTOR_TYPE::BABA_TEXT == _Actor)
@@ -304,6 +339,11 @@ bool GridActor::Move(const int2& _NextPos)
 	return true;
 }
 
+void GridActor::UndoMove(const int2& _NextPos)
+{
+
+}
+
 void GridActor::Push(const int2& _Dir)
 {
 	IsMove = true;
@@ -323,13 +363,21 @@ void GridActor::PushDir(const int2& _Dir)
 			break;
 		}
 
-		if (false == vecGridDatas[PushPos.y][PushPos.x].IsPush())
+		size_t DefineData = vecGridDatas[PushPos.y][PushPos.x].GetDefine();
+
+		if (static_cast<size_t>(DEFINE_INFO::YOU) & DefineData)
 		{
 			return;
 		}
 
-		vecGridDatas[PushPos.y][PushPos.x].Push(_Dir);
-		PushPos += _Dir;
+		if (static_cast<size_t>(DEFINE_INFO::PUSH) & DefineData)
+		{
+			vecGridDatas[PushPos.y][PushPos.x].Push(_Dir);
+			PushPos += _Dir;
+			continue;
+		}
+
+		break;
 	}
 }
 
@@ -350,18 +398,57 @@ bool GridActor::CanMove(const int2& _NextPos)
 			return false;
 		}
 
-		if (true == vecGridDatas[CheckPos.y][CheckPos.x].IsStop())
+		size_t DefineData = vecGridDatas[CheckPos.y][CheckPos.x].GetDefine();
+
+		if (static_cast<size_t>(DEFINE_INFO::STOP) & DefineData)
 		{
 			return false;
 		}
 
-		if (false == vecGridDatas[CheckPos.y][CheckPos.x].IsPush())
+		if (static_cast<size_t>(DEFINE_INFO::YOU) & DefineData)
 		{
-			break;
+			return true;
 		}
 
-		CheckPos += Dir;
+		if (static_cast<size_t>(DEFINE_INFO::PUSH) & DefineData)
+		{
+			CheckPos += Dir;
+			continue;
+		}
+
+		break;
 	}
 
 	return true;
+}
+
+
+void GridActor::Undo()
+{
+	BEHAVIOR UndoBehavior = vecBehaviors.back();
+
+	switch (UndoBehavior)
+	{
+	case GridActor::BEHAVIOR::MOVE_LEFT:
+		break;
+	case GridActor::BEHAVIOR::MOVE_RIGHT:
+		break;
+	case GridActor::BEHAVIOR::MOVE_UP:
+		break;
+	case GridActor::BEHAVIOR::MOVE_DOWN:
+		break;
+	case GridActor::BEHAVIOR::SINK:
+		break;
+	case GridActor::BEHAVIOR::DEFEAT:
+		break;
+	case GridActor::BEHAVIOR::MELT:
+		break;
+	case GridActor::BEHAVIOR::WIN:
+		break;
+	default:
+		MsgAssert("잘못된 Behavior Type 입니다.");
+		break;
+	}
+
+	vecBehaviors.pop_back();
 }
