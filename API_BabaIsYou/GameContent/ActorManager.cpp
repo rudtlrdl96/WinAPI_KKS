@@ -69,9 +69,14 @@ void ActorManager::LoadData(const std::string_view& _PuzzleName)
 	}
 }
 
+void ActorManager::clear()
+{
+	GridActor::ClearGrid();
+}
+
 void ActorManager::Reset()
 {
-	GridActor::ClearGridActor();
+	GridActor::ResetGridActor();
 
 	for (size_t i = 0; i < vecActors.size(); i++)
 	{

@@ -9,6 +9,7 @@ std::vector<GridActor*> GridActor::vecObjectPool;
 size_t GridActor::ReturnActorIndex = 0;
 int2 GridActor::GridSize = int2::Zero;
 float4 GridActor::ActorSize = float4::Zero;
+std::vector<std::vector<GridActor::GridData>> GridActor::vecGridDatas;
 
 #pragma region StaticFunc
 
@@ -44,6 +45,19 @@ void GridActor::InitGridActor(GameEngineLevel* _PuzzleLevel, const int2& _GridSi
 		return;
 	}
 
+	vecGridDatas.resize(_GridSize.y);
+
+	for (size_t y = 0; y < vecGridDatas.size(); y++)
+	{
+		vecGridDatas[y].resize(_GridSize.x);
+
+		for (size_t x = 0; x < vecGridDatas[y].size(); x++)
+		{
+			vecGridDatas[y][x].vecDatas.reserve(16);
+		}
+	}
+
+
 	PuzzleLevel = _PuzzleLevel;
 	GridSize = _GridSize;
 	ActorSize = _ActorSize;
@@ -55,7 +69,18 @@ void GridActor::InitGridActor(GameEngineLevel* _PuzzleLevel, const int2& _GridSi
 	}
 }
 
-void GridActor::ClearGridActor()
+void GridActor::ClearGrid()
+{
+	for (size_t y = 0; y < vecGridDatas.size(); y++)
+	{
+		for (size_t x = 0; x < vecGridDatas[y].size(); x++)
+		{
+			vecGridDatas[y][x].clear();
+		}
+	}
+}
+
+void GridActor::ResetGridActor()
 {
 	for (size_t i = 0; i < vecObjectPool.size(); i++)
 	{
@@ -119,7 +144,20 @@ void GridActor::Update(float _DT)
 {
 	WiggleActor::Update(_DT);
 
-	if (DefineData & static_cast<size_t>(DEFINE_INFO::YOU))
+	if (true == IsOver(GridPos))
+	{
+		MsgAssert("액터가 그리드 밖으로 벗어났습니다.");
+		return;
+	}
+
+	vecGridDatas[GridPos.y][GridPos.x].push_back(this);
+}
+
+
+void GridActor::LateUpdate(float _DT)
+{
+
+	if (true == IsDefine(DEFINE_INFO::YOU))
 	{
 		int2 MoveDir = int2::Zero;
 
@@ -196,6 +234,7 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 		SetDirInterval(0);
 		ActorType = ACTOR_DEFINE::SUBJECT_TEXT;
 		RenderType = ACTOR_RENDER::STATIC;
+		AddDefine(DEFINE_INFO::PUSH);
 	}
 
 	if (TEMP_ACTOR_TYPE::IS_TEXT == _Actor)
@@ -205,6 +244,7 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 		SetDirInterval(0);
 		ActorType = ACTOR_DEFINE::VERB_TEXT;
 		RenderType = ACTOR_RENDER::STATIC;
+		AddDefine(DEFINE_INFO::STOP);
 	}
 
 	if (TEMP_ACTOR_TYPE::YOU_TEXT == _Actor)
@@ -214,6 +254,7 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 		SetDirInterval(0);
 		ActorType = ACTOR_DEFINE::DEFINE_TEXT;
 		RenderType = ACTOR_RENDER::STATIC;
+		AddDefine(DEFINE_INFO::PUSH);
 	}
 
 	SetAnimDir(int2::Right);
@@ -235,6 +276,11 @@ void GridActor::RemoveDefine(DEFINE_INFO _Info)
 	DefineData &= ~static_cast<size_t>(_Info);
 }
 
+bool GridActor::IsDefine(DEFINE_INFO _Info)
+{
+	return DefineData & static_cast<size_t>(_Info);
+}
+
 
 bool GridActor::Move(const int2& _NextPos)
 {
@@ -248,6 +294,8 @@ bool GridActor::Move(const int2& _NextPos)
 		return false;
 	}
 
+	PushDir(_NextPos - GridPos);
+	
 	IsMove = true;
 	PrevPos = GridPos;
 	GridPos = _NextPos;
@@ -256,12 +304,63 @@ bool GridActor::Move(const int2& _NextPos)
 	return true;
 }
 
+void GridActor::Push(const int2& _Dir)
+{
+	IsMove = true;
+	PrevPos = GridPos;
+	GridPos = GridPos + _Dir;
+	MoveProgress = 0.0f;
+}
+
+void GridActor::PushDir(const int2& _Dir)
+{
+	int2 PushPos = GridPos + _Dir;
+
+	while (true)
+	{
+		if (true == IsOver(PushPos))
+		{
+			break;
+		}
+
+		if (false == vecGridDatas[PushPos.y][PushPos.x].IsPush())
+		{
+			return;
+		}
+
+		vecGridDatas[PushPos.y][PushPos.x].Push(_Dir);
+		PushPos += _Dir;
+	}
+}
 
 bool GridActor::CanMove(const int2& _NextPos)
 {
-	if (IsOver(_NextPos))
+	if (true == IsOver(_NextPos))
 	{
 		return false;
+	}
+
+	int2 Dir = _NextPos - GridPos;
+	int2 CheckPos = _NextPos;
+
+	while (true)
+	{
+		if (true == IsOver(CheckPos))
+		{
+			return false;
+		}
+
+		if (true == vecGridDatas[CheckPos.y][CheckPos.x].IsStop())
+		{
+			return false;
+		}
+
+		if (false == vecGridDatas[CheckPos.y][CheckPos.x].IsPush())
+		{
+			break;
+		}
+
+		CheckPos += Dir;
 	}
 
 	return true;

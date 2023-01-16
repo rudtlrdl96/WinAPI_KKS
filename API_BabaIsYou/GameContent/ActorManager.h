@@ -16,6 +16,7 @@ public:
 	ActorManager& operator=(ActorManager&& _Other) noexcept = delete;
 	
 	void LoadData(const std::string_view& _PuzzleName);
+	void clear();
 	void Reset();
 protected:
 

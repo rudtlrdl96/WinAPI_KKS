@@ -27,14 +27,70 @@ enum class ACTOR_DEFINE
 enum class DEFINE_INFO
 {
 	YOU = 1 << 0,
+	PUSH = 1 << 1,
+	STOP = 1 << 2,
 };
 
 class GameEngineLevel;
 class GridActor : public WiggleActor
 {
+private:
+	class GridData
+	{
+	public:
+		std::vector<GridActor*> vecDatas;
+
+		void push_back(GridActor* _Actor)
+		{
+			vecDatas.push_back(_Actor);
+		}
+
+		void clear()
+		{
+			vecDatas.clear();
+		}
+
+		bool IsStop()
+		{
+			for (GridActor* Data : vecDatas)
+			{
+				if (true == Data->IsDefine(DEFINE_INFO::STOP))
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		void Push(const int2& _Dir)
+		{
+			for (GridActor* Data : vecDatas)
+			{
+				if (true == Data->IsDefine(DEFINE_INFO::PUSH))
+				{
+					Data->Push(_Dir);
+				}
+			}
+		}
+
+		bool IsPush()
+		{
+			for (GridActor* Data : vecDatas)
+			{
+				if (true == Data->IsDefine(DEFINE_INFO::PUSH))
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+	};
+
 public:
 	static void InitGridActor(GameEngineLevel* _PuzzleLevel, const int2& _GridSize, const float4& _ActorSize);
-	static void ClearGridActor();
+	static void ResetGridActor();
+	static void ClearGrid();
 	static void DeleteGridActor();
 
 	static GridActor* GetActor(TEMP_ACTOR_TYPE _Type);	
@@ -48,12 +104,15 @@ private:
 	static int2 GridSize;
 	static float4 ActorSize;
 
+	static std::vector<std::vector<GridData>> vecGridDatas;
+
 public:
 	GridActor();
 	~GridActor();
 
 	void Start() override;
 	void Update(float _DT) override;
+	void LateUpdate(float _DT) override;
 
 	GridActor(const GridActor& _Other) = delete;
 	GridActor(GridActor&& _Other) noexcept = delete;
@@ -64,6 +123,8 @@ public:
 	void SetGrid(const int2& _Pos);
 	void AddDefine(DEFINE_INFO _Info);
 	void RemoveDefine(DEFINE_INFO _Info);
+	bool IsDefine(DEFINE_INFO _Info);
+
 protected:
 
 private:	
@@ -79,5 +140,7 @@ private:
 	float MoveProgress = 0.0f;
 
 	bool Move(const int2& _NextPos);
+	void PushDir(const int2& _Dir);
+	void Push(const int2& _Dir);
 	bool CanMove(const int2& _NextPos);
 };
