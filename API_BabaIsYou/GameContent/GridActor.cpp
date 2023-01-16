@@ -4,15 +4,67 @@
 #include <GameEngineCore/GameEngineLevel.h>
 #include "ContentConst.h"
 
+/// GridData
+
+#pragma region GridData
+
+void GridActor::GridData::push_back(GridActor* _Actor)
+{
+	vecDatas.push_back(_Actor);
+}
+
+void GridActor::GridData::clear()
+{
+	PushDoubleCheck = false;
+	vecDatas.clear();
+}
+
+void GridActor::GridData::Push(const int2& _Dir)
+{
+	if (true == PushDoubleCheck)
+	{
+		return;
+	}
+
+	for (GridActor* Data : vecDatas)
+	{
+		if (true == Data->IsDefine(DEFINE_INFO::PUSH))
+		{
+			Data->SetDir(_Dir);
+			Data->Push();
+			PushDoubleCheck = true;
+		}
+	}
+}
+
+size_t GridActor::GridData::GetDefine()
+{
+	size_t Info = static_cast<size_t>(DEFINE_INFO::NONE);
+
+	for (GridActor* Data : vecDatas)
+	{
+		Info |= Data->GetDefine();
+	}
+
+	return Info;
+}
+
+
+#pragma endregion
+
+/// static GridActor
+#pragma region StaticFunc
+
 GameEngineLevel* GridActor::PuzzleLevel = nullptr;
-std::vector<GridActor*> GridActor::vecObjectPool;
 size_t GridActor::ReturnActorIndex = 0;
 int2 GridActor::GridSize = int2::Zero;
 float4 GridActor::ActorSize = float4::Zero;
+bool GridActor::AnyActorMoveCheck = false;
 
+std::vector<GridActor*> GridActor::vecObjectPool;
 std::vector<std::vector<GridActor::GridData>> GridActor::vecGridDatas;
-
-#pragma region StaticFunc
+std::vector<GridActor*> GridActor::vecYouBehaviors;
+std::vector<GridActor*> GridActor::vecMoveBehaviors;
 
 GridActor* GridActor::GetActor(TEMP_ACTOR_TYPE _Type)
 {
@@ -63,6 +115,8 @@ void GridActor::InitGridActor(GameEngineLevel* _PuzzleLevel, const int2& _GridSi
 	GridSize = _GridSize;
 	ActorSize = _ActorSize;
 
+	vecYouBehaviors.reserve(GridSize.x * GridSize.y);
+	vecMoveBehaviors.reserve(GridSize.x * GridSize.y);
 	vecObjectPool.reserve(GridSize.x * GridSize.y);
 
 	for (size_t i = 0; i < vecObjectPool.capacity(); i++)
@@ -80,6 +134,10 @@ void GridActor::ClearGrid()
 			vecGridDatas[y][x].clear();
 		}
 	}
+
+	vecYouBehaviors.clear();
+	vecMoveBehaviors.clear();
+	AnyActorMoveCheck = false;
 }
 
 void GridActor::ResetGridActor()
@@ -102,6 +160,36 @@ void GridActor::DeleteGridActor()
 {
 	vecObjectPool.clear();
 	ReturnActorIndex = 0;
+}
+
+
+void GridActor::MoveAllYouBehavior(const int2& _Dir)
+{
+	for (GridActor* Data: vecYouBehaviors)
+	{
+		if (nullptr == Data)
+		{
+			MsgAssert("nullptr GridActor Data를 참조하려 합니다.");
+			return;
+		}
+
+		Data->SetDir(_Dir);
+		Data->Move();
+	}
+}
+
+void GridActor::MoveAllMoveBehavior()
+{
+	for (GridActor* Data : vecMoveBehaviors)
+	{
+		if (nullptr == Data)
+		{
+			MsgAssert("nullptr GridActor Data를 참조하려 합니다.");
+			return;
+		}
+
+		Data->Move();
+	}
 }
 
 float4 GridActor::GetScreenPos(const int2& _GridPos)
@@ -127,6 +215,8 @@ bool GridActor::IsOver(const int2& _GridPos)
 
 #pragma endregion
 
+/// static GridActor
+
 GridActor::GridActor()
 {
 	vecBehaviors.reserve(32);
@@ -146,6 +236,15 @@ void GridActor::Start()
 
 void GridActor::Update(float _DT)
 {
+	if (true == IsDefine(DEFINE_INFO::YOU))
+	{
+		vecYouBehaviors.push_back(this);
+	}
+	else if (true == IsDefine(DEFINE_INFO::MOVE))
+	{
+		vecMoveBehaviors.push_back(this);
+	}
+
 	WiggleActor::Update(_DT);
 
 	if (true == IsOver(GridPos))
@@ -154,11 +253,11 @@ void GridActor::Update(float _DT)
 		return;
 	}
 
-	CurFramesBehaviors.clear();
 	vecGridDatas[GridPos.y][GridPos.x].push_back(this);
 
 	if (true == IsMove)
 	{
+		AnyActorMoveCheck = true;
 		MoveProgress += _DT * ContentConst::MOVE_SPEED;
 
 		if (1.0f <= MoveProgress)
@@ -253,46 +352,43 @@ bool GridActor::IsDefine(DEFINE_INFO _Info)
 	return DefineData & static_cast<size_t>(_Info);
 }
 
-
-void GridActor::Behavior(const int2& _Dir)
+void GridActor::SaveBehaviorInfo()
 {
-	if(true == IsDefine(DEFINE_INFO::YOU) && int2::Zero != _Dir)
+	if (0 >= CurFramesBehaviors.size())
 	{
-		Move(_Dir);
+		CurFramesBehaviors.push_back(BEHAVIOR::WAIT);
 	}
+
+	vecBehaviors.push_back(CurFramesBehaviors);
+	CurFramesBehaviors.clear();
 }
 
 void GridActor::Undo()
 {
-	for (BEHAVIOR UndoBehavior : vecBehaviors.back())
+	if (0 >= vecBehaviors.size())
 	{
-		switch (UndoBehavior)
+		return;
+	}
+
+	const std::vector<BEHAVIOR>& vecUndos = vecBehaviors.back();
+
+	for (int i = static_cast<int>(vecUndos.size() - 1); i >= 0 ; --i)
+	{
+		switch (vecUndos[i])
 		{
 		case BEHAVIOR::WAIT:
 			break;
-		case BEHAVIOR::MOVE_LEFT:
-			UnMove(int2::Left);
+		case BEHAVIOR::MOVE:
+			UnMove();
 			break;
-		case BEHAVIOR::MOVE_RIGHT:
-			UnMove(int2::Right);
+		case BEHAVIOR::PUSH:
+			UnPush();
 			break;
-		case BEHAVIOR::MOVE_UP:
-			UnMove(int2::Up);
+		case BEHAVIOR::TURN_LEFT:
+			UnTurnLeft();
 			break;
-		case BEHAVIOR::MOVE_DOWN:
-			UnMove(int2::Down);
-			break;
-		case BEHAVIOR::PUSH_LEFT:
-			UnPush(int2::Left);
-			break;
-		case BEHAVIOR::PUSH_RIGHT:
-			UnPush(int2::Right);
-			break;
-		case BEHAVIOR::PUSH_UP:
-			UnPush(int2::Up);
-			break;
-		case BEHAVIOR::PUSH_DOWN:
-			UnPush(int2::Down);
+		case BEHAVIOR::TURN_RIGHT:
+			UnTurnRight();
 			break;
 		case BEHAVIOR::SINK:
 			break;
@@ -306,97 +402,163 @@ void GridActor::Undo()
 			MsgAssert("잘못된 Behavior Type 입니다.");
 			break;
 		}
-
 	}
 
 	vecBehaviors.pop_back();
 }
 
-bool GridActor::Move(const int2& _NextPos)
+bool GridActor::Move()
 {
 	if (true == IsMove)
 	{
 		return false;
 	}
 
-	if (false == CanMove(_NextPos))
+	if (false == CanMove(GridPos + MoveDir))
 	{
 		return false;
 	}
-
-	int2 MoveDir = _NextPos - GridPos;
 
 	AllPushDir(MoveDir);
 	
 	IsMove = true;
 	PrevPos = GridPos;
-	GridPos = _NextPos;
+	GridPos += MoveDir;
 	MoveProgress = 0.0f;
 
-	if (int2::Up == MoveDir)
-	{
-		CurFramesBehaviors.push_back(BEHAVIOR::MOVE_UP);
-	}
-	else if (int2::Down == MoveDir)
-	{
-		CurFramesBehaviors.push_back(BEHAVIOR::MOVE_DOWN);
-	}
-	else if (int2::Left == MoveDir)
-	{
-		CurFramesBehaviors.push_back(BEHAVIOR::MOVE_LEFT);
-	}
-	else if (int2::Right == MoveDir)
-	{
-		CurFramesBehaviors.push_back(BEHAVIOR::MOVE_RIGHT);
-	}
+	CurFramesBehaviors.push_back(BEHAVIOR::MOVE);
 
 	NextAnim();
-	SetAnimDir(MoveDir);
 
 	return true;
 }
 
-void GridActor::UnMove(const int2& _Dir)
+void GridActor::UnMove()
 {
 	IsMove = true;
 	PrevPos = GridPos;
-	GridPos = GridPos - _Dir;
+	GridPos -= MoveDir;
 	MoveProgress = 0.0f;
 
 	PrevAnim();
-	SetAnimDir(_Dir);
 }
 
-void GridActor::Push(const int2& _Dir)
+
+void GridActor::SetDir(const int2& _Dir)
+{
+	while (_Dir != MoveDir)
+	{
+		TurnLeft();
+	} 
+}
+
+void GridActor::TurnLeft()
+{
+	CurFramesBehaviors.push_back(BEHAVIOR::TURN_LEFT);
+
+	if (int2::Left == MoveDir)
+	{
+		MoveDir = int2::Down;
+	}
+	else if (int2::Down == MoveDir)
+	{
+		MoveDir = int2::Right;
+	}
+	else if (int2::Right == MoveDir)
+	{
+		MoveDir = int2::Up;
+	}
+	else if (int2::Up == MoveDir)
+	{
+		MoveDir = int2::Left;
+	}
+
+	SetAnimDir(MoveDir);
+}
+
+void GridActor::UnTurnLeft()
+{
+	if (int2::Left == MoveDir)
+	{
+		MoveDir = int2::Up;
+	}
+	else if (int2::Down == MoveDir)
+	{
+		MoveDir = int2::Left;
+	}
+	else if (int2::Right == MoveDir)
+	{
+		MoveDir = int2::Down;
+	}
+	else if (int2::Up == MoveDir)
+	{
+		MoveDir = int2::Right;
+	}
+
+	SetAnimDir(MoveDir);
+}
+
+void GridActor::TurnRight()
+{
+	CurFramesBehaviors.push_back(BEHAVIOR::TURN_RIGHT);
+
+	if (int2::Left == MoveDir)
+	{
+		MoveDir = int2::Up;
+	}
+	else if (int2::Down == MoveDir)
+	{
+		MoveDir = int2::Left;
+	}
+	else if (int2::Right == MoveDir)
+	{
+		MoveDir = int2::Down;
+	}
+	else if (int2::Up == MoveDir)
+	{
+		MoveDir = int2::Right;
+	}
+
+	SetAnimDir(MoveDir);
+}
+
+void GridActor::UnTurnRight()
+{
+	if (int2::Left == MoveDir)
+	{
+		MoveDir = int2::Down;
+	}
+	else if (int2::Down == MoveDir)
+	{
+		MoveDir = int2::Right;
+	}
+	else if (int2::Right == MoveDir)
+	{
+		MoveDir = int2::Up;
+	}
+	else if (int2::Up == MoveDir)
+	{
+		MoveDir = int2::Left;
+	}
+
+	SetAnimDir(MoveDir);
+}
+
+void GridActor::Push()
 {
 	IsMove = true;
 	PrevPos = GridPos;
-	GridPos = GridPos + _Dir;
+	GridPos = GridPos + MoveDir;
 	MoveProgress = 0.0f;
 
-	if (int2::Up == _Dir)
-	{
-		CurFramesBehaviors.push_back(BEHAVIOR::PUSH_UP);
-	}
-	else if (int2::Down == _Dir)
-	{
-		CurFramesBehaviors.push_back(BEHAVIOR::PUSH_DOWN);
-	}
-	else if (int2::Left == _Dir)
-	{
-		CurFramesBehaviors.push_back(BEHAVIOR::PUSH_LEFT);
-	}
-	else if (int2::Right == _Dir)
-	{
-		CurFramesBehaviors.push_back(BEHAVIOR::PUSH_RIGHT);
-	}
+	CurFramesBehaviors.push_back(BEHAVIOR::PUSH);
 }
 
-void GridActor::UnPush(const int2& _Dir)
+void GridActor::UnPush()
 {
 	IsMove = true;
 	PrevPos = GridPos;
-	GridPos = GridPos - _Dir;
+	GridPos = GridPos - MoveDir;
 	MoveProgress = 0.0f;
 }
 

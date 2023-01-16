@@ -26,6 +26,11 @@ public:
 	{
 	}
 
+	int2 operator-() const
+	{
+		return int2{-x, -y};
+	}
+
 	int2& operator=(const int2& _Other)
 	{
 		this->x = _Other.x;

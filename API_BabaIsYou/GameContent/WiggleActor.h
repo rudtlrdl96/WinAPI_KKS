@@ -10,13 +10,13 @@ public:
 	WiggleActor();
 	~WiggleActor();
 
-	void Update(float _DT) override;
-
 	WiggleActor(const WiggleActor& _Other) = delete;
 	WiggleActor(WiggleActor&& _Other) noexcept = delete;
 	WiggleActor& operator=(const WiggleActor& _Other) = delete;
 	WiggleActor& operator=(WiggleActor&& _Other) noexcept = delete;
 protected:
+	void Update(float _DT) override;
+
 	void InitRender(const std::string_view& _FileName, const float4& _Pos, const float4& _Scale, int _StartIndex, int _AnimLength, int _Order = 0, int _BitmapInterval = -1);
 
 	void SetFrame(int _Frame);

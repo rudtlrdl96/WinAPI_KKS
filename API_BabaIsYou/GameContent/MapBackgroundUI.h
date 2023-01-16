@@ -7,14 +7,13 @@ public:
 	MapBackgroundUI();
 	~MapBackgroundUI();
 
-	void Start() override;
-
 	MapBackgroundUI(const MapBackgroundUI& _Other) = delete;
 	MapBackgroundUI(MapBackgroundUI&& _Other) noexcept = delete;
 	MapBackgroundUI& operator=(const MapBackgroundUI& _Other) = delete;
 	MapBackgroundUI& operator=(MapBackgroundUI&& _Other) noexcept = delete;
 
 protected:
+	void Start() override;
 
 private:
 

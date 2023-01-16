@@ -18,9 +18,6 @@ public:
 	FadeUI();
 	~FadeUI();
 
-	void Start() override;
-	void Update(float _Time) override;
-
 	FadeUI(const FadeUI& _Other) = delete;
 	FadeUI(FadeUI&& _Other) noexcept = delete;
 	FadeUI& operator=(const FadeUI& _Other) = delete;
@@ -29,6 +26,8 @@ public:
 	void SetState(FADE_STATE _State);
 	static void ActiveFade(FADE_STATE _State, GameEngineLevel* _ParentLevel, void (*_Func)(void));
 protected:
+	void Start() override;
+	void Update(float _Time) override;
 
 private:
 	static std::map<GameEngineLevel*, FadeUI*> mapFades;

@@ -57,6 +57,19 @@ enum class TEMP_ACTOR_TYPE
 	COUNT,
 };
 
+enum class BEHAVIOR
+{
+	WAIT,
+	MOVE,
+	PUSH,
+	TURN_LEFT,
+	TURN_RIGHT,
+	SINK,
+	DEFEAT,
+	MELT,
+	WIN
+};
+
 class ContentConst
 {
 public:

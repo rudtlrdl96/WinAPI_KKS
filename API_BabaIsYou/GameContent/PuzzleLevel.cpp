@@ -62,16 +62,20 @@ void PuzzleLevel::Loading()
 	{
 		GameEngineInput::CreateKey("ArrowRight", VK_RIGHT);
 	}
+	if (false == GameEngineInput::IsKey("Undo"))
+	{
+		GameEngineInput::CreateKey("Undo", 'Z');
+	}
+	if (false == GameEngineInput::IsKey("Wait"))
+	{
+		GameEngineInput::CreateKey("Wait", VK_SPACE);
+	}
 }
 
 void PuzzleLevel::Update(float _DT)
 {
-	ActorMgr->Update(_DT);
-}
-
-void PuzzleLevel::LateUpdate(float _DT)
-{
-	ActorMgr->LateUpdate(_DT);
+	ActorMgr->Input(_DT);
+	ActorMgr->clear();
 }
 
 void PuzzleLevel::LevelChangeStart(GameEngineLevel* _NextLevel)

@@ -3,7 +3,7 @@
 #include <GameEnginePlatform/GameEngineInput.h>
 #include <GameEngineCore/GameEngineLevel.h>
 #include "ContentConst.h"
-#include "GridActor.h";
+#include "GridActor.h"
 
 // Todo : Data Save/Load System이 생성되면 제거
 int arrDatas[18][32] = 
@@ -40,56 +40,89 @@ ActorManager::~ActorManager()
 	GridActor::DeleteGridActor();
 }
 
-
-void ActorManager::Update(float _Time)
-{
-	clear();
-}
-
-void ActorManager::LateUpdate(float _Time)
+void ActorManager::Input(float _DT)
 {
 	int2 MoveDir = int2::Zero;
 
 	if (GameEngineInput::IsDown("ArrowUp"))
 	{
-		MoveDir = int2::Up;
+		vecWaitInputs.push_back(INPUTBEHAVIOR::MOVE_UP);
 	}
-	if (GameEngineInput::IsDown("ArrowDown"))
+	else if (GameEngineInput::IsDown("ArrowDown"))
 	{
-		MoveDir = int2::Down;
+		vecWaitInputs.push_back(INPUTBEHAVIOR::MOVE_DOWN);
 	}
-	if (GameEngineInput::IsDown("ArrowLeft"))
+	else if (GameEngineInput::IsDown("ArrowLeft"))
 	{
-		MoveDir = int2::Left;
+		vecWaitInputs.push_back(INPUTBEHAVIOR::MOVE_LEFT);
 	}
-	if (GameEngineInput::IsDown("ArrowRight"))
+	else if (GameEngineInput::IsDown("ArrowRight"))
 	{
-		MoveDir = int2::Right;
+		vecWaitInputs.push_back(INPUTBEHAVIOR::MOVE_RIGHT);
 	}
-
-	if (int2::Zero != MoveDir && 3 > vecWaitInputs.size())
+	else if (GameEngineInput::IsDown("Undo"))
 	{
-		vecWaitInputs.push_back(MoveDir);
+		vecWaitInputs.push_back(INPUTBEHAVIOR::UNDO);
 	}
-
-	if (0 < vecWaitInputs.size())
+	else if (GameEngineInput::IsDown("Wait"))
 	{
-		MoveDir = vecWaitInputs.front();
+		vecWaitInputs.push_back(INPUTBEHAVIOR::WAIT);
+	}
+	
+	if (false == GridActor::AnyActorMoveCheck && 0 < vecWaitInputs.size())
+	{
+		INPUTBEHAVIOR NextBehavior = vecWaitInputs.front();
 		vecWaitInputs.pop_front();
 
-		for (GridActor* ActorData : vecActors)
+		switch (NextBehavior)
 		{
-			if (nullptr == ActorData)
+		case ActorManager::INPUTBEHAVIOR::MOVE_LEFT:
+			GridActor::MoveAllYouBehavior(int2::Left);
+			GridActor::MoveAllMoveBehavior();
+			break;
+		case ActorManager::INPUTBEHAVIOR::MOVE_RIGHT:
+			GridActor::MoveAllYouBehavior(int2::Right);
+			GridActor::MoveAllMoveBehavior();
+			break;
+		case ActorManager::INPUTBEHAVIOR::MOVE_UP:
+			GridActor::MoveAllYouBehavior(int2::Up);
+			GridActor::MoveAllMoveBehavior();
+			break;
+		case ActorManager::INPUTBEHAVIOR::MOVE_DOWN:
+			GridActor::MoveAllYouBehavior(int2::Down);
+			GridActor::MoveAllMoveBehavior();
+			break;
+		case ActorManager::INPUTBEHAVIOR::UNDO:
+
+			for (GridActor* Data : vecActors)
 			{
-				MsgAssert("nullptr GridActor를 참조하려 했습니다");
+				if (nullptr == Data)
+				{
+					MsgAssert("nullptr GridActor Data를 참조하려 했습니다.");
+					return;
+				}
+
+				Data->Undo();
+			}
+
+			return;
+		case ActorManager::INPUTBEHAVIOR::WAIT:
+			GridActor::MoveAllMoveBehavior();
+			break;
+		default:
+			MsgAssert("잘못된 Input enum값 입니다.");
+			break;
+		}
+
+		for (GridActor* Data : vecActors)
+		{
+			if (nullptr == Data)
+			{
+				MsgAssert("nullptr GridActor Data를 참조하려 했습니다.");
 				return;
 			}
 
-			if (ActorData->IsDefine(GridActor::DEFINE_INFO::YOU))
-			{
-				ActorData->Move(MoveDir);
-			}
-
+			Data->SaveBehaviorInfo();
 		}
 	}
 
