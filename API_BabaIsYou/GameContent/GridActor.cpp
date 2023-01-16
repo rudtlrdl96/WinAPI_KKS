@@ -9,6 +9,7 @@ std::vector<GridActor*> GridActor::vecObjectPool;
 size_t GridActor::ReturnActorIndex = 0;
 int2 GridActor::GridSize = int2::Zero;
 float4 GridActor::ActorSize = float4::Zero;
+
 std::vector<std::vector<GridActor::GridData>> GridActor::vecGridDatas;
 
 #pragma region StaticFunc
@@ -61,6 +62,7 @@ void GridActor::InitGridActor(GameEngineLevel* _PuzzleLevel, const int2& _GridSi
 	PuzzleLevel = _PuzzleLevel;
 	GridSize = _GridSize;
 	ActorSize = _ActorSize;
+
 	vecObjectPool.reserve(GridSize.x * GridSize.y);
 
 	for (size_t i = 0; i < vecObjectPool.capacity(); i++)
@@ -128,6 +130,7 @@ bool GridActor::IsOver(const int2& _GridPos)
 GridActor::GridActor()
 {
 	vecBehaviors.reserve(32);
+	CurFramesBehaviors.reserve(4);
 }
 
 GridActor::~GridActor()
@@ -151,73 +154,8 @@ void GridActor::Update(float _DT)
 		return;
 	}
 
+	CurFramesBehaviors.clear();
 	vecGridDatas[GridPos.y][GridPos.x].push_back(this);
-}
-
-
-void GridActor::LateUpdate(float _DT)
-{
-
-	if (true == IsDefine(DEFINE_INFO::YOU))
-	{
-		int2 MoveDir = int2::Zero;
-
-		if (GameEngineInput::IsDown("ArrowUp"))
-		{
-			MoveDir = int2::Up;
-		}
-		if (GameEngineInput::IsDown("ArrowDown"))
-		{
-			MoveDir = int2::Down;
-		}
-		if (GameEngineInput::IsDown("ArrowLeft"))
-		{
-			MoveDir = int2::Left;
-		}
-		if (GameEngineInput::IsDown("ArrowRight"))
-		{
-			MoveDir = int2::Right;
-		}
-
-		if (int2::Zero != MoveDir && 3 > vecWaitInputs.size())
-		{
-			vecWaitInputs.push_back(MoveDir);
-		}
-
-		if (0 < vecWaitInputs.size() && false == IsMove)
-		{
-			MoveDir = vecWaitInputs.front();
-			vecWaitInputs.pop_front();
-
-			if (true == Move(GridPos + MoveDir))
-			{
-				if (int2::Left == MoveDir)
-				{
-					vecBehaviors.push_back(BEHAVIOR::MOVE_LEFT);
-				}
-				else if (int2::Right == MoveDir)
-				{
-					vecBehaviors.push_back(BEHAVIOR::MOVE_RIGHT);
-				}
-				else if (int2::Up == MoveDir)
-				{
-					vecBehaviors.push_back(BEHAVIOR::MOVE_UP);
-				}
-				else if (int2::Down == MoveDir)
-				{
-					vecBehaviors.push_back(BEHAVIOR::MOVE_DOWN);
-				}
-				else
-				{
-					MsgAssert("잘못된 방향으로 액터가 움직였습니다.");
-					return;
-				}
-
-				NextAnim();
-				SetAnimDir(MoveDir);
-			}
-		}
-	}
 
 	if (true == IsMove)
 	{
@@ -242,7 +180,6 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 	}
 
 	vecBehaviors.clear();
-	vecWaitInputs.clear();
 
 	// Todo : File Save/Load 시스템이 완성된 후 데이터베이스 로드
 
@@ -317,6 +254,64 @@ bool GridActor::IsDefine(DEFINE_INFO _Info)
 }
 
 
+void GridActor::Behavior(const int2& _Dir)
+{
+	if(true == IsDefine(DEFINE_INFO::YOU) && int2::Zero != _Dir)
+	{
+		Move(_Dir);
+	}
+}
+
+void GridActor::Undo()
+{
+	for (BEHAVIOR UndoBehavior : vecBehaviors.back())
+	{
+		switch (UndoBehavior)
+		{
+		case BEHAVIOR::WAIT:
+			break;
+		case BEHAVIOR::MOVE_LEFT:
+			UnMove(int2::Left);
+			break;
+		case BEHAVIOR::MOVE_RIGHT:
+			UnMove(int2::Right);
+			break;
+		case BEHAVIOR::MOVE_UP:
+			UnMove(int2::Up);
+			break;
+		case BEHAVIOR::MOVE_DOWN:
+			UnMove(int2::Down);
+			break;
+		case BEHAVIOR::PUSH_LEFT:
+			UnPush(int2::Left);
+			break;
+		case BEHAVIOR::PUSH_RIGHT:
+			UnPush(int2::Right);
+			break;
+		case BEHAVIOR::PUSH_UP:
+			UnPush(int2::Up);
+			break;
+		case BEHAVIOR::PUSH_DOWN:
+			UnPush(int2::Down);
+			break;
+		case BEHAVIOR::SINK:
+			break;
+		case BEHAVIOR::DEFEAT:
+			break;
+		case BEHAVIOR::MELT:
+			break;
+		case BEHAVIOR::WIN:
+			break;
+		default:
+			MsgAssert("잘못된 Behavior Type 입니다.");
+			break;
+		}
+
+	}
+
+	vecBehaviors.pop_back();
+}
+
 bool GridActor::Move(const int2& _NextPos)
 {
 	if (true == IsMove)
@@ -329,19 +324,47 @@ bool GridActor::Move(const int2& _NextPos)
 		return false;
 	}
 
-	PushDir(_NextPos - GridPos);
+	int2 MoveDir = _NextPos - GridPos;
+
+	AllPushDir(MoveDir);
 	
 	IsMove = true;
 	PrevPos = GridPos;
 	GridPos = _NextPos;
 	MoveProgress = 0.0f;
 
+	if (int2::Up == MoveDir)
+	{
+		CurFramesBehaviors.push_back(BEHAVIOR::MOVE_UP);
+	}
+	else if (int2::Down == MoveDir)
+	{
+		CurFramesBehaviors.push_back(BEHAVIOR::MOVE_DOWN);
+	}
+	else if (int2::Left == MoveDir)
+	{
+		CurFramesBehaviors.push_back(BEHAVIOR::MOVE_LEFT);
+	}
+	else if (int2::Right == MoveDir)
+	{
+		CurFramesBehaviors.push_back(BEHAVIOR::MOVE_RIGHT);
+	}
+
+	NextAnim();
+	SetAnimDir(MoveDir);
+
 	return true;
 }
 
-void GridActor::UndoMove(const int2& _NextPos)
+void GridActor::UnMove(const int2& _Dir)
 {
+	IsMove = true;
+	PrevPos = GridPos;
+	GridPos = GridPos - _Dir;
+	MoveProgress = 0.0f;
 
+	PrevAnim();
+	SetAnimDir(_Dir);
 }
 
 void GridActor::Push(const int2& _Dir)
@@ -350,9 +373,34 @@ void GridActor::Push(const int2& _Dir)
 	PrevPos = GridPos;
 	GridPos = GridPos + _Dir;
 	MoveProgress = 0.0f;
+
+	if (int2::Up == _Dir)
+	{
+		CurFramesBehaviors.push_back(BEHAVIOR::PUSH_UP);
+	}
+	else if (int2::Down == _Dir)
+	{
+		CurFramesBehaviors.push_back(BEHAVIOR::PUSH_DOWN);
+	}
+	else if (int2::Left == _Dir)
+	{
+		CurFramesBehaviors.push_back(BEHAVIOR::PUSH_LEFT);
+	}
+	else if (int2::Right == _Dir)
+	{
+		CurFramesBehaviors.push_back(BEHAVIOR::PUSH_RIGHT);
+	}
 }
 
-void GridActor::PushDir(const int2& _Dir)
+void GridActor::UnPush(const int2& _Dir)
+{
+	IsMove = true;
+	PrevPos = GridPos;
+	GridPos = GridPos - _Dir;
+	MoveProgress = 0.0f;
+}
+
+void GridActor::AllPushDir(const int2& _Dir)
 {
 	int2 PushPos = GridPos + _Dir;
 
@@ -420,35 +468,4 @@ bool GridActor::CanMove(const int2& _NextPos)
 	}
 
 	return true;
-}
-
-
-void GridActor::Undo()
-{
-	BEHAVIOR UndoBehavior = vecBehaviors.back();
-
-	switch (UndoBehavior)
-	{
-	case GridActor::BEHAVIOR::MOVE_LEFT:
-		break;
-	case GridActor::BEHAVIOR::MOVE_RIGHT:
-		break;
-	case GridActor::BEHAVIOR::MOVE_UP:
-		break;
-	case GridActor::BEHAVIOR::MOVE_DOWN:
-		break;
-	case GridActor::BEHAVIOR::SINK:
-		break;
-	case GridActor::BEHAVIOR::DEFEAT:
-		break;
-	case GridActor::BEHAVIOR::MELT:
-		break;
-	case GridActor::BEHAVIOR::WIN:
-		break;
-	default:
-		MsgAssert("잘못된 Behavior Type 입니다.");
-		break;
-	}
-
-	vecBehaviors.pop_back();
 }

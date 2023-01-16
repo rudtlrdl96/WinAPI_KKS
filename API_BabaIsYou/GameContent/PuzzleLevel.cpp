@@ -66,7 +66,12 @@ void PuzzleLevel::Loading()
 
 void PuzzleLevel::Update(float _DT)
 {
-	ActorMgr->clear();
+	ActorMgr->Update(_DT);
+}
+
+void PuzzleLevel::LateUpdate(float _DT)
+{
+	ActorMgr->LateUpdate(_DT);
 }
 
 void PuzzleLevel::LevelChangeStart(GameEngineLevel* _NextLevel)

@@ -22,6 +22,7 @@ protected:
 	void SetFrame(int _Frame);
 	void SetLength(int _Length);
 	void SetDirInterval(size_t _DirInterval);
+	void PrevAnim();
 	void NextAnim();
 	void SetAnimDir(const int2& _Dir);
 private:

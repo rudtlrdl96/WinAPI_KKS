@@ -88,6 +88,11 @@ void WiggleActor::SetDirInterval(size_t _DirInterval)
 	Render->SetDirInterval(_DirInterval);
 }
 
+void WiggleActor::PrevAnim()
+{
+	Render->PrevAnim();
+}
+
 void WiggleActor::NextAnim()
 {
 	Render->NextAnim();

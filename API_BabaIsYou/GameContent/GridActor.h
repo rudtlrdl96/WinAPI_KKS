@@ -10,6 +10,8 @@
 class GameEngineLevel;
 class GridActor : public WiggleActor
 {
+	friend class ActorManager;
+
 public:
 	enum class ACTOR_RENDER
 	{
@@ -38,10 +40,15 @@ public:
 
 	enum class BEHAVIOR
 	{
+		WAIT,
 		MOVE_LEFT,
 		MOVE_RIGHT,
 		MOVE_UP,
 		MOVE_DOWN,
+		PUSH_LEFT,
+		PUSH_RIGHT,
+		PUSH_UP,
+		PUSH_DOWN,
 		SINK,
 		DEFEAT,
 		MELT,
@@ -112,7 +119,6 @@ private:
 	static size_t ReturnActorIndex;
 	static int2 GridSize;
 	static float4 ActorSize;
-
 	static std::vector<std::vector<GridData>> vecGridDatas;
 
 public:
@@ -121,7 +127,6 @@ public:
 
 	void Start() override;
 	void Update(float _DT) override;
-	void LateUpdate(float _DT) override;
 
 	GridActor(const GridActor& _Other) = delete;
 	GridActor(GridActor&& _Other) noexcept = delete;
@@ -140,8 +145,8 @@ private:
 	ACTOR_DEFINE ActorType = ACTOR_DEFINE::ACTOR;
 	ACTOR_RENDER RenderType = ACTOR_RENDER::STATIC;
 
-	std::vector<BEHAVIOR> vecBehaviors;
-	std::list<int2> vecWaitInputs;
+	std::vector<BEHAVIOR> CurFramesBehaviors;
+	std::vector<std::vector<BEHAVIOR>> vecBehaviors;
 
 	int2 PrevPos = int2::Zero;
 	int2 GridPos = int2::Zero;
@@ -156,12 +161,13 @@ private:
 		return DefineData;
 	}
 
-	bool Move(const int2& _NextPos);
-	void UndoMove(const int2& _NextPos);
-	void PushDir(const int2& _Dir);
-	void Push(const int2& _Dir);
-	bool CanMove(const int2& _NextPos);
-
+	void Behavior(const int2& _Dir);
 	void Undo();
 
+	bool Move(const int2& _NextPos);
+	void Push(const int2& _Dir);
+	void UnPush(const int2& _Dir);	
+	void AllPushDir(const int2& _Dir);
+	bool CanMove(const int2& _NextPos);
+	void UnMove(const int2& _NextPos);
 };

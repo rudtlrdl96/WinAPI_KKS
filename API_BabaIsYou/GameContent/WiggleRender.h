@@ -12,6 +12,7 @@ public:
 
 	void SetRenderIndex();
 	void Wiggle();
+	void PrevAnim();
 	void NextAnim();
 
 	WiggleRender(const WiggleRender& _Other) = delete;
