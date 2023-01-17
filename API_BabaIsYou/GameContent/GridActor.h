@@ -62,7 +62,7 @@ private:
 #pragma region Static
 
 public:
-	static void InitGridActor(GameEngineLevel* _PuzzleLevel, const int2& _GridSize, const float4& _ActorSize);
+	static void InitGridActor(GameEngineLevel* _PuzzleLevel);
 	static void ResetGridActor();
 	static void ClearGrid();
 	static void DeleteGridActor();
@@ -76,16 +76,12 @@ public:
 
 private:
 	static GameEngineLevel* PuzzleLevel;
-	static size_t ReturnActorIndex;
-	static int2 GridSize;
-	static float4 ActorSize;
+	static size_t ObjectPoolCount;
 	static bool AnyActorMoveCheck;
 
-	static std::vector<GridActor*> vecObjectPool;
 	static std::vector<std::vector<GridData>> vecGridDatas;
-	static std::vector<GridActor*> vecYouBehaviors;
-	static std::vector<GridActor*> vecMoveBehaviors;
-
+	static std::vector<GridActor*> vecObjectPool;	
+	static std::map<DEFINE_INFO, std::vector<GridActor*>> mapDefineActorDatas;
 
 #pragma endregion
 

@@ -101,35 +101,32 @@ size_t GridActor::GridData::GetDefine(GridActor* _this)
 #pragma region StaticFunc
 
 GameEngineLevel* GridActor::PuzzleLevel = nullptr;
-size_t GridActor::ReturnActorIndex = 0;
-int2 GridActor::GridSize = int2::Zero;
-float4 GridActor::ActorSize = float4::Zero;
+size_t GridActor::ObjectPoolCount = 0;
 bool GridActor::AnyActorMoveCheck = false;
 
 std::vector<GridActor*> GridActor::vecObjectPool;
 std::vector<std::vector<GridActor::GridData>> GridActor::vecGridDatas;
-std::vector<GridActor*> GridActor::vecYouBehaviors;
-std::vector<GridActor*> GridActor::vecMoveBehaviors;
+std::map<GridActor::DEFINE_INFO, std::vector<GridActor*>> GridActor::mapDefineActorDatas;
 
 GridActor* GridActor::GetActor(TEMP_ACTOR_TYPE _Type)
 {
-	if (ReturnActorIndex >= vecObjectPool.size())
+	if (ObjectPoolCount >= vecObjectPool.size())
 	{
 		MsgAssert("Object Pool 사이즈를 초과했습니다.");
 		return nullptr;
 	}
 
-	if (nullptr == vecObjectPool[ReturnActorIndex])
+	if (nullptr == vecObjectPool[ObjectPoolCount])
 	{
 		MsgAssert("vecObjectPool 벡터에 nullptr Actor가 존재합니다.");
 		return nullptr;
 	}
 
-	vecObjectPool[ReturnActorIndex]->On();
-	return vecObjectPool[ReturnActorIndex++];
+	vecObjectPool[ObjectPoolCount]->On();
+	return vecObjectPool[ObjectPoolCount++];
 }
 
-void GridActor::InitGridActor(GameEngineLevel* _PuzzleLevel, const int2& _GridSize, const float4& _ActorSize)
+void GridActor::InitGridActor(GameEngineLevel* _PuzzleLevel)
 {
 	if (nullptr != PuzzleLevel)
 	{
@@ -143,11 +140,11 @@ void GridActor::InitGridActor(GameEngineLevel* _PuzzleLevel, const int2& _GridSi
 		return;
 	}
 
-	vecGridDatas.resize(_GridSize.y);
+	vecGridDatas.resize(ContentConst::GRID_SIZE.y);
 
 	for (size_t y = 0; y < vecGridDatas.size(); y++)
 	{
-		vecGridDatas[y].resize(_GridSize.x);
+		vecGridDatas[y].resize(ContentConst::GRID_SIZE.x);
 
 		for (size_t x = 0; x < vecGridDatas[y].size(); x++)
 		{
@@ -157,12 +154,8 @@ void GridActor::InitGridActor(GameEngineLevel* _PuzzleLevel, const int2& _GridSi
 
 
 	PuzzleLevel = _PuzzleLevel;
-	GridSize = _GridSize;
-	ActorSize = _ActorSize;
 
-	vecYouBehaviors.reserve(GridSize.x * GridSize.y);
-	vecMoveBehaviors.reserve(GridSize.x * GridSize.y);
-	vecObjectPool.reserve(GridSize.x * GridSize.y);
+	vecObjectPool.reserve(ContentConst::GRID_SIZE.x * ContentConst::GRID_SIZE.y);
 
 	for (size_t i = 0; i < vecObjectPool.capacity(); i++)
 	{
@@ -180,8 +173,6 @@ void GridActor::ClearGrid()
 		}
 	}
 
-	vecYouBehaviors.clear();
-	vecMoveBehaviors.clear();
 	AnyActorMoveCheck = false;
 }
 
@@ -198,19 +189,18 @@ void GridActor::ResetGridActor()
 		vecObjectPool[i]->Off();
 	}
 
-	ReturnActorIndex = 0;
+	ObjectPoolCount = 0;
 }
 
 void GridActor::DeleteGridActor()
 {
 	vecObjectPool.clear();
-	ReturnActorIndex = 0;
+	ObjectPoolCount = 0;
 }
-
 
 void GridActor::MoveAllYouBehavior(const int2& _Dir)
 {
-	for (GridActor* Data: vecYouBehaviors)
+	for (GridActor* Data: mapDefineActorDatas[DEFINE_INFO::YOU])
 	{
 		if (nullptr == Data)
 		{
@@ -225,7 +215,7 @@ void GridActor::MoveAllYouBehavior(const int2& _Dir)
 
 void GridActor::MoveAllMoveBehavior()
 {
-	for (GridActor* Data : vecMoveBehaviors)
+	for (GridActor* Data : mapDefineActorDatas[DEFINE_INFO::YOU])
 	{
 		if (nullptr == Data)
 		{
@@ -240,8 +230,8 @@ void GridActor::MoveAllMoveBehavior()
 float4 GridActor::GetScreenPos(const int2& _GridPos)
 {
 	return {
-		(ContentConst::ACTOR_SIZE.x * _GridPos.x) + ActorSize.half().x,
-		(ContentConst::ACTOR_SIZE.y * _GridPos.y) + ActorSize.half().y};
+		(ContentConst::ACTOR_SIZE.x * _GridPos.x) + ContentConst::ACTOR_SIZE.half().x,
+		(ContentConst::ACTOR_SIZE.y * _GridPos.y) + ContentConst::ACTOR_SIZE.half().y};
 }
 
 
@@ -249,8 +239,8 @@ bool GridActor::IsOver(const int2& _GridPos)
 {
 	if (_GridPos.x < 0 ||
 		_GridPos.y < 0 ||
-		_GridPos.x >= GridSize.x ||
-		_GridPos.y >= GridSize.y)
+		_GridPos.x >= ContentConst::GRID_SIZE.x ||
+		_GridPos.y >= ContentConst::GRID_SIZE.y)
 	{
 		return true;
 	}
