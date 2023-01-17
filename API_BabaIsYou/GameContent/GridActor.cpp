@@ -10,90 +10,110 @@
 
 void GridActor::GridData::push_back(GridActor* _Actor)
 {
-	vecDatas.push_back(_Actor);
+	mapDatas[_Actor->ActorKey] = _Actor;
+}
+
+void GridActor::GridData::erase(GridActor* _Actor)
+{
+	std::map<int, GridActor*>::iterator FindIter = mapDatas.find(_Actor->ActorKey);
+
+	if (FindIter != mapDatas.end())
+	{
+		mapDatas.erase(FindIter);
+	}
 }
 
 void GridActor::GridData::clear()
 {
-	PushDoubleCheck = false;
-	vecDatas.clear();
+	mapDatas.clear();
 }
 
-
-void GridActor::GridData::DeathCheck(size_t _MyDefine)
+void GridActor::GridData::Push(const int2& _Pos, const int2& _Dir, bool _IsInputMove)
 {
-	for (GridActor* Data : vecDatas)
-	{
-		if (true == Data->IsDeath)
-		{
-			continue;
-		}
-
-		if (Data->IsDefine(DEFINE_INFO::HOT) && _MyDefine & static_cast<size_t>(DEFINE_INFO::MELT))
-		{
-			// Todo : 용암 사운드 및 이펙트
-			Data->ActorDeath();
-		}
-
-		if (Data->IsDefine(DEFINE_INFO::YOU) && _MyDefine & static_cast<size_t>(DEFINE_INFO::DEFEAT))
-		{
-			// Todo : 싱크 사운드 및 이펙트
-			Data->ActorDeath();
-		}
-
-		if (_MyDefine & static_cast<size_t>(DEFINE_INFO::SINK))
-		{
-			// Todo : 디피트 사운드 및 이펙트
-			Data->ActorDeath();
-		}
-	}
-}
-
-void GridActor::GridData::Push(const int2& _Dir)
-{
-	if (true == PushDoubleCheck)
+	if (0 >= mapDatas.size())
 	{
 		return;
 	}
 
-	for (GridActor* Data : vecDatas)
+	std::vector<GridActor*> vecPushErase;
+	vecPushErase.reserve(mapDatas.size());
+
+	int2 NextPos = _Pos + _Dir;
+
+	for (const std::pair<int, GridActor*>& Data : mapDatas)
 	{
-		if (true == Data->IsDeath)
+		if (true == Data.second->IsDeath)
 		{
 			continue;
 		}
 
-		if (true == Data->IsDefine(DEFINE_INFO::PUSH))
+		if ((false == _IsInputMove || false == Data.second->IsDefine(DEFINE_INFO::YOU)) &&
+			true == Data.second->IsDefine(DEFINE_INFO::PUSH))
 		{
-			Data->SetDir(_Dir);
-			Data->Push();
-			PushDoubleCheck = true;
+			vecPushErase.push_back(Data.second);
 		}
+	}
+
+	for (GridActor* Data : vecPushErase)
+	{
+		Data->SetDir(_Dir);
+		Data->Push();
+	}
+	
+	vecGridDatas[NextPos.y][NextPos.x].DeathCheck();
+}
+
+
+void GridActor::GridData::DeathCheck()
+{
+	size_t GridDefine = GetDefine();
+
+	std::map<int, GridActor*>::iterator LoopIter = mapDatas.begin();
+	std::map<int, GridActor*>::iterator EndIter = mapDatas.end();
+
+	bool SinkCheck = 1 < mapDatas.size();
+
+	while (LoopIter != EndIter)
+	{ 
+		if (LoopIter->second->IsDefine(DEFINE_INFO::YOU) && static_cast<size_t>(DEFINE_INFO::DEFEAT) & GridDefine)
+		{
+			LoopIter->second->ActorDeath();
+			LoopIter = mapDatas.erase(LoopIter);
+			continue;
+		}
+		else if (LoopIter->second->IsDefine(DEFINE_INFO::HOT) && static_cast<size_t>(DEFINE_INFO::MELT) & GridDefine)
+		{
+			LoopIter->second->ActorDeath();
+			LoopIter = mapDatas.erase(LoopIter);
+			continue;
+		}
+		else if (true == SinkCheck && static_cast<size_t>(DEFINE_INFO::SINK) & GridDefine)
+		{
+			LoopIter->second->ActorDeath();
+			LoopIter = mapDatas.erase(LoopIter);
+			continue;
+		}
+
+		++LoopIter;
 	}
 }
 
-size_t GridActor::GridData::GetDefine(GridActor* _this)
+size_t GridActor::GridData::GetDefine()
 {
 	size_t Info = static_cast<size_t>(DEFINE_INFO::NONE);
 
-	for (GridActor* Data : vecDatas)
+	for (const std::pair<int, GridActor*>& Data : mapDatas)
 	{
-		if (_this == Data)
+		if (true == Data.second->IsDeath)
 		{
 			continue;
 		}
 
-		if (true == Data->IsDeath)
-		{
-			continue;
-		}
-
-		Info |= Data->GetDefine();
+		Info |= Data.second->GetDefine();
 	}
 
 	return Info;
 }
-
 
 #pragma endregion
 
@@ -103,10 +123,11 @@ size_t GridActor::GridData::GetDefine(GridActor* _this)
 GameEngineLevel* GridActor::PuzzleLevel = nullptr;
 size_t GridActor::ObjectPoolCount = 0;
 bool GridActor::AnyActorMoveCheck = false;
+int GridActor::NextActorKey = 0;
 
 std::vector<GridActor*> GridActor::vecObjectPool;
 std::vector<std::vector<GridActor::GridData>> GridActor::vecGridDatas;
-std::map<GridActor::DEFINE_INFO, std::vector<GridActor*>> GridActor::mapDefineActorDatas;
+std::map<GridActor::DEFINE_INFO, std::map<int, GridActor*>> GridActor::mapDefineActorDatas;
 
 GridActor* GridActor::GetActor(TEMP_ACTOR_TYPE _Type)
 {
@@ -145,13 +166,7 @@ void GridActor::InitGridActor(GameEngineLevel* _PuzzleLevel)
 	for (size_t y = 0; y < vecGridDatas.size(); y++)
 	{
 		vecGridDatas[y].resize(ContentConst::GRID_SIZE.x);
-
-		for (size_t x = 0; x < vecGridDatas[y].size(); x++)
-		{
-			vecGridDatas[y][x].vecDatas.reserve(16);
-		}
 	}
-
 
 	PuzzleLevel = _PuzzleLevel;
 
@@ -200,30 +215,30 @@ void GridActor::DeleteGridActor()
 
 void GridActor::MoveAllYouBehavior(const int2& _Dir)
 {
-	for (GridActor* Data: mapDefineActorDatas[DEFINE_INFO::YOU])
+	for (const std::pair<int, GridActor*>& Data: mapDefineActorDatas[DEFINE_INFO::YOU])
 	{
-		if (nullptr == Data)
+		if (nullptr == Data.second)
 		{
 			MsgAssert("nullptr GridActor Data를 참조하려 합니다.");
 			return;
 		}
 
-		Data->SetDir(_Dir);
-		Data->Move();
+		Data.second->SetDir(_Dir);
+		Data.second->Move(true);
 	}
 }
 
 void GridActor::MoveAllMoveBehavior()
 {
-	for (GridActor* Data : mapDefineActorDatas[DEFINE_INFO::YOU])
+	for (const std::pair<int, GridActor*>& Data : mapDefineActorDatas[DEFINE_INFO::MOVE])
 	{
-		if (nullptr == Data)
+		if (nullptr == Data.second)
 		{
 			MsgAssert("nullptr GridActor Data를 참조하려 합니다.");
 			return;
 		}
 
-		Data->Move();
+		Data.second->Move(false);
 	}
 }
 
@@ -252,7 +267,8 @@ bool GridActor::IsOver(const int2& _GridPos)
 
 /// static GridActor
 
-GridActor::GridActor()
+GridActor::GridActor() :
+	ActorKey(NextActorKey++)
 {
 	vecBehaviors.reserve(32);
 	CurFramesBehaviors.reserve(4);
@@ -271,15 +287,6 @@ void GridActor::Start()
 
 void GridActor::Update(float _DT)
 {
-	if (true == IsDefine(DEFINE_INFO::YOU))
-	{
-		vecYouBehaviors.push_back(this);
-	}
-	else if (false == IsDeath && true == IsDefine(DEFINE_INFO::MOVE))
-	{
-		vecMoveBehaviors.push_back(this);
-	}
-
 	WiggleActor::Update(_DT);
 
 	if (true == IsOver(GridPos))
@@ -287,8 +294,6 @@ void GridActor::Update(float _DT)
 		MsgAssert("액터가 그리드 밖으로 벗어났습니다.");
 		return;
 	}
-
-	vecGridDatas[GridPos.y][GridPos.x].push_back(this);
 
 	if (false == IsDeath && true == IsMove)
 	{
@@ -423,17 +428,32 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 
 void GridActor::SetGrid(const int2& _Pos)
 {
+	if (false == IsOver(PrevPos))
+	{
+		vecGridDatas[PrevPos.y][PrevPos.x].erase(this);
+	}
+
 	GridPos = _Pos;
+	vecGridDatas[GridPos.y][GridPos.x].push_back(this);
 	SetPos(GetScreenPos(GridPos));
 }
 
 void GridActor::AddDefine(DEFINE_INFO _Info)
 {
+	mapDefineActorDatas[_Info][ActorKey] = this;
 	DefineData |= static_cast<size_t>(_Info);
 }
 
 void GridActor::RemoveDefine(DEFINE_INFO _Info)
 {
+	std::map<int, GridActor*>& mapDatas = mapDefineActorDatas[_Info];
+	std::map<int, GridActor*>::iterator FindIter = mapDatas.find(ActorKey);
+
+	if (FindIter != mapDatas.end())
+	{
+		mapDatas.erase(FindIter);
+	}
+
 	DefineData &= ~static_cast<size_t>(_Info);
 }
 
@@ -494,9 +514,9 @@ void GridActor::Undo()
 	vecBehaviors.pop_back();
 }
 
-bool GridActor::Move()
+bool GridActor::Move(bool _IsInputMove)
 {
-	if (true == IsDeath || true == IsMove)
+	if (true == IsDeath)
 	{
 		return false;
 	}
@@ -506,18 +526,19 @@ bool GridActor::Move()
 		return false;
 	}
 
-	AllPushDir(MoveDir);
+	AllPushDir(MoveDir, _IsInputMove);
 	
 	IsMove = true;
 	PrevPos = GridPos;
 	GridPos += MoveDir;
 	MoveProgress = 0.0f;
 
+	vecGridDatas[GridPos.y][GridPos.x].push_back(this);
+	vecGridDatas[PrevPos.y][PrevPos.x].erase(this);
+	vecGridDatas[GridPos.y][GridPos.x].DeathCheck();
+
 	CurFramesBehaviors.push_back(BEHAVIOR::MOVE);
 	NextAnim();
-
-	DeathCheck();
-	vecGridDatas[GridPos.y][GridPos.x].DeathCheck(DefineData);
 
 	return true;
 }
@@ -528,6 +549,9 @@ void GridActor::UndoMove()
 	PrevPos = GridPos;
 	GridPos -= MoveDir;
 	MoveProgress = 0.0f;
+
+	vecGridDatas[GridPos.y][GridPos.x].push_back(this);
+	vecGridDatas[PrevPos.y][PrevPos.x].erase(this);
 
 	PrevAnim();
 }
@@ -544,9 +568,10 @@ void GridActor::Push()
 	GridPos = GridPos + MoveDir;
 	MoveProgress = 0.0f;
 
+	vecGridDatas[GridPos.y][GridPos.x].push_back(this);
+	vecGridDatas[PrevPos.y][PrevPos.x].erase(this);
+
 	CurFramesBehaviors.push_back(BEHAVIOR::PUSH);
-	DeathCheck();
-	vecGridDatas[GridPos.y][GridPos.x].DeathCheck(DefineData);
 }
 
 void GridActor::UndoPush()
@@ -555,6 +580,10 @@ void GridActor::UndoPush()
 	PrevPos = GridPos;
 	GridPos = GridPos - MoveDir;
 	MoveProgress = 0.0f;
+
+	vecGridDatas[GridPos.y][GridPos.x].push_back(this);
+	vecGridDatas[PrevPos.y][PrevPos.x].erase(this);
+
 }
 
 void GridActor::TurnLeft()
@@ -650,6 +679,7 @@ void GridActor::UndoTurnRight()
 	else if (int2::Right == MoveDir)
 	{
 		MoveDir = int2::Up;
+
 	}
 	else if (int2::Up == MoveDir)
 	{
@@ -672,32 +702,6 @@ void GridActor::SetDir(const int2& _Dir)
 	} 
 }
 
-void GridActor::DeathCheck()
-{
-	size_t CurGridDefineData = vecGridDatas[GridPos.y][GridPos.x].GetDefine(this);
-
-	if (this->IsDefine(DEFINE_INFO::HOT) && CurGridDefineData & static_cast<size_t>(DEFINE_INFO::MELT))
-	{
-		// Todo : 용암 사운드 및 이펙트
-		ActorDeath();
-		return;
-	}
-
-	if (this->IsDefine(DEFINE_INFO::YOU) && CurGridDefineData & static_cast<size_t>(DEFINE_INFO::DEFEAT))
-	{
-		// Todo : 싱크 사운드 및 이펙트
-		ActorDeath();
-		return;
-	}
-
-	if (CurGridDefineData & static_cast<size_t>(DEFINE_INFO::SINK))
-	{
-		// Todo : 디피트 사운드 및 이펙트
-		ActorDeath();
-		return;
-	}
-}
-
 void GridActor::ActorDeath()
 {
 	if (true == IsDeath)
@@ -708,41 +712,44 @@ void GridActor::ActorDeath()
 
 	IsDeath = true;
 	CurFramesBehaviors.push_back(BEHAVIOR::DEATH);
+
 	RenderOff();
 }
 
 void GridActor::UndoActorDeath()
 {
+	vecGridDatas[GridPos.y][GridPos.x].push_back(this);
 	IsDeath = false;
 	RenderOn();
 }
 
-void GridActor::AllPushDir(const int2& _Dir)
+void GridActor::AllPushDir(const int2& _Dir, bool _IsInputMove)
 {
 	int2 PushPos = GridPos + _Dir;
 
-	while (true)
+	while (false == IsOver(PushPos))
 	{
-		if (true == IsOver(PushPos))
+		size_t DefineData = vecGridDatas[PushPos.y][PushPos.x].GetDefine();
+
+		if (static_cast<size_t>(DEFINE_INFO::YOU) & DefineData)
 		{
 			break;
 		}
 
-		size_t DefineData = vecGridDatas[PushPos.y][PushPos.x].GetDefine(this);
-
-		if (static_cast<size_t>(DEFINE_INFO::YOU) & DefineData)
-		{
-			return;
-		}
-
 		if (static_cast<size_t>(DEFINE_INFO::PUSH) & DefineData)
 		{
-			vecGridDatas[PushPos.y][PushPos.x].Push(_Dir);
 			PushPos += _Dir;
 			continue;
 		}
 
 		break;
+	}
+
+	while (GridPos != PushPos)
+	{
+		size_t DefineData = vecGridDatas[PushPos.y][PushPos.x].GetDefine();
+		vecGridDatas[PushPos.y][PushPos.x].Push(PushPos, _Dir, _IsInputMove);
+		PushPos -= _Dir;
 	}
 }
 
@@ -756,29 +763,24 @@ bool GridActor::CanMove(const int2& _NextPos)
 	int2 Dir = _NextPos - GridPos;
 	int2 CheckPos = _NextPos;
 
-	while (true)
+	while (false == IsOver(CheckPos))
 	{
-		if (true == IsOver(CheckPos))
-		{
-			return false;
-		}
-
-		size_t DefineData = vecGridDatas[CheckPos.y][CheckPos.x].GetDefine(this);
+		size_t DefineData = vecGridDatas[CheckPos.y][CheckPos.x].GetDefine();
 
 		if (static_cast<size_t>(DEFINE_INFO::STOP) & DefineData)
 		{
 			return false;
 		}
 
-		if (static_cast<size_t>(DEFINE_INFO::YOU) & DefineData)
-		{
-			return true;
-		}
-
 		if (static_cast<size_t>(DEFINE_INFO::PUSH) & DefineData)
 		{
 			CheckPos += Dir;
 			continue;
+		}
+
+		if (static_cast<size_t>(DEFINE_INFO::YOU) & DefineData)
+		{
+			return true;
 		}
 
 		break;

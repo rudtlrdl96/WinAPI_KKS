@@ -131,7 +131,7 @@ void ActorManager::Input(float _DT)
 
 void ActorManager::Init(GameEngineLevel* _PuzzleLevel)
 {
-	GridActor::InitGridActor(_PuzzleLevel, ContentConst::GRID_SIZE, ContentConst::ACTOR_SIZE);
+	GridActor::InitGridActor(_PuzzleLevel);
 	vecActors.reserve(ContentConst::GRID_SIZE_X * ContentConst::GRID_SIZE_Y);
 }
 
@@ -165,7 +165,7 @@ void ActorManager::LoadData(const std::string_view& _PuzzleName)
 
 void ActorManager::clear()
 {
-	GridActor::ClearGrid();
+	GridActor::AnyActorMoveCheck = false;
 }
 
 void ActorManager::Reset()

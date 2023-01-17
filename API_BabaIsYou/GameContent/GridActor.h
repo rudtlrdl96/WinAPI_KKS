@@ -49,14 +49,13 @@ private:
 	class GridData
 	{
 	public:
-		std::vector<GridActor*> vecDatas;
-		bool PushDoubleCheck = false;
-
+		std::map<int, GridActor*> mapDatas;
 		void push_back(GridActor* _Actor);
+		void erase(GridActor* _Actor);
 		void clear();
-		void DeathCheck(size_t _MyDefine);
-		void Push(const int2& _Dir);
-		size_t GetDefine(GridActor* _this);
+		void Push(const int2& _Pos, const int2& _Dir, bool _IsInputMove);
+		void DeathCheck();
+		size_t GetDefine();
 	};
 
 #pragma region Static
@@ -79,9 +78,11 @@ private:
 	static size_t ObjectPoolCount;
 	static bool AnyActorMoveCheck;
 
+	static int NextActorKey;
+
 	static std::vector<std::vector<GridData>> vecGridDatas;
 	static std::vector<GridActor*> vecObjectPool;	
-	static std::map<DEFINE_INFO, std::vector<GridActor*>> mapDefineActorDatas;
+	static std::map<DEFINE_INFO, std::map<int, GridActor*>> mapDefineActorDatas;
 
 #pragma endregion
 
@@ -115,9 +116,10 @@ private:
 	std::vector<BEHAVIOR> CurFramesBehaviors;
 	std::vector<std::vector<BEHAVIOR>> vecBehaviors;
 
-	int2 MoveDir = int2::Right;
+	const int ActorKey = 0;
 
-	int2 PrevPos = int2::Zero;
+	int2 MoveDir = int2::Right;
+	int2 PrevPos = {-1, -1};
 	int2 GridPos = int2::Zero;
 
 	size_t DefineData = static_cast<size_t>(DEFINE_INFO::NONE);
@@ -133,7 +135,7 @@ private:
 
 	void Undo();
 
-	bool Move();
+	bool Move(bool _IsInputMove);
 	void UndoMove();
 	void Push();
 	void UndoPush();
@@ -145,10 +147,9 @@ private:
 
 	void SetDir(const int2& _Dir);
 	
-	void DeathCheck();
 	void ActorDeath();
 	void UndoActorDeath();
 
-	void AllPushDir(const int2& _Dir);
+	void AllPushDir(const int2& _Dir, bool _IsInputMove);
 	bool CanMove(const int2& _NextPos);
 };
