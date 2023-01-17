@@ -32,19 +32,19 @@ void GridActor::GridData::DeathCheck(size_t _MyDefine)
 		if (Data->IsDefine(DEFINE_INFO::HOT) && _MyDefine & static_cast<size_t>(DEFINE_INFO::MELT))
 		{
 			// Todo : 용암 사운드 및 이펙트
-			Data->Death();
+			Data->ActorDeath();
 		}
 
 		if (Data->IsDefine(DEFINE_INFO::YOU) && _MyDefine & static_cast<size_t>(DEFINE_INFO::DEFEAT))
 		{
 			// Todo : 싱크 사운드 및 이펙트
-			Data->Death();
+			Data->ActorDeath();
 		}
 
 		if (_MyDefine & static_cast<size_t>(DEFINE_INFO::SINK))
 		{
 			// Todo : 디피트 사운드 및 이펙트
-			Data->Death();
+			Data->ActorDeath();
 		}
 	}
 }
@@ -332,12 +332,12 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 
 	if (TEMP_ACTOR_TYPE::BABA == _Actor)
 	{
-		SetFrame(1);
+		SetFrame(2);
 		SetLength(4);
 		SetDirInterval(4);
 		ActorType = ACTOR_DEFINE::ACTOR;
 		RenderType = ACTOR_RENDER::CHARACTER;
-		
+
 		// Todo : 테스트용 임시 호출 추후 데이터시스템이 생성되면 삭제
 		AddDefine(DEFINE_INFO::YOU);
 		AddDefine(DEFINE_INFO::PUSH);
@@ -346,14 +346,14 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 
 	if (TEMP_ACTOR_TYPE::KEKE == _Actor)
 	{
-		SetFrame(73);
+		SetFrame(74);
 		SetLength(4);
 		SetDirInterval(4);
 		ActorType = ACTOR_DEFINE::ACTOR;
 		RenderType = ACTOR_RENDER::CHARACTER;
 
 		// Todo : 테스트용 임시 호출 추후 데이터시스템이 생성되면 삭제
-		AddDefine(DEFINE_INFO::PUSH);
+		//AddDefine(DEFINE_INFO::PUSH);
 	}
 
 	if (TEMP_ACTOR_TYPE::BABA_TEXT == _Actor)
@@ -388,7 +388,7 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 
 	if (TEMP_ACTOR_TYPE::LAVA == _Actor)
 	{
-		SetFrame(433);
+		SetFrame(434);
 		SetLength(1);
 		SetDirInterval(0);
 		ActorType = ACTOR_DEFINE::ACTOR;
@@ -398,21 +398,33 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 
 	if (TEMP_ACTOR_TYPE::WATER == _Actor)
 	{
-		SetFrame(361);
+		SetFrame(362);
 		SetLength(1);
 		SetDirInterval(0);
 		ActorType = ACTOR_DEFINE::ACTOR;
 		RenderType = ACTOR_RENDER::TILE;
 		AddDefine(DEFINE_INFO::SINK);
+		AddDefine(DEFINE_INFO::PUSH);
 	}
 
 	if (TEMP_ACTOR_TYPE::SKULL == _Actor)
 	{
-		SetFrame(721);
+		SetFrame(722);
 		SetLength(1);
 		SetDirInterval(0);
 		ActorType = ACTOR_DEFINE::ACTOR;
 		RenderType = ACTOR_RENDER::DYNAMIC;
+		AddDefine(DEFINE_INFO::DEFEAT);
+		AddDefine(DEFINE_INFO::PUSH);
+	}
+
+	if (TEMP_ACTOR_TYPE::WIN_TEXT == _Actor)
+	{
+		SetFrame(866);
+		SetLength(1);
+		SetDirInterval(0);
+		ActorType = ACTOR_DEFINE::ACTOR;
+		RenderType = ACTOR_RENDER::STATIC;
 		AddDefine(DEFINE_INFO::DEFEAT);
 	}
 
