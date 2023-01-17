@@ -1,7 +1,7 @@
 #include "LogoUI.h"
 #include <GameEnginePlatform/GameEngineWindow.h>
 #include <GameEngineCore/GameEngineRender.h>
-#include "ContentConst.h"
+#include "ContentEnum.h"
 
 LogoUI::LogoUI()
 {

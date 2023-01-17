@@ -5,7 +5,7 @@
 #include <GameEngineCore/GameEngineRender.h>
 
 #include "ContentMath.h"
-#include "ContentConst.h"
+#include "ContentEnum.h"
 
 std::map<GameEngineLevel*, FadeUI*> FadeUI::mapFades;
 void (*FadeUI::FuncPtr)(void) = nullptr;

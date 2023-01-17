@@ -1,6 +1,6 @@
 #include "GrayBackUI.h"
 #include <GameEnginePlatform/GameEngineWindow.h>
-#include "ContentConst.h"
+#include "ContentEnum.h"
 
 GrayBackUI::GrayBackUI()
 {

@@ -102,3 +102,13 @@ void WiggleActor::SetAnimDir(const int2& _Dir)
 {
 	Render->SetAnimDir(_Dir);
 }
+
+void WiggleActor::RenderOn()
+{
+	Render->RenderOn();
+}
+
+void WiggleActor::RenderOff()
+{
+	Render->RenderOff();
+}

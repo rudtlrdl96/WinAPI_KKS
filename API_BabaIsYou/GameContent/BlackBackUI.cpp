@@ -1,7 +1,8 @@
 #include "BlackBackUI.h"
 #include <GameEnginePlatform/GameEngineWindow.h>
 #include <GameEngineCore/GameEngineRender.h>
-#include "ContentConst.h"
+#include "ContentEnum.h"
+
 BlackBackUI::BlackBackUI()
 {
 }

@@ -1,7 +1,7 @@
 #include "MapBackgroundUI.h"
 #include <GameEngineCore/GameEngineRender.h>
 #include <GameEnginePlatform/GameEngineWindow.h>
-#include "ContentConst.h"
+#include "ContentEnum.h"
 
 MapBackgroundUI::MapBackgroundUI()
 {

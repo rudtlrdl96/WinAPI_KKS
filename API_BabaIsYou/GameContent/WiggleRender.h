@@ -43,6 +43,9 @@ public:
 	void SetDirInterval(size_t _DirInterval);
 	void SetAnimDir(const int2& _Dir);
 
+	void RenderOn();
+	void RenderOff();
+
 protected:
 
 private:

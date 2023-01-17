@@ -25,6 +25,10 @@ protected:
 	void PrevAnim();
 	void NextAnim();
 	void SetAnimDir(const int2& _Dir);
+	void RenderOn();
+	void RenderOff();
+
+	
 private:
 	float ProgressTime = 0.0f;
 	WiggleRender* Render;

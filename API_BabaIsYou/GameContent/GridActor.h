@@ -4,7 +4,7 @@
 #include <string>
 #include <GameEngineBase/GameEngineDebug.h>
 #include "ContentMath.h"
-#include "ContentConst.h"
+#include "ContentEnum.h"
 #include "WiggleActor.h"
 
 class GameEngineLevel;
@@ -32,11 +32,15 @@ public:
 
 	enum class DEFINE_INFO
 	{
-		NONE = 0,
-		YOU = 1 << 0,
-		PUSH = 1 << 1,
-		STOP = 1 << 2,
-		MOVE = 1 << 3,
+		NONE   = 0,
+		YOU    = 1 << 0,
+		PUSH   = 1 << 1,
+		STOP   = 1 << 2,
+		MOVE   = 1 << 3,
+		HOT	   = 1 << 4,
+		MELT   = 1 << 5,
+		SINK   = 1 << 6,
+		DEFEAT = 1 << 7,
 	};
 
 #pragma endregion
@@ -50,8 +54,9 @@ private:
 
 		void push_back(GridActor* _Actor);
 		void clear();
+		void DeathCheck(size_t _MyDefine);
 		void Push(const int2& _Dir);
-		size_t GetDefine();
+		size_t GetDefine(GridActor* _this);
 	};
 
 #pragma region Static
@@ -121,6 +126,7 @@ private:
 
 	size_t DefineData = static_cast<size_t>(DEFINE_INFO::NONE);
 
+	bool IsDeath = false;
 	bool IsMove = false;
 	float MoveProgress = 0.0f;
 
@@ -132,15 +138,20 @@ private:
 	void Undo();
 
 	bool Move();
-	void UnMove();
+	void UndoMove();
 	void Push();
-	void UnPush();	
+	void UndoPush();
+
+	void TurnLeft();
+	void UndoTurnLeft();
+	void TurnRight();
+	void UndoTurnRight();
 
 	void SetDir(const int2& _Dir);
-	void TurnLeft();
-	void UnTurnLeft();
-	void TurnRight();
-	void UnTurnRight();
+	
+	void DeathCheck();
+	void ActorDeath();
+	void UndoActorDeath();
 
 	void AllPushDir(const int2& _Dir);
 	bool CanMove(const int2& _NextPos);

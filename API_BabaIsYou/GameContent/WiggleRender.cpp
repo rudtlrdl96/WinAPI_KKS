@@ -97,3 +97,14 @@ void WiggleRender::SetAnimDir(const int2& _Dir)
 
 	SetRenderIndex();
 }
+
+
+void WiggleRender::RenderOn()
+{
+	Render->On();
+}
+
+void WiggleRender::RenderOff()
+{
+	Render->Off();
+}

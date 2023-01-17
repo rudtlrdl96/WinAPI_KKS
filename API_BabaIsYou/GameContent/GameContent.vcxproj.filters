@@ -105,6 +105,9 @@
     <ClInclude Include="ContentFunc.h">
       <Filter>00.Base</Filter>
     </ClInclude>
+    <ClInclude Include="ContentEnum.h">
+      <Filter>00.Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ActorManager.cpp">
@@ -168,6 +171,9 @@
       <Filter>00.Base</Filter>
     </ClCompile>
     <ClCompile Include="ContentFunc.cpp">
+      <Filter>00.Base</Filter>
+    </ClCompile>
+    <ClCompile Include="ContentEnum.cpp">
       <Filter>00.Base</Filter>
     </ClCompile>
   </ItemGroup>

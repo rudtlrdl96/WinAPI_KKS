@@ -19,6 +19,36 @@ void GridActor::GridData::clear()
 	vecDatas.clear();
 }
 
+
+void GridActor::GridData::DeathCheck(size_t _MyDefine)
+{
+	for (GridActor* Data : vecDatas)
+	{
+		if (true == Data->IsDeath)
+		{
+			continue;
+		}
+
+		if (Data->IsDefine(DEFINE_INFO::HOT) && _MyDefine & static_cast<size_t>(DEFINE_INFO::MELT))
+		{
+			// Todo : 용암 사운드 및 이펙트
+			Data->Death();
+		}
+
+		if (Data->IsDefine(DEFINE_INFO::YOU) && _MyDefine & static_cast<size_t>(DEFINE_INFO::DEFEAT))
+		{
+			// Todo : 싱크 사운드 및 이펙트
+			Data->Death();
+		}
+
+		if (_MyDefine & static_cast<size_t>(DEFINE_INFO::SINK))
+		{
+			// Todo : 디피트 사운드 및 이펙트
+			Data->Death();
+		}
+	}
+}
+
 void GridActor::GridData::Push(const int2& _Dir)
 {
 	if (true == PushDoubleCheck)
@@ -28,6 +58,11 @@ void GridActor::GridData::Push(const int2& _Dir)
 
 	for (GridActor* Data : vecDatas)
 	{
+		if (true == Data->IsDeath)
+		{
+			continue;
+		}
+
 		if (true == Data->IsDefine(DEFINE_INFO::PUSH))
 		{
 			Data->SetDir(_Dir);
@@ -37,12 +72,22 @@ void GridActor::GridData::Push(const int2& _Dir)
 	}
 }
 
-size_t GridActor::GridData::GetDefine()
+size_t GridActor::GridData::GetDefine(GridActor* _this)
 {
 	size_t Info = static_cast<size_t>(DEFINE_INFO::NONE);
 
 	for (GridActor* Data : vecDatas)
 	{
+		if (_this == Data)
+		{
+			continue;
+		}
+
+		if (true == Data->IsDeath)
+		{
+			continue;
+		}
+
 		Info |= Data->GetDefine();
 	}
 
@@ -240,7 +285,7 @@ void GridActor::Update(float _DT)
 	{
 		vecYouBehaviors.push_back(this);
 	}
-	else if (true == IsDefine(DEFINE_INFO::MOVE))
+	else if (false == IsDeath && true == IsDefine(DEFINE_INFO::MOVE))
 	{
 		vecMoveBehaviors.push_back(this);
 	}
@@ -255,7 +300,7 @@ void GridActor::Update(float _DT)
 
 	vecGridDatas[GridPos.y][GridPos.x].push_back(this);
 
-	if (true == IsMove)
+	if (false == IsDeath && true == IsMove)
 	{
 		AnyActorMoveCheck = true;
 		MoveProgress += _DT * ContentConst::MOVE_SPEED;
@@ -296,6 +341,19 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 		// Todo : 테스트용 임시 호출 추후 데이터시스템이 생성되면 삭제
 		AddDefine(DEFINE_INFO::YOU);
 		AddDefine(DEFINE_INFO::PUSH);
+		AddDefine(DEFINE_INFO::HOT);
+	}
+
+	if (TEMP_ACTOR_TYPE::KEKE == _Actor)
+	{
+		SetFrame(73);
+		SetLength(4);
+		SetDirInterval(4);
+		ActorType = ACTOR_DEFINE::ACTOR;
+		RenderType = ACTOR_RENDER::CHARACTER;
+
+		// Todo : 테스트용 임시 호출 추후 데이터시스템이 생성되면 삭제
+		AddDefine(DEFINE_INFO::PUSH);
 	}
 
 	if (TEMP_ACTOR_TYPE::BABA_TEXT == _Actor)
@@ -326,6 +384,36 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 		ActorType = ACTOR_DEFINE::DEFINE_TEXT;
 		RenderType = ACTOR_RENDER::STATIC;
 		AddDefine(DEFINE_INFO::PUSH);
+	}
+
+	if (TEMP_ACTOR_TYPE::LAVA == _Actor)
+	{
+		SetFrame(433);
+		SetLength(1);
+		SetDirInterval(0);
+		ActorType = ACTOR_DEFINE::ACTOR;
+		RenderType = ACTOR_RENDER::TILE;
+		AddDefine(DEFINE_INFO::MELT);
+	}
+
+	if (TEMP_ACTOR_TYPE::WATER == _Actor)
+	{
+		SetFrame(361);
+		SetLength(1);
+		SetDirInterval(0);
+		ActorType = ACTOR_DEFINE::ACTOR;
+		RenderType = ACTOR_RENDER::TILE;
+		AddDefine(DEFINE_INFO::SINK);
+	}
+
+	if (TEMP_ACTOR_TYPE::SKULL == _Actor)
+	{
+		SetFrame(721);
+		SetLength(1);
+		SetDirInterval(0);
+		ActorType = ACTOR_DEFINE::ACTOR;
+		RenderType = ACTOR_RENDER::DYNAMIC;
+		AddDefine(DEFINE_INFO::DEFEAT);
 	}
 
 	SetAnimDir(int2::Right);
@@ -379,22 +467,19 @@ void GridActor::Undo()
 		case BEHAVIOR::WAIT:
 			break;
 		case BEHAVIOR::MOVE:
-			UnMove();
+			UndoMove();
 			break;
 		case BEHAVIOR::PUSH:
-			UnPush();
+			UndoPush();
 			break;
 		case BEHAVIOR::TURN_LEFT:
-			UnTurnLeft();
+			UndoTurnLeft();
 			break;
 		case BEHAVIOR::TURN_RIGHT:
-			UnTurnRight();
+			UndoTurnRight();
 			break;
-		case BEHAVIOR::SINK:
-			break;
-		case BEHAVIOR::DEFEAT:
-			break;
-		case BEHAVIOR::MELT:
+		case BEHAVIOR::DEATH:
+			UndoActorDeath();
 			break;
 		case BEHAVIOR::WIN:
 			break;
@@ -409,7 +494,7 @@ void GridActor::Undo()
 
 bool GridActor::Move()
 {
-	if (true == IsMove)
+	if (true == IsDeath || true == IsMove)
 	{
 		return false;
 	}
@@ -427,13 +512,15 @@ bool GridActor::Move()
 	MoveProgress = 0.0f;
 
 	CurFramesBehaviors.push_back(BEHAVIOR::MOVE);
-
 	NextAnim();
+
+	DeathCheck();
+	vecGridDatas[GridPos.y][GridPos.x].DeathCheck(DefineData);
 
 	return true;
 }
 
-void GridActor::UnMove()
+void GridActor::UndoMove()
 {
 	IsMove = true;
 	PrevPos = GridPos;
@@ -443,17 +530,38 @@ void GridActor::UnMove()
 	PrevAnim();
 }
 
-
-void GridActor::SetDir(const int2& _Dir)
+void GridActor::Push()
 {
-	while (_Dir != MoveDir)
+	if (true == IsDeath)
 	{
-		TurnLeft();
-	} 
+		return;
+	}
+
+	IsMove = true;
+	PrevPos = GridPos;
+	GridPos = GridPos + MoveDir;
+	MoveProgress = 0.0f;
+
+	CurFramesBehaviors.push_back(BEHAVIOR::PUSH);
+	DeathCheck();
+	vecGridDatas[GridPos.y][GridPos.x].DeathCheck(DefineData);
+}
+
+void GridActor::UndoPush()
+{
+	IsMove = true;
+	PrevPos = GridPos;
+	GridPos = GridPos - MoveDir;
+	MoveProgress = 0.0f;
 }
 
 void GridActor::TurnLeft()
 {
+	if (true == IsDeath)
+	{
+		return;
+	}
+
 	CurFramesBehaviors.push_back(BEHAVIOR::TURN_LEFT);
 
 	if (int2::Left == MoveDir)
@@ -476,7 +584,7 @@ void GridActor::TurnLeft()
 	SetAnimDir(MoveDir);
 }
 
-void GridActor::UnTurnLeft()
+void GridActor::UndoTurnLeft()
 {
 	if (int2::Left == MoveDir)
 	{
@@ -500,6 +608,11 @@ void GridActor::UnTurnLeft()
 
 void GridActor::TurnRight()
 {
+	if (true == IsDeath)
+	{
+		return;
+	}
+
 	CurFramesBehaviors.push_back(BEHAVIOR::TURN_RIGHT);
 
 	if (int2::Left == MoveDir)
@@ -522,7 +635,7 @@ void GridActor::TurnRight()
 	SetAnimDir(MoveDir);
 }
 
-void GridActor::UnTurnRight()
+void GridActor::UndoTurnRight()
 {
 	if (int2::Left == MoveDir)
 	{
@@ -544,22 +657,62 @@ void GridActor::UnTurnRight()
 	SetAnimDir(MoveDir);
 }
 
-void GridActor::Push()
+void GridActor::SetDir(const int2& _Dir)
 {
-	IsMove = true;
-	PrevPos = GridPos;
-	GridPos = GridPos + MoveDir;
-	MoveProgress = 0.0f;
+	if (true == IsDeath)
+	{
+		return;
+	}
 
-	CurFramesBehaviors.push_back(BEHAVIOR::PUSH);
+	while (_Dir != MoveDir)
+	{
+		TurnLeft();
+	} 
 }
 
-void GridActor::UnPush()
+void GridActor::DeathCheck()
 {
-	IsMove = true;
-	PrevPos = GridPos;
-	GridPos = GridPos - MoveDir;
-	MoveProgress = 0.0f;
+	size_t CurGridDefineData = vecGridDatas[GridPos.y][GridPos.x].GetDefine(this);
+
+	if (this->IsDefine(DEFINE_INFO::HOT) && CurGridDefineData & static_cast<size_t>(DEFINE_INFO::MELT))
+	{
+		// Todo : 용암 사운드 및 이펙트
+		ActorDeath();
+		return;
+	}
+
+	if (this->IsDefine(DEFINE_INFO::YOU) && CurGridDefineData & static_cast<size_t>(DEFINE_INFO::DEFEAT))
+	{
+		// Todo : 싱크 사운드 및 이펙트
+		ActorDeath();
+		return;
+	}
+
+	if (CurGridDefineData & static_cast<size_t>(DEFINE_INFO::SINK))
+	{
+		// Todo : 디피트 사운드 및 이펙트
+		ActorDeath();
+		return;
+	}
+}
+
+void GridActor::ActorDeath()
+{
+	if (true == IsDeath)
+	{
+		MsgAssert("이미 죽은상태의 GridActor입니다.");
+		return;
+	}
+
+	IsDeath = true;
+	CurFramesBehaviors.push_back(BEHAVIOR::DEATH);
+	RenderOff();
+}
+
+void GridActor::UndoActorDeath()
+{
+	IsDeath = false;
+	RenderOn();
 }
 
 void GridActor::AllPushDir(const int2& _Dir)
@@ -573,7 +726,7 @@ void GridActor::AllPushDir(const int2& _Dir)
 			break;
 		}
 
-		size_t DefineData = vecGridDatas[PushPos.y][PushPos.x].GetDefine();
+		size_t DefineData = vecGridDatas[PushPos.y][PushPos.x].GetDefine(this);
 
 		if (static_cast<size_t>(DEFINE_INFO::YOU) & DefineData)
 		{
@@ -608,7 +761,7 @@ bool GridActor::CanMove(const int2& _NextPos)
 			return false;
 		}
 
-		size_t DefineData = vecGridDatas[CheckPos.y][CheckPos.x].GetDefine();
+		size_t DefineData = vecGridDatas[CheckPos.y][CheckPos.x].GetDefine(this);
 
 		if (static_cast<size_t>(DEFINE_INFO::STOP) & DefineData)
 		{
