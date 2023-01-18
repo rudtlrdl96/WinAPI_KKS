@@ -13,6 +13,12 @@ GameEngineRender::~GameEngineRender()
 {
 }
 
+GameEngineActor* GameEngineRender::GetActor()
+{
+	return GetOwner<GameEngineActor>();
+}
+
+
 void GameEngineRender::SetImage(const std::string_view& _ImageName) 
 {
 	Image = GameEngineResources::GetInst().ImageFind(_ImageName);
@@ -21,7 +27,7 @@ void GameEngineRender::SetImage(const std::string_view& _ImageName)
 void GameEngineRender::SetOrder(int _Order) 
 {
 	Order = _Order;
-	Owner->GetLevel()->PushRender(this);
+	GetActor()->GetLevel()->PushRender(this);
 }
 
 void GameEngineRender::SetFrame(int _Frame)
@@ -46,11 +52,6 @@ void GameEngineRender::SetFrame(int _Frame)
 
 void GameEngineRender::FrameAnimation::Render(float _DeltaTime)
 {
-	//if (CurrentTime <= 0.0f)
-	//{
-	//	CurrentTime = FrameTime[]
-	//}
-
 	CurrentTime -= _DeltaTime;
 
 	if (CurrentTime <= 0.0f)
@@ -64,7 +65,7 @@ void GameEngineRender::FrameAnimation::Render(float _DeltaTime)
 				CurrentIndex = 0;
 			}
 			else {
-				CurrentIndex = static_cast<int>(FrameIndex.size() - 1);
+				CurrentIndex = static_cast<int>(FrameIndex.size()) - 1;
 			}
 		}
 
@@ -81,15 +82,22 @@ void GameEngineRender::Render(float _DeltaTime)
 		Image = CurrentAnimation->Image;
 	}
 
-	float4 RenderPos = Owner->GetPos() + Position;
+	float4 CameraPos = float4::Zero;
+
+	if (true == IsEffectCamera)
+	{
+		CameraPos = GetActor()->GetLevel()->GetCameraPos();
+	}
+
+	float4 RenderPos = GetActor()->GetPos() + Position - CameraPos;
 
 	if (true == Image->IsImageCutting())
 	{
-		GameEngineWindow::GetDoubleBufferImage()->TransCopy(Image, Frame, RenderPos, Scale);
+		GameEngineWindow::GetDoubleBufferImage()->TransCopy(Image, Frame, RenderPos, Scale, TransColor);
 	}
 	else 
 	{
-		GameEngineWindow::GetDoubleBufferImage()->TransCopy(Image, RenderPos, Scale, {0, 0}, Image->GetImageScale());
+		GameEngineWindow::GetDoubleBufferImage()->TransCopy(Image, RenderPos, Scale, {0, 0}, Image->GetImageScale(), TransColor);
 	}
 }
 

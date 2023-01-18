@@ -26,7 +26,7 @@ void ContentCore::Start()
 	CreateLevel<PuzzleLevel>("Puzzle");
 	CreateLevel<EndingLevel>("Ending");
 
-	ChangeLevel("Puzzle");
+	ChangeLevel("Logo");
 }
 
 void ContentCore::Update()

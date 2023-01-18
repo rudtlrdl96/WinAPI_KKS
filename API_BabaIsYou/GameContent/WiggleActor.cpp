@@ -39,7 +39,7 @@ void WiggleActor::Update(float _DT)
 	}
 }
 
-void WiggleActor::InitRender(const std::string_view& _FileName, const float4& _Pos, const float4& _Scale, int _StartIndex, int _AnimLength, int _Order,  int _BitmapInterval)
+void WiggleActor::InitRender(const WiggleAnimationParameter& _Parameter)
 {
 	if (nullptr != Render)
 	{
@@ -47,7 +47,12 @@ void WiggleActor::InitRender(const std::string_view& _FileName, const float4& _P
 		return;
 	}
 
-	GameEngineRender* TempRender = CreateRender(_FileName, _Order);
+	GameEngineRender* TempRender = CreateRender(_Parameter.FileName, _Parameter.Order);
+
+	if (true == _Parameter.IsUI)
+	{
+		TempRender->EffectCameraOff();
+	}
 
 	if (nullptr == TempRender)
 	{
@@ -55,12 +60,12 @@ void WiggleActor::InitRender(const std::string_view& _FileName, const float4& _P
 		return;
 	}
 
-	TempRender->SetPosition(_Pos);
-	TempRender->SetScale(_Scale);
+	TempRender->SetPosition(_Parameter.Pos);
+	TempRender->SetScale(_Parameter.Scale);
 
-	Render = new WiggleRender(TempRender, _StartIndex, _AnimLength, _BitmapInterval);
+	Render = new WiggleRender(TempRender, _Parameter.StartIndex, _Parameter.AnimLength, _Parameter.BitmapInterval);
 
-	if (0 >= _BitmapInterval)
+	if (0 >= _Parameter.BitmapInterval)
 	{
 		Render->DisableWiggle();
 	}
@@ -91,6 +96,11 @@ void WiggleActor::SetDirInterval(size_t _DirInterval)
 void WiggleActor::PrevAnim()
 {
 	Render->PrevAnim();
+}
+
+void WiggleActor::SetTileIndex(int _Index)
+{
+	Render->SetTileIndex(_Index);
 }
 
 void WiggleActor::NextAnim()

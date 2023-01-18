@@ -60,7 +60,10 @@ void GridActor::GridData::Push(const int2& _Pos, const int2& _Dir, bool _IsInput
 		Data->Push();
 	}
 	
-	vecGridDatas[NextPos.y][NextPos.x].DeathCheck();
+	if (false == IsOver(NextPos))
+	{
+		vecGridDatas[NextPos.y][NextPos.x].DeathCheck();
+	}
 }
 
 
@@ -98,6 +101,24 @@ void GridActor::GridData::DeathCheck()
 	}
 }
 
+bool GridActor::GridData::equals(const std::string_view& _Name)
+{
+	for (const std::pair<int, GridActor*>& Data : mapDatas)
+	{
+		if (true == Data.second->IsDeath)
+		{
+			continue;
+		}
+
+		if (_Name == Data.second->ActorName)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 size_t GridActor::GridData::GetDefine()
 {
 	size_t Info = static_cast<size_t>(DEFINE_INFO::NONE);
@@ -128,6 +149,7 @@ int GridActor::NextActorKey = 0;
 std::vector<GridActor*> GridActor::vecObjectPool;
 std::vector<std::vector<GridActor::GridData>> GridActor::vecGridDatas;
 std::map<GridActor::DEFINE_INFO, std::map<int, GridActor*>> GridActor::mapDefineActorDatas;
+std::map<int, int> GridActor::mapTileRenderIndex;
 
 GridActor* GridActor::GetActor(TEMP_ACTOR_TYPE _Type)
 {
@@ -176,6 +198,23 @@ void GridActor::InitGridActor(GameEngineLevel* _PuzzleLevel)
 	{
 		PuzzleLevel->CreateActor<GridActor>();
 	}
+
+	mapTileRenderIndex[DIR_FLAG::NONE] = 0;
+	mapTileRenderIndex[DIR_FLAG::RIGHT] = 1;
+	mapTileRenderIndex[DIR_FLAG::UP] = 2;
+	mapTileRenderIndex[DIR_FLAG::LEFT] = 4;
+	mapTileRenderIndex[DIR_FLAG::DOWN] = 8;
+	mapTileRenderIndex[DIR_FLAG::RIGHT | DIR_FLAG::UP] = 3;
+	mapTileRenderIndex[DIR_FLAG::LEFT | DIR_FLAG::RIGHT] = 5;
+	mapTileRenderIndex[DIR_FLAG::LEFT | DIR_FLAG::UP] = 6;
+	mapTileRenderIndex[DIR_FLAG::DOWN | DIR_FLAG::RIGHT] = 9;
+	mapTileRenderIndex[DIR_FLAG::UP | DIR_FLAG::DOWN] = 10;
+	mapTileRenderIndex[DIR_FLAG::LEFT | DIR_FLAG::DOWN] = 12;
+	mapTileRenderIndex[DIR_FLAG::LEFT | DIR_FLAG::UP | DIR_FLAG::RIGHT] = 7;
+	mapTileRenderIndex[DIR_FLAG::UP | DIR_FLAG::DOWN | DIR_FLAG::RIGHT] = 11;
+	mapTileRenderIndex[DIR_FLAG::LEFT | DIR_FLAG::DOWN | DIR_FLAG::RIGHT] = 13;
+	mapTileRenderIndex[DIR_FLAG::UP | DIR_FLAG::DOWN | DIR_FLAG::LEFT] = 14;
+	mapTileRenderIndex[DIR_FLAG::UP | DIR_FLAG::DOWN | DIR_FLAG::LEFT | DIR_FLAG::RIGHT] = 0;
 }
 
 void GridActor::ClearGrid()
@@ -245,8 +284,8 @@ void GridActor::MoveAllMoveBehavior()
 float4 GridActor::GetScreenPos(const int2& _GridPos)
 {
 	return {
-		(ContentConst::ACTOR_SIZE.x * _GridPos.x) + ContentConst::ACTOR_SIZE.half().x,
-		(ContentConst::ACTOR_SIZE.y * _GridPos.y) + ContentConst::ACTOR_SIZE.half().y};
+		((ContentConst::ACTOR_SIZE.x)* _GridPos.x) + ContentConst::ACTOR_SIZE.half().x,
+		((ContentConst::ACTOR_SIZE.y)* _GridPos.y) + ContentConst::ACTOR_SIZE.half().y};
 }
 
 
@@ -280,7 +319,15 @@ GridActor::~GridActor()
 
 void GridActor::Start()
 {
-	InitRender("actor.BMP", float4::Zero, ContentConst::ACTOR_SIZE, 0, 4, 10, 24);
+	InitRender({
+		.FileName = "actor.BMP",
+		.Pos = float4::Zero,
+		.Scale = ContentConst::GRID_BITMAP_SIZE,
+		.StartIndex = 0,
+		.AnimLength = 4,
+		.Order = 10,
+		.BitmapInterval = 24});
+
 	vecObjectPool.push_back(this);
 	Off();
 }
@@ -293,6 +340,11 @@ void GridActor::Update(float _DT)
 	{
 		MsgAssert("액터가 그리드 밖으로 벗어났습니다.");
 		return;
+	}
+
+	if (ACTOR_RENDER::TILE == RenderType)
+	{
+		SetTileRender();
 	}
 
 	if (false == IsDeath && true == IsMove)
@@ -308,6 +360,7 @@ void GridActor::Update(float _DT)
 
 		SetPos(Lerp(GetScreenPos(PrevPos), GetScreenPos(GridPos), MoveProgress));
 	}
+
 }
 
 void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
@@ -327,6 +380,7 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 
 	if (TEMP_ACTOR_TYPE::BABA == _Actor)
 	{
+		ActorName = "BABA";
 		SetFrame(2);
 		SetLength(4);
 		SetDirInterval(4);
@@ -341,6 +395,7 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 
 	if (TEMP_ACTOR_TYPE::KEKE == _Actor)
 	{
+		ActorName = "KEKE";
 		SetFrame(74);
 		SetLength(4);
 		SetDirInterval(4);
@@ -353,6 +408,7 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 
 	if (TEMP_ACTOR_TYPE::BABA_TEXT == _Actor)
 	{
+		ActorName = "BABA_TEXT";
 		SetFrame(0);
 		SetLength(1);
 		SetDirInterval(0);
@@ -363,6 +419,7 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 
 	if (TEMP_ACTOR_TYPE::IS_TEXT == _Actor)
 	{
+		ActorName = "IS_TEXT";
 		SetFrame(792);
 		SetLength(1);
 		SetDirInterval(0);
@@ -373,6 +430,7 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 
 	if (TEMP_ACTOR_TYPE::YOU_TEXT == _Actor)
 	{
+		ActorName = "YOU_TEXT";
 		SetFrame(864);
 		SetLength(1);
 		SetDirInterval(0);
@@ -383,6 +441,7 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 
 	if (TEMP_ACTOR_TYPE::LAVA == _Actor)
 	{
+		ActorName = "LAVA";
 		SetFrame(434);
 		SetLength(1);
 		SetDirInterval(0);
@@ -393,6 +452,7 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 
 	if (TEMP_ACTOR_TYPE::WATER == _Actor)
 	{
+		ActorName = "WATER";
 		SetFrame(362);
 		SetLength(1);
 		SetDirInterval(0);
@@ -404,9 +464,10 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 
 	if (TEMP_ACTOR_TYPE::SKULL == _Actor)
 	{
+		ActorName = "SKULL";
 		SetFrame(722);
 		SetLength(1);
-		SetDirInterval(0);
+		SetDirInterval(1);
 		ActorType = ACTOR_DEFINE::ACTOR;
 		RenderType = ACTOR_RENDER::DYNAMIC;
 		AddDefine(DEFINE_INFO::DEFEAT);
@@ -415,6 +476,7 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 
 	if (TEMP_ACTOR_TYPE::WIN_TEXT == _Actor)
 	{
+		ActorName = "WIN_TEXT";
 		SetFrame(866);
 		SetLength(1);
 		SetDirInterval(0);
@@ -787,4 +849,36 @@ bool GridActor::CanMove(const int2& _NextPos)
 	}
 
 	return true;
+}
+
+void GridActor::SetTileRender()
+{
+	int RenderKey = DIR_FLAG::NONE;
+	int2 CheckPos = GridPos;
+
+	CheckPos = GridPos + int2::Up;
+	if (false == IsOver(CheckPos) && vecGridDatas[CheckPos.y][CheckPos.x].equals(ActorName))
+	{
+		RenderKey |= DIR_FLAG::UP;
+	}
+
+	CheckPos = GridPos + int2::Down;
+	if (false == IsOver(CheckPos) && vecGridDatas[CheckPos.y][CheckPos.x].equals(ActorName))
+	{
+		RenderKey |= DIR_FLAG::DOWN;
+	}
+
+	CheckPos = GridPos + int2::Left;
+	if (false == IsOver(CheckPos) && vecGridDatas[CheckPos.y][CheckPos.x].equals(ActorName))
+	{
+		RenderKey |= DIR_FLAG::LEFT;
+	}
+
+	CheckPos = GridPos + int2::Right;
+	if (false == IsOver(CheckPos) && vecGridDatas[CheckPos.y][CheckPos.x].equals(ActorName))
+	{
+		RenderKey |= DIR_FLAG::RIGHT;
+	}
+
+	SetTileIndex(mapTileRenderIndex[RenderKey]);
 }

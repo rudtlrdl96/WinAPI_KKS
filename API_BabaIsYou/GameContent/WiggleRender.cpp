@@ -24,7 +24,7 @@ WiggleRender::~WiggleRender()
 
 void WiggleRender::SetRenderIndex()
 {
-	CurIndex = StartIndex + CurAnim + (CurWiggle * BitmapInterval) + static_cast<int>(DirIndex);
+	CurIndex = StartIndex + CurAnim + (CurWiggle * BitmapInterval) + CurTileIndex + static_cast<int>(DirIndex);
 	Render->SetFrame(CurIndex);
 }
 

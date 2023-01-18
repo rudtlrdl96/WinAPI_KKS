@@ -36,7 +36,7 @@ void GameEngineLevel::ActorStart(GameEngineActor* _Actor, int _Order)
 		return;
 	}
 
-	_Actor->Level = this;
+	_Actor->SetOwner(this);
 	_Actor->SetOrder(_Order);
 	_Actor->Start();
 }
@@ -89,7 +89,6 @@ void GameEngineLevel::ActorsUpdate(float _DeltaTime)
 
 void GameEngineLevel::ActorsRender(float _DeltaTime)
 {
-
 	{
 		std::map<int, std::list<GameEngineRender*>>::iterator GroupStartIter = Renders.begin();
 		std::map<int, std::list<GameEngineRender*>>::iterator GroupEndIter = Renders.end();
@@ -131,6 +130,7 @@ void GameEngineLevel::ActorsRender(float _DeltaTime)
 			}
 		}
 	}
+
 }
 
 void GameEngineLevel::PushRender(GameEngineRender* _Render)

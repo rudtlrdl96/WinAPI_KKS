@@ -12,8 +12,12 @@ BlackBackUI::~BlackBackUI()
 }
 void BlackBackUI::Start()
 {
-	InitRender("Background_Black.BMP",
-		GameEngineWindow::GetScreenSize().half(),
-		GameEngineWindow::GetScreenSize(),
-		0, 1, static_cast<int>(RENDER_ORDER::BACKGROUND));
+	InitRender({
+		.FileName = "Background_Black.BMP",
+		.Pos = GameEngineWindow::GetScreenSize().half(),
+		.Scale = GameEngineWindow::GetScreenSize(),
+		.StartIndex = 0,
+		.AnimLength = 1,
+		.Order = static_cast<int>(RENDER_ORDER::BACKGROUND),
+		.IsUI = true});
 }

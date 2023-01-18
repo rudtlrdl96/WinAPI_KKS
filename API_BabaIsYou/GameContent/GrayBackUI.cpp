@@ -12,8 +12,13 @@ GrayBackUI::~GrayBackUI()
 
 void GrayBackUI::Start()
 {
-	InitRender("Background_Gray.BMP",
-		GameEngineWindow::GetScreenSize().half(),
-		GameEngineWindow::GetScreenSize(),
-		0, 1, static_cast<int>(RENDER_ORDER::BACKGROUND));
+
+	InitRender({
+	.FileName = "Background_Gray.BMP",
+	.Pos = GameEngineWindow::GetScreenSize().half(),
+	.Scale = GameEngineWindow::GetScreenSize(),
+	.StartIndex = 0,
+	.AnimLength = 1,
+	.Order = static_cast<int>(RENDER_ORDER::BACKGROUND),
+	.IsUI = true });
 }

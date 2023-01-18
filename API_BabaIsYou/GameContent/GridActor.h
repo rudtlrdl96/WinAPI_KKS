@@ -55,6 +55,7 @@ private:
 		void clear();
 		void Push(const int2& _Pos, const int2& _Dir, bool _IsInputMove);
 		void DeathCheck();
+		bool equals(const std::string_view& _Name);
 		size_t GetDefine();
 	};
 
@@ -84,6 +85,8 @@ private:
 	static std::vector<GridActor*> vecObjectPool;	
 	static std::map<DEFINE_INFO, std::map<int, GridActor*>> mapDefineActorDatas;
 
+	static std::map<int, int> mapTileRenderIndex;
+
 #pragma endregion
 
 
@@ -109,7 +112,9 @@ protected:
 	void Start() override;
 	void Update(float _DT) override;
 
-private:	
+private:
+	std::string ActorName = "";
+
 	ACTOR_DEFINE ActorType = ACTOR_DEFINE::ACTOR;
 	ACTOR_RENDER RenderType = ACTOR_RENDER::STATIC;
 
@@ -152,4 +157,6 @@ private:
 
 	void AllPushDir(const int2& _Dir, bool _IsInputMove);
 	bool CanMove(const int2& _NextPos);
+
+	void SetTileRender();
 };

@@ -13,8 +13,13 @@ TitleLogoUI::~TitleLogoUI()
 
 void TitleLogoUI::Start()
 {
-	InitRender("TitleLogo.BMP",
-		GameEngineWindow::GetScreenSize().half() - float4{ 0.0f, 135.0f },
-		{ 600, 250 },
-		0, 1, static_cast<int>(RENDER_ORDER::UIIMAGE), 1);
+	InitRender({
+		.FileName = "TitleLogo.BMP",
+		.Pos = GameEngineWindow::GetScreenSize().half() - float4{ 0.0f, 135.0f },
+		.Scale = { 600, 250 },
+		.StartIndex = 0,
+		.AnimLength = 1,
+		.Order = static_cast<int>(RENDER_ORDER::UIIMAGE),
+		.BitmapInterval = 1,
+		.IsUI = true });
 }

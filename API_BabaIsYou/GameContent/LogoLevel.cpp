@@ -34,10 +34,37 @@ void LogoLevel::Loading()
 	CreateActor<FadeUI>(1);
 	CreateActor<LogoUI>(0);
 	CreateActor<BlackBackUI>(-1);
+
+	if (false == GameEngineInput::IsKey("DebugCameraLeft"))
+	{
+		GameEngineInput::CreateKey("DebugCameraUp", 'w');
+		GameEngineInput::CreateKey("DebugCameraRight", 'd');
+		GameEngineInput::CreateKey("DebugCameraDown", 's');
+		GameEngineInput::CreateKey("DebugCameraLeft", 'a');
+	}
+
 }
 
 void LogoLevel::Update(float _DT)
 {
+
+	if (true == GameEngineInput::IsPress("DebugCameraUp"))
+	{
+		SetCameraMove(float4::Up * _DT * 100.0f);
+	}
+	if (true == GameEngineInput::IsPress("DebugCameraRight"))
+	{
+		SetCameraMove(float4::Right * _DT * 100.0f);
+	}
+	if (true == GameEngineInput::IsPress("DebugCameraDown"))
+	{
+		SetCameraMove(float4::Down * _DT * 100.0f);
+	}
+	if (true == GameEngineInput::IsPress("DebugCameraLeft"))
+	{
+		SetCameraMove(float4::Left * _DT * 100.0f);
+	}
+
 	if (true == GameEngineInput::IsAnyKey())
 	{
 		FadeUI::ActiveFade(FADE_STATE::FADEIN, this, ContentFunc::ChangeTitleLevel);

@@ -27,8 +27,6 @@ class GameEngineRender : public GameEngineObject
 	friend GameEngineActor;
 	friend GameEngineLevel;
 
-
-
 public:
 	// constrcuter destructer
 	GameEngineRender();
@@ -69,6 +67,12 @@ public:
 		return Frame;
 	}
 
+	GameEngineActor* GetActor();
+
+	void SetTransColor(int _Color) 
+	{
+		TransColor = _Color;
+	}
 
 	inline float4 GetPosition()
 	{
@@ -80,6 +84,11 @@ public:
 		return Scale;
 	}
 
+	inline void EffectCameraOff()
+	{
+		IsEffectCamera = false;
+	}
+
 	void CreateAnimation(const FrameAnimationParameter& _Paramter);
 	void ChangeAnimation(const std::string_view& _AnimationName);
 
@@ -87,12 +96,13 @@ protected:
 
 
 private:
-	GameEngineActor* Owner = nullptr;
-
 	int Order = 0;
 	float4 Position = float4::Zero;
 	float4 Scale = float4::Zero;
 	GameEngineImage* Image = nullptr;
+	bool IsEffectCamera = true;
+
+	int TransColor = RGB(255, 0, 255);
 
 	int Frame = 0;
 

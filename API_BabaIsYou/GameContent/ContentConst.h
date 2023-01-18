@@ -13,6 +13,7 @@ public:
 	static const int GRID_SIZE_X;
 	static const int GRID_SIZE_Y;
 	static const int2 GRID_SIZE;
+	static const float4 GRID_BITMAP_SIZE;
 	static const float4 ACTOR_SIZE;
 
 public:

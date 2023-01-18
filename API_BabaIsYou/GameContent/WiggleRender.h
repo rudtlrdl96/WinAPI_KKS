@@ -40,6 +40,12 @@ public:
 		AnimLength = _Length;
 	}
 
+	inline void SetTileIndex(int _Index)
+	{
+		CurTileIndex = _Index;
+		SetRenderIndex();
+	}
+
 	void SetDirInterval(size_t _DirInterval);
 	void SetAnimDir(const int2& _Dir);
 
@@ -52,6 +58,7 @@ private:
 	int CurIndex = 0;
 	int CurAnim = 0;
 	int CurWiggle = 0;
+	int CurTileIndex = 0;
 
 	int StartIndex = 0;
 	int AnimLength = 1;

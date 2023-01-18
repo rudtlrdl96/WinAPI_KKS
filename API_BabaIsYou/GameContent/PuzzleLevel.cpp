@@ -70,12 +70,38 @@ void PuzzleLevel::Loading()
 	{
 		GameEngineInput::CreateKey("Wait", VK_SPACE);
 	}
+
+	if (false == GameEngineInput::IsKey("DebugCameraLeft"))
+	{
+		GameEngineInput::CreateKey("DebugCameraUp", 'w');
+		GameEngineInput::CreateKey("DebugCameraRight", 'd');
+		GameEngineInput::CreateKey("DebugCameraDown", 's');
+		GameEngineInput::CreateKey("DebugCameraLeft", 'a');
+	}
+
 }
 
 void PuzzleLevel::Update(float _DT)
 {
 	ActorMgr->Input(_DT);
 	ActorMgr->clear();
+
+	if (true == GameEngineInput::IsPress("DebugCameraUp"))
+	{
+		SetCameraMove(float4::Up * _DT * 100.0f);
+	}
+	if (true == GameEngineInput::IsPress("DebugCameraRight"))
+	{
+		SetCameraMove(float4::Right * _DT * 100.0f);
+	}
+	if (true == GameEngineInput::IsPress("DebugCameraDown"))
+	{
+		SetCameraMove(float4::Down * _DT * 100.0f);
+	}
+	if (true == GameEngineInput::IsPress("DebugCameraLeft"))
+	{
+		SetCameraMove(float4::Left * _DT * 100.0f);
+	}
 }
 
 void PuzzleLevel::LevelChangeStart(GameEngineLevel* _NextLevel)
