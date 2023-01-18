@@ -5,7 +5,7 @@
 
 class GameEngineLevel;
 class GridActor;
-class ActorManager sealed
+class GridActorManager sealed
 {
 private:
 	enum class INPUTBEHAVIOR
@@ -18,15 +18,15 @@ private:
 		WAIT
 	};
 public:
-	ActorManager(GameEngineLevel* _PuzzleLevel);
-	~ActorManager();
+	GridActorManager(GameEngineLevel* _PuzzleLevel);
+	~GridActorManager();
 
 	void Input(float _DT);
 
-	ActorManager(const ActorManager& _Other) = delete;
-	ActorManager(ActorManager&& _Other) noexcept = delete;
-	ActorManager& operator=(const ActorManager& _Other) = delete;
-	ActorManager& operator=(ActorManager&& _Other) noexcept = delete;
+	GridActorManager(const GridActorManager& _Other) = delete;
+	GridActorManager(GridActorManager&& _Other) noexcept = delete;
+	GridActorManager& operator=(const GridActorManager& _Other) = delete;
+	GridActorManager& operator=(GridActorManager&& _Other) noexcept = delete;
 
 	void clear();
 	void LoadData(const std::string_view& _PuzzleName);
@@ -36,9 +36,12 @@ public:
 		UpdateBehavior = true;
 	}
 
+	bool IsPuzzleEnd() const;
+
 protected:
 
 private:
+	GameEngineLevel* PuzzleLevel = nullptr;
 	void Init(GameEngineLevel* _PuzzleLevel);
 
 	std::list<INPUTBEHAVIOR> vecWaitInputs;

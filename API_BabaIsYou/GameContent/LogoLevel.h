@@ -1,6 +1,7 @@
 #pragma once
 #include <GameEngineCore/GameEngineLevel.h>
 
+class FadeUI;
 class LogoLevel : public GameEngineLevel
 {
 public:
@@ -18,5 +19,5 @@ protected:
 	void LevelChangeStart(GameEngineLevel* _NextLevel) override;
 	void LevelChangeEnd(GameEngineLevel* _NextLevel) override {}
 private:
-
+	FadeUI* LogoFadeActor = nullptr;
 };

@@ -2,7 +2,6 @@
 #include <vector>
 #include <map>
 #include <string>
-#include <GameEngineBase/GameEngineDebug.h>
 #include "ContentMath.h"
 #include "ContentEnum.h"
 #include "WiggleActor.h"
@@ -10,7 +9,7 @@
 class GameEngineLevel;
 class GridActor : public WiggleActor
 {
-	friend class ActorManager;
+	friend class GridActorManager;
 public:
 #pragma region Enum
 	enum class ACTOR_RENDER
@@ -41,6 +40,7 @@ public:
 		MELT   = 1 << 5,
 		SINK   = 1 << 6,
 		DEFEAT = 1 << 7,
+		WIN	   = 1 << 8,
 	};
 
 #pragma endregion
@@ -78,6 +78,7 @@ private:
 	static GameEngineLevel* PuzzleLevel;
 	static size_t ObjectPoolCount;
 	static bool AnyActorMoveCheck;
+	static bool WinCheckValue;
 
 	static int NextActorKey;
 
@@ -157,6 +158,7 @@ private:
 
 	void AllPushDir(const int2& _Dir, bool _IsInputMove);
 	bool CanMove(const int2& _NextPos);
+	void WinCheck();
 
 	void SetTileRender();
 };

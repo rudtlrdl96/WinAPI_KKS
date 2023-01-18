@@ -6,9 +6,7 @@
 
 #include "ContentMath.h"
 #include "ContentEnum.h"
-
-std::map<GameEngineLevel*, FadeUI*> FadeUI::mapFades;
-void (*FadeUI::FuncPtr)(void) = nullptr;
+#include "ContentConst.h"
 
 FadeUI::FadeUI()
 {
@@ -20,11 +18,14 @@ FadeUI::~FadeUI()
 
 void FadeUI::Start()
 {
-	mapFades.insert(std::make_pair(GetLevel(), this));
 	FadeRender = CreateRender(RENDER_ORDER::FADE);
 
-	FadeRender->CreateAnimation(
-		{ .AnimationName = "FadeIn", .ImageName = "FadeAnim.BMP", .Start = 0, .End = 34, .InterTime = FadeTime / 34, .Loop = false});
+	FadeRender->CreateAnimation({ 
+		.AnimationName = "FadeIn",
+		.ImageName = "FadeAnim.BMP", 
+		.Start = 0, .End = 34,
+		.InterTime = ContentConst::FADE_TIME / 34,
+		.Loop = false});
 	
 	
 	std::vector<int> FadeOutAnimIndex;
@@ -35,8 +36,12 @@ void FadeUI::Start()
 		FadeOutAnimIndex.push_back(i);
 	}
 
-	FadeRender->CreateAnimation(
-		{ .AnimationName = "FadeOut", .ImageName = "FadeAnim.BMP", .InterTime = FadeTime / 34, .Loop = false, .FrameIndex = FadeOutAnimIndex});
+	FadeRender->CreateAnimation({ 
+		.AnimationName = "FadeOut", 
+		.ImageName = "FadeAnim.BMP", 
+		.InterTime = ContentConst::FADE_TIME / 34, 
+		.Loop = false, 
+		.FrameIndex = FadeOutAnimIndex});
 
 	FadeRender->ChangeAnimation("FadeIn");
 
@@ -56,7 +61,7 @@ void FadeUI::Update(float _Time)
 {
 	ProgressTime += _Time;
 
-	if (FadeTime <= ProgressTime)
+	if (ContentConst::FADE_TIME <= ProgressTime)
 	{
 		switch (State)
 		{
@@ -65,21 +70,25 @@ void FadeUI::Update(float _Time)
 			BoxRender->On();
 			DelayTime += _Time;
 
-			if (0.3f <= DelayTime)
+			if (ContentConst::FADE_DELAY <= DelayTime)
 			{
-				if (nullptr != FuncPtr)
+				if (nullptr != EndFunction)
 				{
-					FuncPtr();
+					EndFunction();
+					EndFunction = nullptr;
 				}
+				IsProgressValue = false;
 			}
 		}
 			break;
 		case FADE_STATE::FADEOUT:
 		{
-			if (nullptr != FuncPtr)
+			if (nullptr != EndFunction)
 			{
-				FuncPtr();
+				EndFunction();
+				EndFunction = nullptr;
 			}
+			IsProgressValue = false;
 			Off();
 		}
 		return;
@@ -88,7 +97,8 @@ void FadeUI::Update(float _Time)
 
 }
 
-void FadeUI::SetState(FADE_STATE _State)
+
+void FadeUI::Fade(FADE_STATE _State, void (*_Func)(void))
 {
 	State = _State;
 
@@ -101,32 +111,12 @@ void FadeUI::SetState(FADE_STATE _State)
 		FadeRender->ChangeAnimation("FadeOut");
 	}
 
+	IsProgressValue = true;
+	EndFunction = _Func;
+
 	ProgressTime = 0.0f;
 	DelayTime = 0.0f;
 	BoxRender->Off();
 	FadeRender->On();
 	On();
-}
-
-void FadeUI::ActiveFade(FADE_STATE _State, GameEngineLevel* _ParentLevel, void (*_Func)(void))
-{
-	if (nullptr == _ParentLevel)
-	{
-		MsgAssert("Nullptr Level을 참조하려 했습니다.");
-		return;
-	}
-
-	FadeUI* FadeActor = mapFades[_ParentLevel];
-
-	if (FadeActor == nullptr)
-	{
-		MsgAssert("삭제된 페이트 액터를 참조하려 합니다.");
-	}
-
-	if (FadeActor->GetLevel() == _ParentLevel)
-	{
-		FadeActor->SetState(_State);
-	}
-
-	FuncPtr = _Func;
 }

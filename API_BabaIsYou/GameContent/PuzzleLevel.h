@@ -3,7 +3,9 @@
 #include <string>
 #include <string_view>
 
-class ActorManager;
+class FadeUI;
+class CongratulationsUI;
+class GridActorManager;
 class PuzzleLevel : public GameEngineLevel
 {
 public:
@@ -15,6 +17,7 @@ public:
 	PuzzleLevel& operator=(const PuzzleLevel& _Other) = delete;
 	PuzzleLevel& operator=(PuzzleLevel&& _Other) noexcept = delete;
 
+	static void PuzzleLevelExit();
 	static void SetPuzzleMapName(const std::string_view& _MapName);
 	void LoadPuzzleData();
 
@@ -23,9 +26,13 @@ protected:
 	void Update(float _DT) override;
 
 	void LevelChangeStart(GameEngineLevel* _PrevLevel) override;
-	void LevelChangeEnd(GameEngineLevel* _NextLevel) override {}
+	void LevelChangeEnd(GameEngineLevel* _NextLevel) override;
 private:
 	static std::string LoadPuzzleName;
 
-	ActorManager* ActorMgr = nullptr;
+	GridActorManager* GridActorMgr = nullptr;
+	FadeUI* PuzzleFadeActor = nullptr;
+	CongratulationsUI* CongratulationActor = nullptr;
+
+	static bool IsExitValue;
 };

@@ -1,9 +1,10 @@
-#include "ActorManager.h"
+#include "GridActorManager.h"
 #include <GameEngineBase/GameEngineDebug.h>
 #include <GameEnginePlatform/GameEngineInput.h>
 #include <GameEngineCore/GameEngineLevel.h>
 #include "ContentConst.h"
 #include "GridActor.h"
+#include "CongratulationsUI.h"
 
 // Todo : Data Save/Load System이 생성되면 제거
 int arrDatas[18][32] = 
@@ -11,7 +12,7 @@ int arrDatas[18][32] =
 	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1},
 	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1},
 	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1},
-	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1},
+	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,11,-1,-1,-1,-1,-1,-1},
 	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 1, 1,-1,-1,-1,-1,-1,-1},
 	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1},
 	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 0, 0,-1,-1, 14, 28, 31,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1},
@@ -28,20 +29,26 @@ int arrDatas[18][32] =
 	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1},
 };
 
-bool ActorManager::UpdateBehavior = false;
+bool GridActorManager::UpdateBehavior = false;
 
-ActorManager::ActorManager(GameEngineLevel* _PuzzleLevel)
+GridActorManager::GridActorManager(GameEngineLevel* _PuzzleLevel)
 {
-	Init(_PuzzleLevel);
+	PuzzleLevel = _PuzzleLevel;
+	Init(PuzzleLevel);
 }
 
-ActorManager::~ActorManager()
+GridActorManager::~GridActorManager()
 {
 	GridActor::DeleteGridActor();
 }
 
-void ActorManager::Input(float _DT)
+void GridActorManager::Input(float _DT)
 {
+	if (true == GridActor::WinCheckValue)
+	{
+		return;
+	}
+
 	int2 MoveDir = int2::Zero;
 
 	if (GameEngineInput::IsDown("ArrowUp"))
@@ -76,23 +83,23 @@ void ActorManager::Input(float _DT)
 
 		switch (NextBehavior)
 		{
-		case ActorManager::INPUTBEHAVIOR::MOVE_LEFT:
+		case INPUTBEHAVIOR::MOVE_LEFT:
 			GridActor::MoveAllYouBehavior(int2::Left);
 			GridActor::MoveAllMoveBehavior();
 			break;
-		case ActorManager::INPUTBEHAVIOR::MOVE_RIGHT:
+		case INPUTBEHAVIOR::MOVE_RIGHT:
 			GridActor::MoveAllYouBehavior(int2::Right);
 			GridActor::MoveAllMoveBehavior();
 			break;
-		case ActorManager::INPUTBEHAVIOR::MOVE_UP:
+		case INPUTBEHAVIOR::MOVE_UP:
 			GridActor::MoveAllYouBehavior(int2::Up);
 			GridActor::MoveAllMoveBehavior();
 			break;
-		case ActorManager::INPUTBEHAVIOR::MOVE_DOWN:
+		case INPUTBEHAVIOR::MOVE_DOWN:
 			GridActor::MoveAllYouBehavior(int2::Down);
 			GridActor::MoveAllMoveBehavior();
 			break;
-		case ActorManager::INPUTBEHAVIOR::UNDO:
+		case INPUTBEHAVIOR::UNDO:
 
 			for (GridActor* Data : vecActors)
 			{
@@ -106,7 +113,7 @@ void ActorManager::Input(float _DT)
 			}
 
 			return;
-		case ActorManager::INPUTBEHAVIOR::WAIT:
+		case INPUTBEHAVIOR::WAIT:
 			GridActor::MoveAllMoveBehavior();
 			break;
 		default:
@@ -125,17 +132,15 @@ void ActorManager::Input(float _DT)
 			Data->SaveBehaviorInfo();
 		}
 	}
-
-
 }
 
-void ActorManager::Init(GameEngineLevel* _PuzzleLevel)
+void GridActorManager::Init(GameEngineLevel* _PuzzleLevel)
 {
 	GridActor::InitGridActor(_PuzzleLevel);
 	vecActors.reserve(ContentConst::GRID_SIZE_X * ContentConst::GRID_SIZE_Y);
 }
 
-void ActorManager::LoadData(const std::string_view& _PuzzleName)
+void GridActorManager::LoadData(const std::string_view& _PuzzleName)
 {
 	Reset();
 
@@ -163,12 +168,12 @@ void ActorManager::LoadData(const std::string_view& _PuzzleName)
 	}
 }
 
-void ActorManager::clear()
+void GridActorManager::clear()
 {
 	GridActor::AnyActorMoveCheck = false;
 }
 
-void ActorManager::Reset()
+void GridActorManager::Reset()
 {
 	GridActor::ResetGridActor();
 
@@ -177,4 +182,10 @@ void ActorManager::Reset()
 		vecActors[i]->Off();
 	}
 	vecActors.clear();
+}
+
+
+bool GridActorManager::IsPuzzleEnd() const
+{
+	return GridActor::WinCheckValue;
 }

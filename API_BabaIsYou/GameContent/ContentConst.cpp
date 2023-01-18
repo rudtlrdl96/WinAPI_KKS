@@ -11,6 +11,10 @@ ContentConst::~ContentConst()
 const int ContentConst::WIGGLE_MAXTICK = 3;
 const float ContentConst::WIGGLE_TIME = 0.33f;
 const float ContentConst::MOVE_SPEED = 8.0f;
+const float ContentConst::FADE_TIME = 0.5f;
+const float ContentConst::FADE_DELAY = 0.5f;
+const float ContentConst::CONGRATULATION_TIME = 1.2f;
+const float ContentConst::CONGRATULATION_DELAY = 3.0f;
 
 const int ContentConst::GRID_SIZE_X = 35;
 const int ContentConst::GRID_SIZE_Y = 20;

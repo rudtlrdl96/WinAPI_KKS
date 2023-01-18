@@ -31,47 +31,20 @@ void LogoLevel::Loading()
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("FadeCircle.BMP"));
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("FadeAnim.BMP"))->Cut(1, 35);
 
-	CreateActor<FadeUI>(1);
+	LogoFadeActor = CreateActor<FadeUI>(1);
 	CreateActor<LogoUI>(0);
 	CreateActor<BlackBackUI>(-1);
-
-	if (false == GameEngineInput::IsKey("DebugCameraLeft"))
-	{
-		GameEngineInput::CreateKey("DebugCameraUp", 'w');
-		GameEngineInput::CreateKey("DebugCameraRight", 'd');
-		GameEngineInput::CreateKey("DebugCameraDown", 's');
-		GameEngineInput::CreateKey("DebugCameraLeft", 'a');
-	}
-
 }
 
 void LogoLevel::Update(float _DT)
 {
-
-	if (true == GameEngineInput::IsPress("DebugCameraUp"))
+	if (false == LogoFadeActor->IsProgress() && true == GameEngineInput::IsAnyKey())
 	{
-		SetCameraMove(float4::Up * _DT * 100.0f);
-	}
-	if (true == GameEngineInput::IsPress("DebugCameraRight"))
-	{
-		SetCameraMove(float4::Right * _DT * 100.0f);
-	}
-	if (true == GameEngineInput::IsPress("DebugCameraDown"))
-	{
-		SetCameraMove(float4::Down * _DT * 100.0f);
-	}
-	if (true == GameEngineInput::IsPress("DebugCameraLeft"))
-	{
-		SetCameraMove(float4::Left * _DT * 100.0f);
-	}
-
-	if (true == GameEngineInput::IsAnyKey())
-	{
-		FadeUI::ActiveFade(FADE_STATE::FADEIN, this, ContentFunc::ChangeTitleLevel);
+		LogoFadeActor->Fade(FADE_STATE::FADEIN, ContentFunc::ChangeTitleLevel);
 	}
 }
 
 void LogoLevel::LevelChangeStart(GameEngineLevel* _NextLevel)
 {
-	FadeUI::ActiveFade(FADE_STATE::FADEOUT, this, nullptr);
+	LogoFadeActor->Fade(FADE_STATE::FADEOUT);
 }

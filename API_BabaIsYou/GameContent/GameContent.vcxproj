@@ -226,7 +226,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="ActorManager.h">
+    <ClInclude Include="GridActorManager.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -316,7 +316,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="ActorManager.cpp">
+    <ClCompile Include="GridActorManager.cpp">
       <SubType>
       </SubType>
     </ClCompile>

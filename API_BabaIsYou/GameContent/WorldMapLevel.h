@@ -1,6 +1,7 @@
 #pragma once
 #include <GameEngineCore/GameEngineLevel.h>
 
+class FadeUI;
 class WorldMapLevel : public GameEngineLevel
 {
 public:
@@ -20,5 +21,5 @@ protected:
 	void LevelChangeEnd(GameEngineLevel* _NextLevel) override {}
 
 private:
-
+	FadeUI* WorldMapFadeActor = nullptr;
 };

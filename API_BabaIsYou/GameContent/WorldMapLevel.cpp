@@ -26,7 +26,7 @@ void WorldMapLevel::Loading()
 
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("WorldMap.BMP"))->Cut(1, 3);
 
-	CreateActor<FadeUI>();
+	WorldMapFadeActor = CreateActor<FadeUI>();
 	CreateActor<MapBackgroundUI>();
 
 	if (false == GameEngineInput::IsKey("LevelChange"))
@@ -37,14 +37,14 @@ void WorldMapLevel::Loading()
 
 void WorldMapLevel::Update(float _DT)
 {
-	if (true == GameEngineInput::IsDown("LevelChange"))
+	if (false == WorldMapFadeActor->IsProgress() && true == GameEngineInput::IsDown("LevelChange"))
 	{
-		FadeUI::ActiveFade(FADE_STATE::FADEIN,this, ContentFunc::ChangePuzzleLevel);
+		WorldMapFadeActor->Fade(FADE_STATE::FADEIN, ContentFunc::ChangePuzzleLevel);
 	}
 }
 
 
 void WorldMapLevel::LevelChangeStart(GameEngineLevel* _PrevLevel)
 {
-	FadeUI::ActiveFade(FADE_STATE::FADEOUT, this, nullptr);
+	WorldMapFadeActor->Fade(FADE_STATE::FADEOUT);
 }

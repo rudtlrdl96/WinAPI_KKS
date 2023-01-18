@@ -9,6 +9,10 @@ public:
 	static const int WIGGLE_MAXTICK;
 	static const float WIGGLE_TIME;
 	static const float MOVE_SPEED;
+	static const float FADE_TIME;
+	static const float FADE_DELAY;
+	static const float CONGRATULATION_TIME;
+	static const float CONGRATULATION_DELAY;
 
 	static const int GRID_SIZE_X;
 	static const int GRID_SIZE_Y;

@@ -144,6 +144,7 @@ size_t GridActor::GridData::GetDefine()
 GameEngineLevel* GridActor::PuzzleLevel = nullptr;
 size_t GridActor::ObjectPoolCount = 0;
 bool GridActor::AnyActorMoveCheck = false;
+bool GridActor::WinCheckValue = false;
 int GridActor::NextActorKey = 0;
 
 std::vector<GridActor*> GridActor::vecObjectPool;
@@ -243,7 +244,9 @@ void GridActor::ResetGridActor()
 		vecObjectPool[i]->Off();
 	}
 
+	ClearGrid();
 	ObjectPoolCount = 0;
+	WinCheckValue = false;
 }
 
 void GridActor::DeleteGridActor()
@@ -347,6 +350,12 @@ void GridActor::Update(float _DT)
 		SetTileRender();
 	}
 
+	if (IsDefine(DEFINE_INFO::YOU))
+	{
+		WinCheck();
+	}
+
+
 	if (false == IsDeath && true == IsMove)
 	{
 		AnyActorMoveCheck = true;
@@ -404,6 +413,18 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 
 		// Todo : 테스트용 임시 호출 추후 데이터시스템이 생성되면 삭제
 		//AddDefine(DEFINE_INFO::PUSH);
+	}
+
+	if (TEMP_ACTOR_TYPE::FLAG == _Actor)
+	{
+		ActorName = "FLAG";
+		SetFrame(728);
+		SetLength(1);
+		SetDirInterval(0);
+		ActorType = ACTOR_DEFINE::ACTOR;
+		RenderType = ACTOR_RENDER::STATIC;
+
+		AddDefine(DEFINE_INFO::WIN);
 	}
 
 	if (TEMP_ACTOR_TYPE::BABA_TEXT == _Actor)
@@ -849,6 +870,16 @@ bool GridActor::CanMove(const int2& _NextPos)
 	}
 
 	return true;
+}
+
+void GridActor::WinCheck()
+{
+	size_t DefineInfo = vecGridDatas[GridPos.y][GridPos.x].GetDefine();
+
+	if (DefineInfo & static_cast<size_t>(DEFINE_INFO::WIN))
+	{
+		WinCheckValue = true;
+	}
 }
 
 void GridActor::SetTileRender()

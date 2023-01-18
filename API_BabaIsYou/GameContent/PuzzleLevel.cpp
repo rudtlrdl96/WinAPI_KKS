@@ -4,10 +4,14 @@
 #include <GameEngineCore/GameEngineResources.h>
 
 #include "FadeUI.h"
-#include "ActorManager.h"
+#include "GridActorManager.h"
 #include "GrayBackUI.h"
+#include "CongratulationsUI.h"
+#include "ContentFunc.h"
+#include "ContentConst.h"
 
 std::string PuzzleLevel::LoadPuzzleName = "";
+bool PuzzleLevel::IsExitValue = false;
 
 PuzzleLevel::PuzzleLevel()
 {
@@ -15,11 +19,16 @@ PuzzleLevel::PuzzleLevel()
 
 PuzzleLevel::~PuzzleLevel()
 {
-	if (nullptr != ActorMgr)
+	if (nullptr != GridActorMgr)
 	{
-		delete ActorMgr;
-		ActorMgr = nullptr;
+		delete GridActorMgr;
+		GridActorMgr = nullptr;
 	}
+}
+
+void PuzzleLevel::PuzzleLevelExit()
+{
+	IsExitValue = true;
 }
 
 void PuzzleLevel::SetPuzzleMapName(const std::string_view& _MapName)
@@ -36,87 +45,73 @@ void PuzzleLevel::Loading()
 	Dir.Move("Bitmap");
 
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("actor.BMP"))->Cut(24, 40);
-
-	CreateActor<FadeUI>();
+	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("CongratulationsAnim.BMP"))->Cut(1, 11);
+	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("CongratulationsWiggle.BMP"))->Cut(1, 3);
+		
 	CreateActor<GrayBackUI>();
+	PuzzleFadeActor = CreateActor<FadeUI>();
+	CongratulationActor = CreateActor<CongratulationsUI>();
 
-	if (nullptr == ActorMgr)
+	if (nullptr == GridActorMgr)
 	{
-		ActorMgr = new ActorManager(this);
+		GridActorMgr = new GridActorManager(this);
 	}
 
-
-	if (false == GameEngineInput::IsKey("ArrowUp"))
-	{
-		GameEngineInput::CreateKey("ArrowUp", VK_UP);
-	}
-	if (false == GameEngineInput::IsKey("ArrowDown"))
-	{
-		GameEngineInput::CreateKey("ArrowDown", VK_DOWN);
-	}
-	if (false == GameEngineInput::IsKey("ArrowLeft"))
-	{
-		GameEngineInput::CreateKey("ArrowLeft", VK_LEFT);
-	}
-	if (false == GameEngineInput::IsKey("ArrowRight"))
-	{
-		GameEngineInput::CreateKey("ArrowRight", VK_RIGHT);
-	}
-	if (false == GameEngineInput::IsKey("Undo"))
-	{
-		GameEngineInput::CreateKey("Undo", 'Z');
-	}
 	if (false == GameEngineInput::IsKey("Wait"))
 	{
+		GameEngineInput::CreateKey("ArrowUp", VK_UP);
+		GameEngineInput::CreateKey("ArrowDown", VK_DOWN);
+		GameEngineInput::CreateKey("ArrowLeft", VK_LEFT);
+		GameEngineInput::CreateKey("ArrowRight", VK_RIGHT);
+		GameEngineInput::CreateKey("Undo", 'Z');
 		GameEngineInput::CreateKey("Wait", VK_SPACE);
 	}
 
-	if (false == GameEngineInput::IsKey("DebugCameraLeft"))
-	{
-		GameEngineInput::CreateKey("DebugCameraUp", 'w');
-		GameEngineInput::CreateKey("DebugCameraRight", 'd');
-		GameEngineInput::CreateKey("DebugCameraDown", 's');
-		GameEngineInput::CreateKey("DebugCameraLeft", 'a');
-	}
-
+	SetCameraMove({-8.0f, 0.0f});
 }
 
 void PuzzleLevel::Update(float _DT)
 {
-	ActorMgr->Input(_DT);
-	ActorMgr->clear();
+	if (false == PuzzleFadeActor->IsProgress() && true == IsExitValue)
+	{
+		PuzzleFadeActor->Fade(FADE_STATE::FADEIN, ContentFunc::ChangeWorldmapLevel);
+	}
 
-	if (true == GameEngineInput::IsPress("DebugCameraUp"))
+	if (true == IsExitValue)
 	{
-		SetCameraMove(float4::Up * _DT * 100.0f);
+		return;
 	}
-	if (true == GameEngineInput::IsPress("DebugCameraRight"))
+
+	if (true == GridActorMgr->IsPuzzleEnd() && false == CongratulationActor->IsProgress())
 	{
-		SetCameraMove(float4::Right * _DT * 100.0f);
+		CongratulationActor->Congratulations(&PuzzleLevelExit);
 	}
-	if (true == GameEngineInput::IsPress("DebugCameraDown"))
+	else
 	{
-		SetCameraMove(float4::Down * _DT * 100.0f);
-	}
-	if (true == GameEngineInput::IsPress("DebugCameraLeft"))
-	{
-		SetCameraMove(float4::Left * _DT * 100.0f);
+		GridActorMgr->Input(_DT);
+		GridActorMgr->clear();
 	}
 }
 
 void PuzzleLevel::LevelChangeStart(GameEngineLevel* _NextLevel)
 {
+	IsExitValue = false;
 	LoadPuzzleData();
-	FadeUI::ActiveFade(FADE_STATE::FADEOUT, this, nullptr);
+	PuzzleFadeActor->Fade(FADE_STATE::FADEOUT);
+}
+
+void PuzzleLevel::LevelChangeEnd(GameEngineLevel* _NextLevel)
+{
+	CongratulationActor->Off();
 }
 
 void PuzzleLevel::LoadPuzzleData()
 {
-	if (nullptr == ActorMgr)
+	if (nullptr == GridActorMgr)
 	{
 		MsgAssert("ActorManager가 초기화 되지 않았습니다");
 		return;
 	}
 
-	ActorMgr->LoadData(LoadPuzzleName);
+	GridActorMgr->LoadData(LoadPuzzleName);
 }

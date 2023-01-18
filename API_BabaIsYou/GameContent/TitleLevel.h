@@ -1,6 +1,7 @@
 #pragma once
 #include <GameEngineCore/GameEngineLevel.h>
 
+class FadeUI;
 class TitleLevel : public GameEngineLevel
 {
 public:
@@ -18,4 +19,5 @@ protected:
 	void LevelChangeStart(GameEngineLevel* _PrevLevel) override;
 	void LevelChangeEnd(GameEngineLevel* _NextLevel) override {}
 private:
+	FadeUI* TitleFadeActor = nullptr;
 };
