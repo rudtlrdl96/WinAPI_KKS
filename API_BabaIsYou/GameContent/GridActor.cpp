@@ -146,11 +146,13 @@ size_t GridActor::ObjectPoolCount = 0;
 bool GridActor::AnyActorMoveCheck = false;
 bool GridActor::WinCheckValue = false;
 int GridActor::NextActorKey = 0;
+int2 GridActor::GridLength = int2::Zero;
 
 std::vector<GridActor*> GridActor::vecObjectPool;
 std::vector<std::vector<GridActor::GridData>> GridActor::vecGridDatas;
 std::map<GridActor::DEFINE_INFO, std::map<int, GridActor*>> GridActor::mapDefineActorDatas;
 std::map<int, int> GridActor::mapTileRenderIndex;
+
 
 GridActor* GridActor::GetActor(TEMP_ACTOR_TYPE _Type)
 {
@@ -284,6 +286,12 @@ void GridActor::MoveAllMoveBehavior()
 	}
 }
 
+
+void GridActor::SetGridLength(const int2& _Length)
+{
+	GridLength = _Length;
+}
+
 float4 GridActor::GetScreenPos(const int2& _GridPos)
 {
 	return {
@@ -296,8 +304,8 @@ bool GridActor::IsOver(const int2& _GridPos)
 {
 	if (_GridPos.x < 0 ||
 		_GridPos.y < 0 ||
-		_GridPos.x >= ContentConst::GRID_SIZE.x ||
-		_GridPos.y >= ContentConst::GRID_SIZE.y)
+		_GridPos.x >= GridLength.x ||
+		_GridPos.y >= GridLength.y)
 	{
 		return true;
 	}

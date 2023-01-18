@@ -66,8 +66,6 @@ void PuzzleLevel::Loading()
 		GameEngineInput::CreateKey("Undo", 'Z');
 		GameEngineInput::CreateKey("Wait", VK_SPACE);
 	}
-
-	SetCameraMove({-8.0f, 0.0f});
 }
 
 void PuzzleLevel::Update(float _DT)

@@ -69,6 +69,7 @@ public:
 
 	static void MoveAllYouBehavior(const int2& _Dir);
 	static void MoveAllMoveBehavior();
+	static void SetGridLength(const int2& _Length);
 
 	static GridActor* GetActor(TEMP_ACTOR_TYPE _Type);
 	static float4 GetScreenPos(const int2& _GridPos);
@@ -79,14 +80,14 @@ private:
 	static size_t ObjectPoolCount;
 	static bool AnyActorMoveCheck;
 	static bool WinCheckValue;
-
 	static int NextActorKey;
+	static int2 GridLength;
 
 	static std::vector<std::vector<GridData>> vecGridDatas;
 	static std::vector<GridActor*> vecObjectPool;	
 	static std::map<DEFINE_INFO, std::map<int, GridActor*>> mapDefineActorDatas;
-
 	static std::map<int, int> mapTileRenderIndex;
+
 
 #pragma endregion
 

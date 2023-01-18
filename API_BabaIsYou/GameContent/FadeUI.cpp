@@ -47,6 +47,7 @@ void FadeUI::Start()
 
 	FadeRender->SetPosition(GameEngineWindow::GetScreenSize().half());
 	FadeRender->SetScale(GameEngineWindow::GetScreenSize());
+	FadeRender->EffectCameraOff();
 	FadeRender->Off();
 
 	BoxRender = CreateRender("Background_Gray.BMP", RENDER_ORDER::FADE);

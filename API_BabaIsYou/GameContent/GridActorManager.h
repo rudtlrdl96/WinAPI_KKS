@@ -5,6 +5,7 @@
 
 class GameEngineLevel;
 class GridActor;
+class BlackBackUI;
 class GridActorManager sealed
 {
 private:
@@ -41,12 +42,14 @@ public:
 protected:
 
 private:
-	GameEngineLevel* PuzzleLevel = nullptr;
-	void Init(GameEngineLevel* _PuzzleLevel);
+	static bool UpdateBehavior;
 
 	std::list<INPUTBEHAVIOR> vecWaitInputs;
 	std::vector<GridActor*> vecActors;
-	static bool UpdateBehavior;
 
+	GameEngineLevel* PuzzleLevel = nullptr;
+	BlackBackUI* GridBackActor = nullptr;
+
+	void Init(GameEngineLevel* _PuzzleLevel);
 	void Reset();
 };

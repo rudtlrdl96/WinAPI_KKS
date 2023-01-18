@@ -33,6 +33,7 @@ void CongratulationsUI::Start()
 		.InterTime = ContentConst::WIGGLE_TIME,
 		.Loop = true });
 
+	CongratulationRender->EffectCameraOff();
 	Off();
 }
 

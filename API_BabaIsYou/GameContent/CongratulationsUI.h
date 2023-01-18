@@ -30,7 +30,6 @@ private:
 	void(*EndFunction)(void) = nullptr;
 	GameEngineRender* CongratulationRender = nullptr;
 
-	std::vector<GameEngineRender*> vecCircleRenders;
 	bool IsProgressValue = false;
 
 	float ProgressTime = 0.0f;

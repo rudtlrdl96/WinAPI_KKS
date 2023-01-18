@@ -12,12 +12,14 @@ BlackBackUI::~BlackBackUI()
 }
 void BlackBackUI::Start()
 {
-	InitRender({
-		.FileName = "Background_Black.BMP",
-		.Pos = GameEngineWindow::GetScreenSize().half(),
-		.Scale = GameEngineWindow::GetScreenSize(),
-		.StartIndex = 0,
-		.AnimLength = 1,
-		.Order = static_cast<int>(RENDER_ORDER::BACKGROUND),
-		.IsUI = true});
+	BackRender = CreateRender("Background_Black.BMP", RENDER_ORDER::GRIDBACK);
+	BackRender->SetPosition(GameEngineWindow::GetScreenSize().half());
+	BackRender->SetScale(GameEngineWindow::GetScreenSize());
+	BackRender->EffectCameraOff();
+}
+
+
+void BlackBackUI::SetScale(const float4& _Scale)
+{
+	BackRender->SetScale(_Scale);
 }
