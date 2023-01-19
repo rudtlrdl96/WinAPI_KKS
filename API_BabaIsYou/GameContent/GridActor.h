@@ -9,41 +9,6 @@
 class GameEngineLevel;
 class GridActor : public WiggleActor
 {
-public:
-#pragma region Enum
-	enum class ACTOR_RENDER
-	{
-		STATIC,
-		DYNAMIC,
-		CHARACTER,
-		TILE,
-		BELT,
-	};
-
-	enum class ACTOR_DEFINE
-	{
-		ACTOR,
-		SUBJECT_TEXT,
-		VERB_TEXT,
-		DEFINE_TEXT,
-	};
-
-	enum class DEFINE_INFO
-	{
-		NONE   = 0,
-		YOU    = 1 << 0,
-		PUSH   = 1 << 1,
-		STOP   = 1 << 2,
-		MOVE   = 1 << 3,
-		HOT	   = 1 << 4,
-		MELT   = 1 << 5,
-		SINK   = 1 << 6,
-		DEFEAT = 1 << 7,
-		WIN	   = 1 << 8,
-	};
-
-#pragma endregion
-
 private:
 	class GridData
 	{
@@ -96,8 +61,16 @@ private:
 	static int2 GridLength;
 
 	static std::vector<std::vector<GridData>> vecGridDatas;
+	static std::vector<std::vector<GridActor*>> vecTextDatas;
+
+	// ObjectPooling 
 	static std::vector<GridActor*> vecObjectPool;	
+
+	// 액터 타입별 데이터 정렬
+	static std::map<TEMP_ACTOR_TYPE, std::vector<GridActor*>> mapActorDatas;
+	// 액터 Deinfe 데이터 정렬
 	static std::map<DEFINE_INFO, std::map<int, GridActor*>> mapDefineActorDatas;
+	// 타일 랜더이미지 Index	
 	static std::map<int, int> mapTileRenderImageIndex;
 
 
@@ -176,6 +149,8 @@ private:
 	void AllPushDir(const int2& _Dir, bool _IsInputMove);
 	bool CanMove(const int2& _NextPos);
 	void WinCheck();
+	void AddRuleCheck();
+	void RemoveRuleCheck();
 
 	void SetTileRender();
 	void ResetValues();

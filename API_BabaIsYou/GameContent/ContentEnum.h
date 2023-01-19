@@ -4,7 +4,6 @@
 //Defeat
 //Hot
 //Melt
-
 enum DIR_FLAG
 {
 	NONE	= 0,
@@ -80,4 +79,36 @@ enum class BEHAVIOR
 	WIN,
 	DEFINE_ADD,
 	DEFINE_REMOVE,
+};
+
+
+enum class ACTOR_RENDER
+{
+	STATIC,
+	DYNAMIC,
+	CHARACTER,
+	TILE,
+	BELT,
+};
+
+enum class ACTOR_DEFINE
+{
+	ACTOR,
+	SUBJECT_TEXT,
+	VERB_TEXT,
+	DEFINE_TEXT,
+};
+
+enum class DEFINE_INFO
+{
+	NONE = 0,
+	YOU = 1 << 0,
+	PUSH = 1 << 1,
+	STOP = 1 << 2,
+	MOVE = 1 << 3,
+	HOT = 1 << 4,
+	MELT = 1 << 5,
+	SINK = 1 << 6,
+	DEFEAT = 1 << 7,
+	WIN = 1 << 8,
 };

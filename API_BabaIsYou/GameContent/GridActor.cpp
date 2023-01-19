@@ -150,7 +150,10 @@ int2 GridActor::GridLength = int2::Zero;
 
 std::vector<GridActor*> GridActor::vecObjectPool;
 std::vector<std::vector<GridActor::GridData>> GridActor::vecGridDatas;
-std::map<GridActor::DEFINE_INFO, std::map<int, GridActor*>> GridActor::mapDefineActorDatas;
+std::vector<std::vector<GridActor*>> GridActor::vecTextDatas;
+
+std::map<TEMP_ACTOR_TYPE, std::vector<GridActor*>> GridActor::mapActorDatas;
+std::map<DEFINE_INFO, std::map<int, GridActor*>> GridActor::mapDefineActorDatas;
 std::map<int, int> GridActor::mapTileRenderImageIndex;
 
 
@@ -193,10 +196,21 @@ void GridActor::InitGridActor(GameEngineLevel* _PuzzleLevel)
 	}
 
 	vecGridDatas.resize(ContentConst::GRID_SIZE.y);
+	vecTextDatas.resize(ContentConst::GRID_SIZE.y);
 
 	for (size_t y = 0; y < vecGridDatas.size(); y++)
 	{
 		vecGridDatas[y].resize(ContentConst::GRID_SIZE.x);
+	}
+
+	for (size_t y = 0; y < vecTextDatas.size(); y++)
+	{
+		vecTextDatas[y].resize(ContentConst::GRID_SIZE.x);
+
+		for (size_t x = 0; x < vecTextDatas[y].size(); x++)
+		{
+			vecTextDatas[y][x] = nullptr;
+		}
 	}
 
 	PuzzleLevel = _PuzzleLevel;
@@ -211,19 +225,19 @@ void GridActor::InitGridActor(GameEngineLevel* _PuzzleLevel)
 	mapTileRenderImageIndex[DIR_FLAG::NONE] = 0;
 	mapTileRenderImageIndex[DIR_FLAG::RIGHT] = 1;
 	mapTileRenderImageIndex[DIR_FLAG::UP] = 2;
-	mapTileRenderImageIndex[DIR_FLAG::LEFT] = 4;
-	mapTileRenderImageIndex[DIR_FLAG::DOWN] = 8;
 	mapTileRenderImageIndex[DIR_FLAG::RIGHT | DIR_FLAG::UP] = 3;
+	mapTileRenderImageIndex[DIR_FLAG::LEFT] = 4;
 	mapTileRenderImageIndex[DIR_FLAG::LEFT | DIR_FLAG::RIGHT] = 5;
 	mapTileRenderImageIndex[DIR_FLAG::LEFT | DIR_FLAG::UP] = 6;
+	mapTileRenderImageIndex[DIR_FLAG::LEFT | DIR_FLAG::UP | DIR_FLAG::RIGHT] = 7;
+	mapTileRenderImageIndex[DIR_FLAG::DOWN] = 8;
 	mapTileRenderImageIndex[DIR_FLAG::DOWN | DIR_FLAG::RIGHT] = 9;
 	mapTileRenderImageIndex[DIR_FLAG::UP | DIR_FLAG::DOWN] = 10;
-	mapTileRenderImageIndex[DIR_FLAG::LEFT | DIR_FLAG::DOWN] = 12;
-	mapTileRenderImageIndex[DIR_FLAG::LEFT | DIR_FLAG::UP | DIR_FLAG::RIGHT] = 7;
 	mapTileRenderImageIndex[DIR_FLAG::UP | DIR_FLAG::DOWN | DIR_FLAG::RIGHT] = 11;
+	mapTileRenderImageIndex[DIR_FLAG::LEFT | DIR_FLAG::DOWN] = 12;
 	mapTileRenderImageIndex[DIR_FLAG::LEFT | DIR_FLAG::DOWN | DIR_FLAG::RIGHT] = 13;
 	mapTileRenderImageIndex[DIR_FLAG::UP | DIR_FLAG::DOWN | DIR_FLAG::LEFT] = 14;
-	mapTileRenderImageIndex[DIR_FLAG::UP | DIR_FLAG::DOWN | DIR_FLAG::LEFT | DIR_FLAG::RIGHT] = 0;
+	mapTileRenderImageIndex[DIR_FLAG::UP | DIR_FLAG::DOWN | DIR_FLAG::LEFT | DIR_FLAG::RIGHT] = 15;
 }
 
 void GridActor::ClearGrid()
@@ -253,6 +267,8 @@ void GridActor::ResetGridActor()
 	}
 
 	ClearGrid();
+	mapActorDatas.clear();
+	mapDefineActorDatas.clear();
 	ObjectPoolCount = 0;
 	WinCheckValue = false;
 }
@@ -260,6 +276,8 @@ void GridActor::ResetGridActor()
 void GridActor::DeleteGridActor()
 {
 	vecObjectPool.clear();
+	mapActorDatas.clear();
+	mapDefineActorDatas.clear();
 	ObjectPoolCount = 0;
 }
 
@@ -547,13 +565,19 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 
 void GridActor::SetGrid(const int2& _Pos)
 {
-	if (false == IsOver(PrevPos))
+	if (false == IsOver(GridPos))
 	{
-		vecGridDatas[PrevPos.y][PrevPos.x].erase(this);
+		vecGridDatas[GridPos.y][GridPos.x].erase(this);
 	}
 
 	GridPos = _Pos;
 	vecGridDatas[GridPos.y][GridPos.x].push_back(this);
+
+	if (ACTOR_DEFINE::ACTOR != ActorType)
+	{
+		vecTextDatas[GridPos.y][GridPos.x] = this;
+	}
+
 	SetPos(GetScreenPos(GridPos));
 }
 
@@ -693,10 +717,22 @@ bool GridActor::Move(bool _IsInputMove)
 
 	AllPushDir(MoveDir, _IsInputMove);
 	
+	if (ACTOR_DEFINE::ACTOR != ActorType)
+	{
+		RemoveRuleCheck();
+		vecTextDatas[GridPos.y][GridPos.x] = nullptr;
+	}
+
 	IsMove = true;
 	PrevPos = GridPos;
 	GridPos += MoveDir;
 	MoveProgress = 0.0f;
+
+	if (ACTOR_DEFINE::ACTOR != ActorType)
+	{
+		AddRuleCheck();
+		vecTextDatas[GridPos.y][GridPos.x] = this;
+	}
 
 	vecGridDatas[GridPos.y][GridPos.x].push_back(this);
 	vecGridDatas[PrevPos.y][PrevPos.x].erase(this);
@@ -727,11 +763,22 @@ void GridActor::Push()
 	{
 		return;
 	}
+	if (ACTOR_DEFINE::ACTOR != ActorType)
+	{
+		RemoveRuleCheck();
+		vecTextDatas[GridPos.y][GridPos.x] = nullptr;
+	}
 
 	IsMove = true;
 	PrevPos = GridPos;
 	GridPos = GridPos + MoveDir;
 	MoveProgress = 0.0f;
+
+	if (ACTOR_DEFINE::ACTOR != ActorType)
+	{
+		AddRuleCheck();
+		vecTextDatas[GridPos.y][GridPos.x] = this;
+	}
 
 	vecGridDatas[GridPos.y][GridPos.x].push_back(this);
 	vecGridDatas[PrevPos.y][PrevPos.x].erase(this);
@@ -967,6 +1014,17 @@ void GridActor::WinCheck()
 	{
 		WinCheckValue = true;
 	}
+}
+
+
+void GridActor::AddRuleCheck()
+{
+
+}
+
+void GridActor::RemoveRuleCheck()
+{
+
 }
 
 void GridActor::SetTileRender()

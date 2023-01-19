@@ -1,6 +1,9 @@
 #include "RuleManager.h"
 #include <GameEngineBase/GameEngineDebug.h>
 
+#include "ContentEnum.h"
+#include "GridActor.h"
+
 RuleManager::RuleManager()
 {
 }
@@ -17,6 +20,16 @@ void RuleManager::AddRule(const Rule& _Rule)
 	if (FindIter == EndIter)
 	{
 		mapRules[_Rule.Value.KeyValue] = _Rule;
+
+		switch (static_cast<RULE_TYPE>(_Rule.Value.DefineValue))
+		{
+		case RULE_TYPE::SUBJECT:
+			break;
+		case RULE_TYPE::DEFINE:
+			break;
+		default:
+			break;
+		}
 	}
 
 	++(mapRules[_Rule.Value.KeyValue].RuleCount);
