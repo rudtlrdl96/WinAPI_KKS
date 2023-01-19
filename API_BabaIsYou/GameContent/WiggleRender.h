@@ -10,11 +10,6 @@ public:
 	WiggleRender(GameEngineRender* _WiggleRender, int _StartIndex, int _AnimLength, int _BitmapInterval);
 	~WiggleRender();
 
-	void SetRenderIndex();
-	void Wiggle();
-	void PrevAnim();
-	void NextAnim();
-
 	WiggleRender(const WiggleRender& _Other) = delete;
 	WiggleRender(WiggleRender&& _Other) noexcept = delete;
 	WiggleRender& operator=(const WiggleRender& _Other) = delete;
@@ -45,6 +40,13 @@ public:
 		CurTileIndex = _Index;
 		SetRenderIndex();
 	}
+
+
+	void SetRenderIndex();
+	void Wiggle();
+	void ResetAnim();
+	void PrevAnim();
+	void NextAnim();
 
 	void SetDirInterval(size_t _DirInterval);
 	void SetAnimDir(const int2& _Dir);

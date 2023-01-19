@@ -33,7 +33,7 @@ protected:
 
 	void InitRender(const WiggleAnimationParameter& _Parameter);
 
-
+	void ResetAnim();
 	void SetFrame(int _Frame);
 	void SetLength(int _Length);
 	void SetDirInterval(size_t _DirInterval);

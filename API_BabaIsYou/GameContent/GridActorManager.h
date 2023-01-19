@@ -19,20 +19,19 @@ private:
 		WAIT
 	};
 public:
-	GridActorManager(GameEngineLevel* _PuzzleLevel);
-	~GridActorManager();
+	static GridActorManager* GetInst()
+	{
+		static GridActorManager Instance;
+		return &Instance;
+	}
 
+	void Init(GameEngineLevel* _PuzzleLevel);
 	void Input(float _DT);
-
-	GridActorManager(const GridActorManager& _Other) = delete;
-	GridActorManager(GridActorManager&& _Other) noexcept = delete;
-	GridActorManager& operator=(const GridActorManager& _Other) = delete;
-	GridActorManager& operator=(GridActorManager&& _Other) noexcept = delete;
 
 	void clear();
 	void LoadData(const std::string_view& _PuzzleName);
 
-	static void ActiveUpdateBehavior()
+	void ActiveUpdateBehavior()
 	{
 		UpdateBehavior = true;
 	}
@@ -42,7 +41,15 @@ public:
 protected:
 
 private:
-	static bool UpdateBehavior;
+	GridActorManager();
+	~GridActorManager();
+
+	GridActorManager(const GridActorManager& _Other) = delete;
+	GridActorManager(GridActorManager&& _Other) noexcept = delete;
+	GridActorManager& operator=(const GridActorManager& _Other) = delete;
+	GridActorManager& operator=(GridActorManager&& _Other) noexcept = delete;
+
+	bool UpdateBehavior = false;
 
 	std::list<INPUTBEHAVIOR> vecWaitInputs;
 	std::vector<GridActor*> vecActors;
@@ -50,6 +57,5 @@ private:
 	GameEngineLevel* PuzzleLevel = nullptr;
 	BlackBackUI* GridBackActor = nullptr;
 
-	void Init(GameEngineLevel* _PuzzleLevel);
 	void Reset();
 };

@@ -30,7 +30,6 @@ protected:
 private:
 	static std::string LoadPuzzleName;
 
-	GridActorManager* GridActorMgr = nullptr;
 	FadeUI* PuzzleFadeActor = nullptr;
 	CongratulationsUI* CongratulationActor = nullptr;
 

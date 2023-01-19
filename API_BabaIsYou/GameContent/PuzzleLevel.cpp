@@ -5,6 +5,7 @@
 
 #include "FadeUI.h"
 #include "GridActorManager.h"
+#include "RuleManager.h"
 #include "GrayBackUI.h"
 #include "CongratulationsUI.h"
 #include "ContentFunc.h"
@@ -19,11 +20,6 @@ PuzzleLevel::PuzzleLevel()
 
 PuzzleLevel::~PuzzleLevel()
 {
-	if (nullptr != GridActorMgr)
-	{
-		delete GridActorMgr;
-		GridActorMgr = nullptr;
-	}
 }
 
 void PuzzleLevel::PuzzleLevelExit()
@@ -52,10 +48,7 @@ void PuzzleLevel::Loading()
 	PuzzleFadeActor = CreateActor<FadeUI>();
 	CongratulationActor = CreateActor<CongratulationsUI>();
 
-	if (nullptr == GridActorMgr)
-	{
-		GridActorMgr = new GridActorManager(this);
-	}
+	GridActorManager::GetInst()->Init(this);
 
 	if (false == GameEngineInput::IsKey("Wait"))
 	{
@@ -80,14 +73,14 @@ void PuzzleLevel::Update(float _DT)
 		return;
 	}
 
-	if (true == GridActorMgr->IsPuzzleEnd() && false == CongratulationActor->IsProgress())
+	if (true == GridActorManager::GetInst()->IsPuzzleEnd() && false == CongratulationActor->IsProgress())
 	{
 		CongratulationActor->Congratulations(&PuzzleLevelExit);
 	}
 	else
 	{
-		GridActorMgr->Input(_DT);
-		GridActorMgr->clear();
+		GridActorManager::GetInst()->Input(_DT);
+		GridActorManager::GetInst()->clear();
 	}
 }
 
@@ -105,11 +98,5 @@ void PuzzleLevel::LevelChangeEnd(GameEngineLevel* _NextLevel)
 
 void PuzzleLevel::LoadPuzzleData()
 {
-	if (nullptr == GridActorMgr)
-	{
-		MsgAssert("ActorManager가 초기화 되지 않았습니다");
-		return;
-	}
-
-	GridActorMgr->LoadData(LoadPuzzleName);
+	GridActorManager::GetInst()->LoadData(LoadPuzzleName);
 }

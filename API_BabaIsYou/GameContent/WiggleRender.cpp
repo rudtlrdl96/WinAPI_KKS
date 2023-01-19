@@ -46,6 +46,12 @@ void WiggleRender::Wiggle()
 	SetRenderIndex();
 }
 
+void WiggleRender::ResetAnim()
+{
+	CurAnim = 0;
+	SetRenderIndex();
+}
+
 void WiggleRender::PrevAnim()
 {
 	--CurAnim;

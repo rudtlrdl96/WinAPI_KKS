@@ -64,7 +64,8 @@ void GameEngineRender::FrameAnimation::Render(float _DeltaTime)
 			{
 				CurrentIndex = 0;
 			}
-			else {
+			else 
+			{
 				CurrentIndex = static_cast<int>(FrameIndex.size()) - 1;
 			}
 		}

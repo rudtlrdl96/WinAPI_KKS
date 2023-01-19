@@ -9,7 +9,6 @@
 class GameEngineLevel;
 class GridActor : public WiggleActor
 {
-	friend class GridActorManager;
 public:
 #pragma region Enum
 	enum class ACTOR_RENDER
@@ -59,6 +58,13 @@ private:
 		size_t GetDefine();
 	};
 
+	class BehavoirData
+	{
+	public:
+		BEHAVIOR Behavior = BEHAVIOR::WAIT;
+		int Value = -1;
+	};
+
 #pragma region Static
 
 public:
@@ -67,13 +73,19 @@ public:
 	static void ClearGrid();
 	static void DeleteGridActor();
 
+	static void AllActorUndo();
 	static void MoveAllYouBehavior(const int2& _Dir);
 	static void MoveAllMoveBehavior();
 	static void SetGridLength(const int2& _Length);
 
 	static GridActor* GetActor(TEMP_ACTOR_TYPE _Type);
+	static std::map<int, GridActor*>& GetDefineActors(DEFINE_INFO _Define);
 	static float4 GetScreenPos(const int2& _GridPos);
+
+	static bool IsAnyMove();
+	static void AnyMoveCheckReset();
 	static bool IsOver(const int2& _GridPos);
+	static bool IsWin();
 
 private:
 	static GameEngineLevel* PuzzleLevel;
@@ -86,7 +98,7 @@ private:
 	static std::vector<std::vector<GridData>> vecGridDatas;
 	static std::vector<GridActor*> vecObjectPool;	
 	static std::map<DEFINE_INFO, std::map<int, GridActor*>> mapDefineActorDatas;
-	static std::map<int, int> mapTileRenderIndex;
+	static std::map<int, int> mapTileRenderImageIndex;
 
 
 #pragma endregion
@@ -106,10 +118,9 @@ public:
 	void AddDefine(DEFINE_INFO _Info);
 	void RemoveDefine(DEFINE_INFO _Info);
 	bool IsDefine(DEFINE_INFO _Info);
-	
 	void SaveBehaviorInfo();
-
-
+	
+	
 protected:
 	void Start() override;
 	void Update(float _DT) override;
@@ -117,11 +128,12 @@ protected:
 private:
 	std::string ActorName = "";
 
+	TEMP_ACTOR_TYPE ActorEnum = TEMP_ACTOR_TYPE::COUNT;
 	ACTOR_DEFINE ActorType = ACTOR_DEFINE::ACTOR;
 	ACTOR_RENDER RenderType = ACTOR_RENDER::STATIC;
 
-	std::vector<BEHAVIOR> CurFramesBehaviors;
-	std::vector<std::vector<BEHAVIOR>> vecBehaviors;
+	std::vector<BehavoirData> CurFramesBehaviors;
+	std::vector<std::vector<BehavoirData>> vecBehaviors;
 
 	const int ActorKey = 0;
 
@@ -152,6 +164,10 @@ private:
 	void TurnRight();
 	void UndoTurnRight();
 
+	void SetDefine(DEFINE_INFO _Info);
+	void UndoAddDefine(DEFINE_INFO _Info);
+	void UndoRemoveDefine(DEFINE_INFO _Info);
+
 	void SetDir(const int2& _Dir);
 	
 	void ActorDeath();
@@ -162,4 +178,5 @@ private:
 	void WinCheck();
 
 	void SetTileRender();
+	void ResetValues();
 };

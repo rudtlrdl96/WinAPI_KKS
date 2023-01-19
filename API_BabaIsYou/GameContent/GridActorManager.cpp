@@ -4,6 +4,8 @@
 #include <GameEnginePlatform/GameEngineInput.h>
 #include <GameEngineCore/GameEngineLevel.h>
 #include <GameEngineCore/GameEngineRender.h>
+
+#include "RuleManager.h"
 #include "ContentConst.h"
 #include "GridActor.h"
 #include "CongratulationsUI.h"
@@ -32,13 +34,9 @@ int arrDatas[TEMP_Y][TEMP_X] =
 	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,},
 };
 
-bool GridActorManager::UpdateBehavior = false;
-
-GridActorManager::GridActorManager(GameEngineLevel* _PuzzleLevel)
+GridActorManager::GridActorManager()
 {
-	PuzzleLevel = _PuzzleLevel;
-	Init(PuzzleLevel);
-	GridBackActor = PuzzleLevel->CreateActor<BlackBackUI>();
+
 }
 
 GridActorManager::~GridActorManager()
@@ -46,9 +44,18 @@ GridActorManager::~GridActorManager()
 	GridActor::DeleteGridActor();
 }
 
+
+void GridActorManager::Init(GameEngineLevel* _PuzzleLevel)
+{
+	PuzzleLevel = _PuzzleLevel;
+	GridActor::InitGridActor(_PuzzleLevel);
+	vecActors.reserve(ContentConst::GRID_SIZE_X * ContentConst::GRID_SIZE_Y);
+	GridBackActor = PuzzleLevel->CreateActor<BlackBackUI>();
+}
+
 void GridActorManager::Input(float _DT)
 {
-	if (true == GridActor::WinCheckValue)
+	if (true == GridActor::IsWin())
 	{
 		return;
 	}
@@ -80,7 +87,7 @@ void GridActorManager::Input(float _DT)
 		vecWaitInputs.push_back(INPUTBEHAVIOR::WAIT);
 	}
 	
-	if (false == GridActor::AnyActorMoveCheck && 0 < vecWaitInputs.size())
+	if (false == GridActor::IsAnyMove() && 0 < vecWaitInputs.size())
 	{
 		INPUTBEHAVIOR NextBehavior = vecWaitInputs.front();
 		vecWaitInputs.pop_front();
@@ -104,18 +111,7 @@ void GridActorManager::Input(float _DT)
 			GridActor::MoveAllMoveBehavior();
 			break;
 		case INPUTBEHAVIOR::UNDO:
-
-			for (GridActor* Data : vecActors)
-			{
-				if (nullptr == Data)
-				{
-					MsgAssert("nullptr GridActor Data를 참조하려 했습니다.");
-					return;
-				}
-
-				Data->Undo();
-			}
-
+			GridActor::AllActorUndo();
 			return;
 		case INPUTBEHAVIOR::WAIT:
 			GridActor::MoveAllMoveBehavior();
@@ -124,6 +120,8 @@ void GridActorManager::Input(float _DT)
 			MsgAssert("잘못된 Input enum값 입니다.");
 			break;
 		}
+
+		// Todo : RuleCheck 기능 추가
 
 		for (GridActor* Data : vecActors)
 		{
@@ -136,12 +134,6 @@ void GridActorManager::Input(float _DT)
 			Data->SaveBehaviorInfo();
 		}
 	}
-}
-
-void GridActorManager::Init(GameEngineLevel* _PuzzleLevel)
-{
-	GridActor::InitGridActor(_PuzzleLevel);
-	vecActors.reserve(ContentConst::GRID_SIZE_X * ContentConst::GRID_SIZE_Y);
 }
 
 void GridActorManager::LoadData(const std::string_view& _PuzzleName)
@@ -185,7 +177,7 @@ void GridActorManager::LoadData(const std::string_view& _PuzzleName)
 
 void GridActorManager::clear()
 {
-	GridActor::AnyActorMoveCheck = false;
+	GridActor::AnyMoveCheckReset();
 }
 
 void GridActorManager::Reset()
@@ -202,5 +194,5 @@ void GridActorManager::Reset()
 
 bool GridActorManager::IsPuzzleEnd() const
 {
-	return GridActor::WinCheckValue;
+	return GridActor::IsWin();
 }

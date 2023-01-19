@@ -151,7 +151,7 @@ int2 GridActor::GridLength = int2::Zero;
 std::vector<GridActor*> GridActor::vecObjectPool;
 std::vector<std::vector<GridActor::GridData>> GridActor::vecGridDatas;
 std::map<GridActor::DEFINE_INFO, std::map<int, GridActor*>> GridActor::mapDefineActorDatas;
-std::map<int, int> GridActor::mapTileRenderIndex;
+std::map<int, int> GridActor::mapTileRenderImageIndex;
 
 
 GridActor* GridActor::GetActor(TEMP_ACTOR_TYPE _Type)
@@ -171,6 +171,12 @@ GridActor* GridActor::GetActor(TEMP_ACTOR_TYPE _Type)
 	vecObjectPool[ObjectPoolCount]->On();
 	return vecObjectPool[ObjectPoolCount++];
 }
+
+std::map<int, GridActor*>& GridActor::GetDefineActors(DEFINE_INFO _Define)
+{
+	return mapDefineActorDatas[_Define];
+}
+
 
 void GridActor::InitGridActor(GameEngineLevel* _PuzzleLevel)
 {
@@ -202,22 +208,22 @@ void GridActor::InitGridActor(GameEngineLevel* _PuzzleLevel)
 		PuzzleLevel->CreateActor<GridActor>();
 	}
 
-	mapTileRenderIndex[DIR_FLAG::NONE] = 0;
-	mapTileRenderIndex[DIR_FLAG::RIGHT] = 1;
-	mapTileRenderIndex[DIR_FLAG::UP] = 2;
-	mapTileRenderIndex[DIR_FLAG::LEFT] = 4;
-	mapTileRenderIndex[DIR_FLAG::DOWN] = 8;
-	mapTileRenderIndex[DIR_FLAG::RIGHT | DIR_FLAG::UP] = 3;
-	mapTileRenderIndex[DIR_FLAG::LEFT | DIR_FLAG::RIGHT] = 5;
-	mapTileRenderIndex[DIR_FLAG::LEFT | DIR_FLAG::UP] = 6;
-	mapTileRenderIndex[DIR_FLAG::DOWN | DIR_FLAG::RIGHT] = 9;
-	mapTileRenderIndex[DIR_FLAG::UP | DIR_FLAG::DOWN] = 10;
-	mapTileRenderIndex[DIR_FLAG::LEFT | DIR_FLAG::DOWN] = 12;
-	mapTileRenderIndex[DIR_FLAG::LEFT | DIR_FLAG::UP | DIR_FLAG::RIGHT] = 7;
-	mapTileRenderIndex[DIR_FLAG::UP | DIR_FLAG::DOWN | DIR_FLAG::RIGHT] = 11;
-	mapTileRenderIndex[DIR_FLAG::LEFT | DIR_FLAG::DOWN | DIR_FLAG::RIGHT] = 13;
-	mapTileRenderIndex[DIR_FLAG::UP | DIR_FLAG::DOWN | DIR_FLAG::LEFT] = 14;
-	mapTileRenderIndex[DIR_FLAG::UP | DIR_FLAG::DOWN | DIR_FLAG::LEFT | DIR_FLAG::RIGHT] = 0;
+	mapTileRenderImageIndex[DIR_FLAG::NONE] = 0;
+	mapTileRenderImageIndex[DIR_FLAG::RIGHT] = 1;
+	mapTileRenderImageIndex[DIR_FLAG::UP] = 2;
+	mapTileRenderImageIndex[DIR_FLAG::LEFT] = 4;
+	mapTileRenderImageIndex[DIR_FLAG::DOWN] = 8;
+	mapTileRenderImageIndex[DIR_FLAG::RIGHT | DIR_FLAG::UP] = 3;
+	mapTileRenderImageIndex[DIR_FLAG::LEFT | DIR_FLAG::RIGHT] = 5;
+	mapTileRenderImageIndex[DIR_FLAG::LEFT | DIR_FLAG::UP] = 6;
+	mapTileRenderImageIndex[DIR_FLAG::DOWN | DIR_FLAG::RIGHT] = 9;
+	mapTileRenderImageIndex[DIR_FLAG::UP | DIR_FLAG::DOWN] = 10;
+	mapTileRenderImageIndex[DIR_FLAG::LEFT | DIR_FLAG::DOWN] = 12;
+	mapTileRenderImageIndex[DIR_FLAG::LEFT | DIR_FLAG::UP | DIR_FLAG::RIGHT] = 7;
+	mapTileRenderImageIndex[DIR_FLAG::UP | DIR_FLAG::DOWN | DIR_FLAG::RIGHT] = 11;
+	mapTileRenderImageIndex[DIR_FLAG::LEFT | DIR_FLAG::DOWN | DIR_FLAG::RIGHT] = 13;
+	mapTileRenderImageIndex[DIR_FLAG::UP | DIR_FLAG::DOWN | DIR_FLAG::LEFT] = 14;
+	mapTileRenderImageIndex[DIR_FLAG::UP | DIR_FLAG::DOWN | DIR_FLAG::LEFT | DIR_FLAG::RIGHT] = 0;
 }
 
 void GridActor::ClearGrid()
@@ -255,6 +261,14 @@ void GridActor::DeleteGridActor()
 {
 	vecObjectPool.clear();
 	ObjectPoolCount = 0;
+}
+
+void GridActor::AllActorUndo()
+{
+	for (size_t i = 0; i < ObjectPoolCount; i++)
+	{
+		vecObjectPool[i]->Undo();
+	}
 }
 
 void GridActor::MoveAllYouBehavior(const int2& _Dir)
@@ -313,6 +327,21 @@ bool GridActor::IsOver(const int2& _GridPos)
 	return false;
 }
 
+bool GridActor::IsWin()
+{
+	return WinCheckValue;
+}
+
+bool GridActor::IsAnyMove()
+{
+	return AnyActorMoveCheck;
+}
+
+void GridActor::AnyMoveCheckReset()
+{
+	AnyActorMoveCheck = false;
+}
+
 #pragma endregion
 
 /// static GridActor
@@ -358,7 +387,7 @@ void GridActor::Update(float _DT)
 		SetTileRender();
 	}
 
-	if (IsDefine(DEFINE_INFO::YOU))
+	if (false == IsDeath && IsDefine(DEFINE_INFO::YOU))
 	{
 		WinCheck();
 	}
@@ -388,12 +417,12 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 		return;
 	}
 
-	vecBehaviors.clear();
+	ActorEnum = _Actor;
 
 	// Todo : File Save/Load 시스템이 완성된 후 데이터베이스 로드
 
 	// 속성 값 초기화
-	DefineData = 0;
+	ResetValues();
 
 	if (TEMP_ACTOR_TYPE::BABA == _Actor)
 	{
@@ -405,9 +434,7 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 		RenderType = ACTOR_RENDER::CHARACTER;
 
 		// Todo : 테스트용 임시 호출 추후 데이터시스템이 생성되면 삭제
-		AddDefine(DEFINE_INFO::YOU);
-		AddDefine(DEFINE_INFO::PUSH);
-		AddDefine(DEFINE_INFO::HOT);
+		SetDefine(DEFINE_INFO::YOU);
 	}
 
 	if (TEMP_ACTOR_TYPE::KEKE == _Actor)
@@ -432,7 +459,8 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 		ActorType = ACTOR_DEFINE::ACTOR;
 		RenderType = ACTOR_RENDER::STATIC;
 
-		AddDefine(DEFINE_INFO::WIN);
+		SetDefine(DEFINE_INFO::MELT);
+		SetDefine(DEFINE_INFO::WIN);
 	}
 
 	if (TEMP_ACTOR_TYPE::BABA_TEXT == _Actor)
@@ -443,7 +471,7 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 		SetDirInterval(0);
 		ActorType = ACTOR_DEFINE::SUBJECT_TEXT;
 		RenderType = ACTOR_RENDER::STATIC;
-		AddDefine(DEFINE_INFO::PUSH);
+		SetDefine(DEFINE_INFO::PUSH);
 	}
 
 	if (TEMP_ACTOR_TYPE::IS_TEXT == _Actor)
@@ -454,7 +482,7 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 		SetDirInterval(0);
 		ActorType = ACTOR_DEFINE::VERB_TEXT;
 		RenderType = ACTOR_RENDER::STATIC;
-		AddDefine(DEFINE_INFO::STOP);
+		SetDefine(DEFINE_INFO::STOP);
 	}
 
 	if (TEMP_ACTOR_TYPE::YOU_TEXT == _Actor)
@@ -465,7 +493,7 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 		SetDirInterval(0);
 		ActorType = ACTOR_DEFINE::DEFINE_TEXT;
 		RenderType = ACTOR_RENDER::STATIC;
-		AddDefine(DEFINE_INFO::PUSH);
+		SetDefine(DEFINE_INFO::PUSH);
 	}
 
 	if (TEMP_ACTOR_TYPE::LAVA == _Actor)
@@ -476,7 +504,7 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 		SetDirInterval(0);
 		ActorType = ACTOR_DEFINE::ACTOR;
 		RenderType = ACTOR_RENDER::TILE;
-		AddDefine(DEFINE_INFO::MELT);
+		SetDefine(DEFINE_INFO::MELT);
 	}
 
 	if (TEMP_ACTOR_TYPE::WATER == _Actor)
@@ -487,8 +515,8 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 		SetDirInterval(0);
 		ActorType = ACTOR_DEFINE::ACTOR;
 		RenderType = ACTOR_RENDER::TILE;
-		AddDefine(DEFINE_INFO::SINK);
-		AddDefine(DEFINE_INFO::PUSH);
+		SetDefine(DEFINE_INFO::SINK);
+		SetDefine(DEFINE_INFO::PUSH);
 	}
 
 	if (TEMP_ACTOR_TYPE::SKULL == _Actor)
@@ -499,8 +527,8 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 		SetDirInterval(1);
 		ActorType = ACTOR_DEFINE::ACTOR;
 		RenderType = ACTOR_RENDER::DYNAMIC;
-		AddDefine(DEFINE_INFO::DEFEAT);
-		AddDefine(DEFINE_INFO::PUSH);
+		SetDefine(DEFINE_INFO::DEFEAT);
+		SetDefine(DEFINE_INFO::PUSH);
 	}
 
 	if (TEMP_ACTOR_TYPE::WIN_TEXT == _Actor)
@@ -511,7 +539,7 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 		SetDirInterval(0);
 		ActorType = ACTOR_DEFINE::ACTOR;
 		RenderType = ACTOR_RENDER::STATIC;
-		AddDefine(DEFINE_INFO::DEFEAT);
+		SetDefine(DEFINE_INFO::DEFEAT);
 	}
 
 	SetAnimDir(int2::Right);
@@ -529,13 +557,24 @@ void GridActor::SetGrid(const int2& _Pos)
 	SetPos(GetScreenPos(GridPos));
 }
 
-void GridActor::AddDefine(DEFINE_INFO _Info)
+void GridActor::SetDefine(DEFINE_INFO _Info)
 {
 	mapDefineActorDatas[_Info][ActorKey] = this;
 	DefineData |= static_cast<size_t>(_Info);
 }
 
-void GridActor::RemoveDefine(DEFINE_INFO _Info)
+void GridActor::AddDefine(DEFINE_INFO _Info)
+{
+	if (false == IsDefine(_Info))
+	{
+		mapDefineActorDatas[_Info][ActorKey] = this;
+		CurFramesBehaviors.push_back({BEHAVIOR::DEFINE_ADD, static_cast<int>(_Info)});
+	}
+
+	DefineData |= static_cast<size_t>(_Info);
+}
+
+void GridActor::UndoAddDefine(DEFINE_INFO _Info)
 {
 	std::map<int, GridActor*>& mapDatas = mapDefineActorDatas[_Info];
 	std::map<int, GridActor*>::iterator FindIter = mapDatas.find(ActorKey);
@@ -548,6 +587,34 @@ void GridActor::RemoveDefine(DEFINE_INFO _Info)
 	DefineData &= ~static_cast<size_t>(_Info);
 }
 
+void GridActor::RemoveDefine(DEFINE_INFO _Info)
+{
+	if (true == IsDefine(_Info))
+	{
+		CurFramesBehaviors.push_back({ BEHAVIOR::DEFINE_REMOVE, static_cast<int>(_Info) });
+	}
+
+	std::map<int, GridActor*>& mapDatas = mapDefineActorDatas[_Info];
+	std::map<int, GridActor*>::iterator FindIter = mapDatas.find(ActorKey);
+
+	if (FindIter != mapDatas.end())
+	{
+		mapDatas.erase(FindIter);
+	}
+
+	DefineData &= ~static_cast<size_t>(_Info);
+}
+
+void GridActor::UndoRemoveDefine(DEFINE_INFO _Info)
+{
+	if (false == IsDefine(_Info))
+	{
+		mapDefineActorDatas[_Info][ActorKey] = this;
+	}
+
+	DefineData |= static_cast<size_t>(_Info);
+}
+
 bool GridActor::IsDefine(DEFINE_INFO _Info)
 {
 	return DefineData & static_cast<size_t>(_Info);
@@ -557,7 +624,7 @@ void GridActor::SaveBehaviorInfo()
 {
 	if (0 >= CurFramesBehaviors.size())
 	{
-		CurFramesBehaviors.push_back(BEHAVIOR::WAIT);
+		CurFramesBehaviors.push_back({ BEHAVIOR::WAIT, -1});
 	}
 
 	vecBehaviors.push_back(CurFramesBehaviors);
@@ -571,11 +638,11 @@ void GridActor::Undo()
 		return;
 	}
 
-	const std::vector<BEHAVIOR>& vecUndos = vecBehaviors.back();
+	const std::vector<BehavoirData>& vecUndos = vecBehaviors.back();
 
 	for (int i = static_cast<int>(vecUndos.size() - 1); i >= 0 ; --i)
 	{
-		switch (vecUndos[i])
+		switch (vecUndos[i].Behavior)
 		{
 		case BEHAVIOR::WAIT:
 			break;
@@ -596,6 +663,13 @@ void GridActor::Undo()
 			break;
 		case BEHAVIOR::WIN:
 			break;
+		case BEHAVIOR::DEFINE_ADD:
+			UndoAddDefine(static_cast<DEFINE_INFO>(vecUndos[i].Value));
+			break;
+		case BEHAVIOR::DEFINE_REMOVE:
+			UndoRemoveDefine(static_cast<DEFINE_INFO>(vecUndos[i].Value));
+			break;
+
 		default:
 			MsgAssert("잘못된 Behavior Type 입니다.");
 			break;
@@ -628,7 +702,7 @@ bool GridActor::Move(bool _IsInputMove)
 	vecGridDatas[PrevPos.y][PrevPos.x].erase(this);
 	vecGridDatas[GridPos.y][GridPos.x].DeathCheck();
 
-	CurFramesBehaviors.push_back(BEHAVIOR::MOVE);
+	CurFramesBehaviors.push_back({ BEHAVIOR::MOVE, -1});
 	NextAnim();
 
 	return true;
@@ -662,7 +736,7 @@ void GridActor::Push()
 	vecGridDatas[GridPos.y][GridPos.x].push_back(this);
 	vecGridDatas[PrevPos.y][PrevPos.x].erase(this);
 
-	CurFramesBehaviors.push_back(BEHAVIOR::PUSH);
+	CurFramesBehaviors.push_back({ BEHAVIOR::PUSH, -1});
 }
 
 void GridActor::UndoPush()
@@ -684,7 +758,7 @@ void GridActor::TurnLeft()
 		return;
 	}
 
-	CurFramesBehaviors.push_back(BEHAVIOR::TURN_LEFT);
+	CurFramesBehaviors.push_back({ BEHAVIOR::TURN_LEFT, -1 });
 
 	if (int2::Left == MoveDir)
 	{
@@ -735,7 +809,7 @@ void GridActor::TurnRight()
 		return;
 	}
 
-	CurFramesBehaviors.push_back(BEHAVIOR::TURN_RIGHT);
+	CurFramesBehaviors.push_back({ BEHAVIOR::TURN_RIGHT, -1});
 
 	if (int2::Left == MoveDir)
 	{
@@ -802,7 +876,7 @@ void GridActor::ActorDeath()
 	}
 
 	IsDeath = true;
-	CurFramesBehaviors.push_back(BEHAVIOR::DEATH);
+	CurFramesBehaviors.push_back({BEHAVIOR::DEATH, -1});
 
 	RenderOff();
 }
@@ -854,8 +928,13 @@ bool GridActor::CanMove(const int2& _NextPos)
 	int2 Dir = _NextPos - GridPos;
 	int2 CheckPos = _NextPos;
 
-	while (false == IsOver(CheckPos))
+	while (true)
 	{
+		if (true == IsOver(CheckPos))
+		{
+			return false;
+		}
+
 		size_t DefineData = vecGridDatas[CheckPos.y][CheckPos.x].GetDefine();
 
 		if (static_cast<size_t>(DEFINE_INFO::STOP) & DefineData)
@@ -919,5 +998,24 @@ void GridActor::SetTileRender()
 		RenderKey |= DIR_FLAG::RIGHT;
 	}
 
-	SetTileIndex(mapTileRenderIndex[RenderKey]);
+	SetTileIndex(mapTileRenderImageIndex[RenderKey]);
+}
+
+void GridActor::ResetValues()
+{
+	vecBehaviors.clear();
+	CurFramesBehaviors.clear();
+
+	MoveDir = int2::Right;
+	PrevPos = { -1, -1 };
+	GridPos = int2::Zero;
+
+	DefineData = 0;
+
+	IsDeath = false;
+	IsMove = false;
+	MoveProgress = 0.0f;
+
+	ResetAnim();
+	RenderOn();
 }

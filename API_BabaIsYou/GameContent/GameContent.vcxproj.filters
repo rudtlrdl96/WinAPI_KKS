@@ -108,6 +108,9 @@
     <ClInclude Include="ContentEnum.h">
       <Filter>00.Base</Filter>
     </ClInclude>
+    <ClInclude Include="RuleManager.h">
+      <Filter>02.Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GridActorManager.cpp">
@@ -175,6 +178,9 @@
     </ClCompile>
     <ClCompile Include="ContentEnum.cpp">
       <Filter>00.Base</Filter>
+    </ClCompile>
+    <ClCompile Include="RuleManager.cpp">
+      <Filter>02.Manager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
