@@ -256,6 +256,7 @@ void GridActor::ResetGridActor()
 			return;
 		}
 
+		vecObjectPool[i]->ResetValues();
 		vecObjectPool[i]->Off();
 	}
 
@@ -285,6 +286,14 @@ void GridActor::AllActorUndo()
 	for (size_t i = 0; i < ObjectPoolCount; i++)
 	{
 		vecObjectPool[i]->Undo();
+	}
+}
+
+void GridActor::AllActorSaveBehavior()
+{
+	for (size_t i = 0; i < ObjectPoolCount; i++)
+	{
+		vecObjectPool[i]->SaveBehaviorInfo();
 	}
 }
 
@@ -435,23 +444,22 @@ void GridActor::LoadData(TEMP_ACTOR_INDEX _Actor)
 	}
 
 
-	std::map<int, GridActor*>& PrevMapDatas = mapActorDatas[ActorEnum];
+	//std::map<int, GridActor*>& PrevMapDatas = mapActorDatas[ActorEnum];
 
-	std::map<int, GridActor*>::iterator FindIter = PrevMapDatas.find(ActorKey);
-	std::map<int, GridActor*>::iterator EndIter = PrevMapDatas.end();
-
-	if (FindIter != EndIter)
-	{
-		PrevMapDatas.erase(FindIter);
-	}
+	//std::map<int, GridActor*>::iterator FindIter = PrevMapDatas.find(ActorKey);
+	//std::map<int, GridActor*>::iterator EndIter = PrevMapDatas.end();
+	//
+	//if (FindIter != EndIter)
+	//{
+	//	PrevMapDatas.erase(FindIter);
+	//}
 
 	ActorEnum = _Actor;
-	mapActorDatas[ActorEnum][ActorKey] = this;
+	//mapActorDatas[ActorEnum][ActorKey] = this;
 
 	// Todo : File Save/Load 시스템이 완성된 후 데이터베이스 로드
 
 	// 속성 값 초기화
-	ResetValues();
 	WiggleRender* WiggleRenderPtr = GetWiggleRender();
 
 
@@ -462,6 +470,8 @@ void GridActor::LoadData(TEMP_ACTOR_INDEX _Actor)
 	}
 
 	WiggleRenderPtr->Reset();
+	DefineData = 0;
+	GetWiggleRender()->ResetAnim();
 
 	// Todo : 테스트용 임시 호출 추후 데이터시스템이 생성되면 삭제
 	if (TEMP_ACTOR_INDEX::BABA == _Actor)

@@ -9,6 +9,14 @@
 class GameEngineLevel;
 class GridActor : public WiggleActor
 {
+public:
+	class Rule
+	{
+	public:
+		RULE_TYPE Type;
+		TEMP_ACTOR_INDEX Verb;
+		int Value;
+	};
 private:
 	class GridData
 	{
@@ -41,6 +49,7 @@ public:
 	static float4 GetScreenPos(const int2& _GridPos);
 
 	static void AllActorUndo();
+	static void AllActorSaveBehavior();
 	static void MoveAllYouBehavior(const int2& _Dir);
 	static void MoveAllMoveBehavior();
 

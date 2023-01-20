@@ -48,7 +48,6 @@ void GridActorManager::Init(GameEngineLevel* _PuzzleLevel)
 {
 	PuzzleLevel = _PuzzleLevel;
 	GridActor::InitGridActor(_PuzzleLevel);
-	vecActors.reserve(ContentConst::GRID_SIZE_X * ContentConst::GRID_SIZE_Y);
 	GridBackActor = PuzzleLevel->CreateActor<BlackBackUI>();
 }
 
@@ -122,16 +121,7 @@ void GridActorManager::Input(float _DT)
 
 		// Todo : RuleCheck 기능 추가
 
-		for (GridActor* Data : vecActors)
-		{
-			if (nullptr == Data)
-			{
-				MsgAssert("nullptr GridActor Data를 참조하려 했습니다.");
-				return;
-			}
-
-			Data->SaveBehaviorInfo();
-		}
+		GridActor::AllActorSaveBehavior();
 	}
 }
 
@@ -164,7 +154,6 @@ void GridActorManager::LoadData(const std::string_view& _PuzzleName)
 				ActorData->LoadData(static_cast<TEMP_ACTOR_INDEX>(arrDatas[y][x]));
 				ActorData->On();
 				ActorData->SetGrid({static_cast<int>(x), static_cast<int>(y)});
-				vecActors.push_back(ActorData);
 			}
 		}
 	}
@@ -182,12 +171,6 @@ void GridActorManager::clear()
 void GridActorManager::Reset()
 {
 	GridActor::ResetGridActor();
-
-	for (size_t i = 0; i < vecActors.size(); i++)
-	{
-		vecActors[i]->Off();
-	}
-	vecActors.clear();
 }
 
 
