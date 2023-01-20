@@ -24,32 +24,50 @@ public:
 	{
 		IsWiggle = false;
 	}
-
-	inline void SetStartIndex(int _Index)
+	
+	inline void ActiveTile()
 	{
-		StartIndex = _Index;
+		IsTile = true;
 	}
 
-	inline void SetAnimLength(int _Length)
+	inline void DisableTile()
 	{
-		AnimLength = _Length;
+		IsTile = false;
 	}
 
-	inline void SetTileIndex(int _Index)
+	inline void ActiveDir()
 	{
-		CurTileIndex = _Index;
-		SetRenderIndex();
+		IsDir = true;
 	}
 
+	inline void DisableDir()
+	{
+		IsDir = false;
+	}
+
+	inline void ActiveAnimation()
+	{
+		IsAnimation = true;
+	}
+
+	inline void DisableAnimation()
+	{
+		IsAnimation = false;
+	}
+	
+	void Wiggle();
+	void Reset();
 
 	void SetRenderIndex();
-	void Wiggle();
-	void ResetAnim();
-	void PrevAnim();
-	void NextAnim();
-
+	void SetStartIndex(int _Index);
+	void SetAnimLength(int _Length);
+	void SetTileIndex(int _Index);
 	void SetDirInterval(size_t _DirInterval);
 	void SetAnimDir(const int2& _Dir);
+
+	void PrevAnim();
+	void NextAnim();
+	void ResetAnim();
 
 	void RenderOn();
 	void RenderOff();
@@ -58,8 +76,8 @@ protected:
 
 private:
 	int CurIndex = 0;
-	int CurAnim = 0;
-	int CurWiggle = 0;
+	int CurAnimationIndex = 0;
+	int CurWiggleIndex = 0;
 	int CurTileIndex = 0;
 
 	int StartIndex = 0;
@@ -70,5 +88,9 @@ private:
 	size_t DirInterval = 0;
 
 	bool IsWiggle = false;
+	bool IsTile = false;
+	bool IsDir = false;
+	bool IsAnimation = false;
+
 	GameEngineRender* Render = nullptr;
 };

@@ -37,7 +37,7 @@ void WorldMapLevel::Loading()
 
 void WorldMapLevel::Update(float _DT)
 {
-	if (false == WorldMapFadeActor->IsProgress() && true == GameEngineInput::IsDown("LevelChange"))
+	if (false == WorldMapFadeActor->IsProgress() && true == GameEngineInput::IsAnyKey())
 	{
 		WorldMapFadeActor->Fade(FADE_STATE::FADEIN, ContentFunc::ChangePuzzleLevel);
 	}

@@ -35,17 +35,11 @@ void TitleLevel::Loading()
 	TitleFadeActor = CreateActor<FadeUI>();
 	CreateActor<TitleLogoUI>();
 	CreateActor<BlackBackUI>();
-
-	if (false == GameEngineInput::IsKey("LevelChange"))
-	{
-		GameEngineInput::CreateKey("LevelChange", VK_SPACE);
-	}
-
 }
 
 void TitleLevel::Update(float _DT)
 {
-	if (false == TitleFadeActor->IsProgress() && true == GameEngineInput::IsDown("LevelChange"))
+	if (false == TitleFadeActor->IsProgress() && true == GameEngineInput::IsAnyKey())
 	{
 		TitleFadeActor->Fade(FADE_STATE::FADEIN, ContentFunc::ChangeWorldmapLevel);
 	}

@@ -75,55 +75,12 @@ void WiggleActor::InitRender(const WiggleAnimationParameter& _Parameter)
 	}
 }
 
-void WiggleActor::SetFrame(int _Frame)
+WiggleRender* WiggleActor::GetWiggleRender() const
 {
-	Render->SetStartIndex(_Frame);
-	Render->SetRenderIndex();
-}
+	if (nullptr == Render)
+	{
+		MsgAssert("WiggleRender를 초기화하지 않고 사용하려 했습니다.");
+	}
 
-void WiggleActor::SetLength(int _Length)
-{
-	Render->SetAnimLength(_Length);
-	Render->SetRenderIndex();
-}
-
-
-void WiggleActor::SetDirInterval(size_t _DirInterval)
-{
-	Render->SetDirInterval(_DirInterval);
-}
-
-void WiggleActor::ResetAnim()
-{
-	Render->ResetAnim();
-}
-
-void WiggleActor::PrevAnim()
-{
-	Render->PrevAnim();
-}
-
-void WiggleActor::SetTileIndex(int _Index)
-{
-	Render->SetTileIndex(_Index);
-}
-
-void WiggleActor::NextAnim()
-{
-	Render->NextAnim();
-}
-
-void WiggleActor::SetAnimDir(const int2& _Dir)
-{
-	Render->SetAnimDir(_Dir);
-}
-
-void WiggleActor::RenderOn()
-{
-	Render->RenderOn();
-}
-
-void WiggleActor::RenderOff()
-{
-	Render->RenderOff();
+	return Render;
 }

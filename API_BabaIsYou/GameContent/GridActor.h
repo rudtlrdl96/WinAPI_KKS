@@ -34,18 +34,18 @@ private:
 
 public:
 	static void InitGridActor(GameEngineLevel* _PuzzleLevel);
+	static void SetGridLength(const int2& _Length);
 	static void ResetGridActor();
-	static void ClearGrid();
 	static void DeleteGridActor();
+
+	static float4 GetScreenPos(const int2& _GridPos);
 
 	static void AllActorUndo();
 	static void MoveAllYouBehavior(const int2& _Dir);
 	static void MoveAllMoveBehavior();
-	static void SetGridLength(const int2& _Length);
 
-	static GridActor* GetActor(TEMP_ACTOR_TYPE _Type);
-	static std::map<int, GridActor*>& GetDefineActors(DEFINE_INFO _Define);
-	static float4 GetScreenPos(const int2& _GridPos);
+	static GridActor* CreateGridActor(TEMP_ACTOR_TYPE _Type);
+	static std::map<int, GridActor*>& GetDefineActors(ACTOR_DEFINE _Define);
 
 	static bool IsAnyMove();
 	static void AnyMoveCheckReset();
@@ -57,6 +57,8 @@ private:
 	static size_t ObjectPoolCount;
 	static bool AnyActorMoveCheck;
 	static bool WinCheckValue;
+
+	// 액터마다 고유 키를 주기위한 변수 절대 임의로 값 수정 x
 	static int NextActorKey;
 	static int2 GridLength;
 
@@ -69,7 +71,7 @@ private:
 	// 액터 타입별 데이터 정렬
 	static std::map<TEMP_ACTOR_TYPE, std::vector<GridActor*>> mapActorDatas;
 	// 액터 Deinfe 데이터 정렬
-	static std::map<DEFINE_INFO, std::map<int, GridActor*>> mapDefineActorDatas;
+	static std::map<ACTOR_DEFINE, std::map<int, GridActor*>> mapDefineActorDatas;
 	// 타일 랜더이미지 Index	
 	static std::map<int, int> mapTileRenderImageIndex;
 
@@ -88,9 +90,9 @@ public:
 
 	void LoadData(TEMP_ACTOR_TYPE _Actor);
 	void SetGrid(const int2& _Pos);
-	void AddDefine(DEFINE_INFO _Info);
-	void RemoveDefine(DEFINE_INFO _Info);
-	bool IsDefine(DEFINE_INFO _Info);
+	void AddDefine(ACTOR_DEFINE _Info);
+	void RemoveDefine(ACTOR_DEFINE _Info);
+	bool IsDefine(ACTOR_DEFINE _Info);
 	void SaveBehaviorInfo();
 	
 	
@@ -102,8 +104,8 @@ private:
 	std::string ActorName = "";
 
 	TEMP_ACTOR_TYPE ActorEnum = TEMP_ACTOR_TYPE::COUNT;
-	ACTOR_DEFINE ActorType = ACTOR_DEFINE::ACTOR;
-	ACTOR_RENDER RenderType = ACTOR_RENDER::STATIC;
+	ACTOR_TYPE ActorType = ACTOR_TYPE::ACTOR;
+	ACTOR_RENDER_TYPE RenderType = ACTOR_RENDER_TYPE::STATIC;
 
 	std::vector<BehavoirData> CurFramesBehaviors;
 	std::vector<std::vector<BehavoirData>> vecBehaviors;
@@ -114,7 +116,7 @@ private:
 	int2 PrevPos = {-1, -1};
 	int2 GridPos = int2::Zero;
 
-	size_t DefineData = static_cast<size_t>(DEFINE_INFO::NONE);
+	size_t DefineData = static_cast<size_t>(ACTOR_DEFINE::NONE);
 
 	bool IsDeath = false;
 	bool IsMove = false;
@@ -137,9 +139,9 @@ private:
 	void TurnRight();
 	void UndoTurnRight();
 
-	void SetDefine(DEFINE_INFO _Info);
-	void UndoAddDefine(DEFINE_INFO _Info);
-	void UndoRemoveDefine(DEFINE_INFO _Info);
+	void SetDefine(ACTOR_DEFINE _Info);
+	void UndoAddDefine(ACTOR_DEFINE _Info);
+	void UndoRemoveDefine(ACTOR_DEFINE _Info);
 
 	void SetDir(const int2& _Dir);
 	

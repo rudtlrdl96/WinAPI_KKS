@@ -30,21 +30,8 @@ public:
 	WiggleActor& operator=(WiggleActor&& _Other) noexcept = delete;
 protected:
 	void Update(float _DT) override;
-
 	void InitRender(const WiggleAnimationParameter& _Parameter);
-
-	void ResetAnim();
-	void SetFrame(int _Frame);
-	void SetLength(int _Length);
-	void SetDirInterval(size_t _DirInterval);
-	void SetTileIndex(int _Index);
-	void PrevAnim();
-	void NextAnim();
-	void SetAnimDir(const int2& _Dir);
-	void RenderOn();
-	void RenderOff();
-
-	
+	WiggleRender* GetWiggleRender() const;
 private:
 	float ProgressTime = 0.0f;
 	WiggleRender* Render;

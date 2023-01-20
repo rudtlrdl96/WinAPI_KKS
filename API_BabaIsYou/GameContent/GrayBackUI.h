@@ -1,6 +1,7 @@
 #pragma once
 #include "WiggleActor.h"
 
+class GameEngineRender;
 class GrayBackUI : public WiggleActor
 {
 public:
@@ -16,4 +17,5 @@ protected:
 	void Start() override;
 
 private:
+	GameEngineRender* BackRender = nullptr;
 };

@@ -1,9 +1,5 @@
 #pragma once
 
-//Sink
-//Defeat
-//Hot
-//Melt
 enum DIR_FLAG
 {
 	NONE	= 0,
@@ -18,6 +14,7 @@ enum class RENDER_ORDER
 	BACKGROUND = 0,
 	GRIDBACK,
 	WORLDMAP,
+	ACTORSTART,
 	TEXTUI = 10000,
 	UIIMAGE,
 	BUTTON,
@@ -82,7 +79,7 @@ enum class BEHAVIOR
 };
 
 
-enum class ACTOR_RENDER
+enum class ACTOR_RENDER_TYPE
 {
 	STATIC,
 	DYNAMIC,
@@ -91,7 +88,7 @@ enum class ACTOR_RENDER
 	BELT,
 };
 
-enum class ACTOR_DEFINE
+enum class ACTOR_TYPE
 {
 	ACTOR,
 	SUBJECT_TEXT,
@@ -99,7 +96,7 @@ enum class ACTOR_DEFINE
 	DEFINE_TEXT,
 };
 
-enum class DEFINE_INFO
+enum class ACTOR_DEFINE
 {
 	NONE = 0,
 	YOU = 1 << 0,

@@ -44,7 +44,6 @@ GridActorManager::~GridActorManager()
 	GridActor::DeleteGridActor();
 }
 
-
 void GridActorManager::Init(GameEngineLevel* _PuzzleLevel)
 {
 	PuzzleLevel = _PuzzleLevel;
@@ -155,7 +154,7 @@ void GridActorManager::LoadData(const std::string_view& _PuzzleName)
 		{
 			if (0 <= arrDatas[y][x])
 			{
-				GridActor* ActorData = GridActor::GetActor(static_cast<TEMP_ACTOR_TYPE>(arrDatas[y][x]));
+				GridActor* ActorData = GridActor::CreateGridActor(static_cast<TEMP_ACTOR_TYPE>(arrDatas[y][x]));
 
 				if (nullptr == ActorData)
 				{

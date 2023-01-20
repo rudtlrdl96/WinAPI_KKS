@@ -4,12 +4,6 @@
 class ContentFunc
 {
 public:
-	ContentFunc(const ContentFunc& _Other) = delete;
-	ContentFunc(ContentFunc&& _Other) noexcept = delete;
-	ContentFunc& operator=(const ContentFunc& _Other) = delete;
-	ContentFunc& operator=(ContentFunc&& _Other) noexcept = delete;
-
-
 	static void ChangeLogoLevel()
 	{
 		GameEngineCore::GetInst()->ChangeLevel("Logo");
@@ -40,4 +34,9 @@ protected:
 private:
 	ContentFunc();
 	~ContentFunc();
+
+	ContentFunc(const ContentFunc& _Other) = delete;
+	ContentFunc(ContentFunc&& _Other) noexcept = delete;
+	ContentFunc& operator=(const ContentFunc& _Other) = delete;
+	ContentFunc& operator=(ContentFunc&& _Other) noexcept = delete;
 };
