@@ -21,7 +21,7 @@ enum class RENDER_ORDER
 	FADE,
 };
 
-enum class TEMP_ACTOR_TYPE
+enum class TEMP_ACTOR_INDEX
 {
 	BABA, // Chacter Start
 	KEKE,

@@ -153,11 +153,11 @@ std::vector<GridActor*> GridActor::vecObjectPool;
 std::vector<std::vector<GridActor::GridData>> GridActor::vecGridDatas;
 std::vector<std::vector<GridActor*>> GridActor::vecTextDatas;
 
-std::map<TEMP_ACTOR_TYPE, std::vector<GridActor*>> GridActor::mapActorDatas;
+std::map<TEMP_ACTOR_INDEX, std::map<int, GridActor*>> GridActor::mapActorDatas;
 std::map<ACTOR_DEFINE, std::map<int, GridActor*>> GridActor::mapDefineActorDatas;
 std::map<int, int> GridActor::mapTileRenderImageIndex;
 
-GridActor* GridActor::CreateGridActor(TEMP_ACTOR_TYPE _Type)
+GridActor* GridActor::CreateGridActor(TEMP_ACTOR_INDEX _Type)
 {
 	if (ObjectPoolCount >= vecObjectPool.size())
 	{
@@ -175,7 +175,12 @@ GridActor* GridActor::CreateGridActor(TEMP_ACTOR_TYPE _Type)
 	return vecObjectPool[ObjectPoolCount++];
 }
 
-std::map<int, GridActor*>& GridActor::GetDefineActors(ACTOR_DEFINE _Define)
+std::map<int, GridActor*>& GridActor::GetActors(TEMP_ACTOR_INDEX _ActorIndex)
+{
+	return mapActorDatas[_ActorIndex];
+}
+
+std::map<int, GridActor*>& GridActor::GetActors(ACTOR_DEFINE _Define)
 {
 	return mapDefineActorDatas[_Define];
 }
@@ -421,21 +426,34 @@ void GridActor::Update(float _DT)
 
 }
 
-void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
+void GridActor::LoadData(TEMP_ACTOR_INDEX _Actor)
 {
-	if (_Actor < TEMP_ACTOR_TYPE::BABA || _Actor >= TEMP_ACTOR_TYPE::COUNT)
+	if (_Actor < TEMP_ACTOR_INDEX::BABA || _Actor >= TEMP_ACTOR_INDEX::COUNT)
 	{
 		MsgAssert("잘못된 Actor Type이 입력되었습니다.");
 		return;
 	}
 
+
+	std::map<int, GridActor*>& PrevMapDatas = mapActorDatas[ActorEnum];
+
+	std::map<int, GridActor*>::iterator FindIter = PrevMapDatas.find(ActorKey);
+	std::map<int, GridActor*>::iterator EndIter = PrevMapDatas.end();
+
+	if (FindIter != EndIter)
+	{
+		PrevMapDatas.erase(FindIter);
+	}
+
 	ActorEnum = _Actor;
+	mapActorDatas[ActorEnum][ActorKey] = this;
 
 	// Todo : File Save/Load 시스템이 완성된 후 데이터베이스 로드
 
 	// 속성 값 초기화
 	ResetValues();
 	WiggleRender* WiggleRenderPtr = GetWiggleRender();
+
 
 	if (nullptr == WiggleRenderPtr)
 	{
@@ -446,7 +464,7 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 	WiggleRenderPtr->Reset();
 
 	// Todo : 테스트용 임시 호출 추후 데이터시스템이 생성되면 삭제
-	if (TEMP_ACTOR_TYPE::BABA == _Actor)
+	if (TEMP_ACTOR_INDEX::BABA == _Actor)
 	{
 		ActorName = "BABA";
 		WiggleRenderPtr->SetStartIndex(2);
@@ -456,7 +474,7 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 		SetDefine(ACTOR_DEFINE::YOU);
 	}
 
-	if (TEMP_ACTOR_TYPE::KEKE == _Actor)
+	if (TEMP_ACTOR_INDEX::KEKE == _Actor)
 	{
 		ActorName = "KEKE";
 		WiggleRenderPtr->SetStartIndex(74);
@@ -467,7 +485,7 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 		SetDefine(ACTOR_DEFINE::HOT);
 	}
 
-	if (TEMP_ACTOR_TYPE::FLAG == _Actor)
+	if (TEMP_ACTOR_INDEX::FLAG == _Actor)
 	{
 		ActorName = "FLAG";
 		WiggleRenderPtr->SetStartIndex(728);
@@ -477,7 +495,7 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 		SetDefine(ACTOR_DEFINE::WIN);
 	}
 
-	if (TEMP_ACTOR_TYPE::BABA_TEXT == _Actor)
+	if (TEMP_ACTOR_INDEX::BABA_TEXT == _Actor)
 	{
 		ActorName = "BABA_TEXT";
 		WiggleRenderPtr->SetStartIndex(0);
@@ -486,7 +504,7 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 		SetDefine(ACTOR_DEFINE::PUSH);
 	}
 
-	if (TEMP_ACTOR_TYPE::IS_TEXT == _Actor)
+	if (TEMP_ACTOR_INDEX::IS_TEXT == _Actor)
 	{
 		ActorName = "IS_TEXT";
 		WiggleRenderPtr->SetStartIndex(792);
@@ -495,7 +513,7 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 		SetDefine(ACTOR_DEFINE::PUSH);
 	}
 
-	if (TEMP_ACTOR_TYPE::YOU_TEXT == _Actor)
+	if (TEMP_ACTOR_INDEX::YOU_TEXT == _Actor)
 	{
 		ActorName = "YOU_TEXT";
 		WiggleRenderPtr->SetStartIndex(864);
@@ -504,7 +522,7 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 		SetDefine(ACTOR_DEFINE::PUSH);
 	}
 
-	if (TEMP_ACTOR_TYPE::LAVA == _Actor)
+	if (TEMP_ACTOR_INDEX::LAVA == _Actor)
 	{
 		ActorName = "LAVA";
 		WiggleRenderPtr->SetStartIndex(434);
@@ -513,7 +531,7 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 		SetDefine(ACTOR_DEFINE::MELT);
 	}
 
-	if (TEMP_ACTOR_TYPE::WATER == _Actor)
+	if (TEMP_ACTOR_INDEX::WATER == _Actor)
 	{
 		ActorName = "WATER";
 		WiggleRenderPtr->SetStartIndex(362);
@@ -522,7 +540,7 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 		SetDefine(ACTOR_DEFINE::SINK);
 	}
 
-	if (TEMP_ACTOR_TYPE::SKULL == _Actor)
+	if (TEMP_ACTOR_INDEX::SKULL == _Actor)
 	{
 		ActorName = "SKULL";
 		WiggleRenderPtr->SetStartIndex(722);
@@ -531,7 +549,7 @@ void GridActor::LoadData(TEMP_ACTOR_TYPE _Actor)
 		SetDefine(ACTOR_DEFINE::DEFEAT);
 	}
 
-	if (TEMP_ACTOR_TYPE::WIN_TEXT == _Actor)
+	if (TEMP_ACTOR_INDEX::WIN_TEXT == _Actor)
 	{
 		ActorName = "WIN_TEXT";
 		WiggleRenderPtr->SetStartIndex(866);

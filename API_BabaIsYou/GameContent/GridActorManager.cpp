@@ -154,14 +154,14 @@ void GridActorManager::LoadData(const std::string_view& _PuzzleName)
 		{
 			if (0 <= arrDatas[y][x])
 			{
-				GridActor* ActorData = GridActor::CreateGridActor(static_cast<TEMP_ACTOR_TYPE>(arrDatas[y][x]));
+				GridActor* ActorData = GridActor::CreateGridActor(static_cast<TEMP_ACTOR_INDEX>(arrDatas[y][x]));
 
 				if (nullptr == ActorData)
 				{
 					MsgAssert("nullptr Actor가 반환되었습니다.");
 				}
 
-				ActorData->LoadData(static_cast<TEMP_ACTOR_TYPE>(arrDatas[y][x]));
+				ActorData->LoadData(static_cast<TEMP_ACTOR_INDEX>(arrDatas[y][x]));
 				ActorData->On();
 				ActorData->SetGrid({static_cast<int>(x), static_cast<int>(y)});
 				vecActors.push_back(ActorData);

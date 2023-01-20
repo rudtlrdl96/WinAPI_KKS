@@ -1,20 +1,23 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="01.Actor">
-      <UniqueIdentifier>{009b04dc-4e47-4a66-81bd-1c8e41f91d7c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="01.Actor\UIActor">
-      <UniqueIdentifier>{b808d85e-4264-4cd8-91b5-50fa67f99a4b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="04.Core">
       <UniqueIdentifier>{cdbb95bd-6754-4da4-90aa-193be0f98549}</UniqueIdentifier>
     </Filter>
     <Filter Include="00.Base">
       <UniqueIdentifier>{4e2af69b-bb58-46ed-b2ee-1b9f08a3ac9e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Actor\GridActor">
-      <UniqueIdentifier>{c123d8a8-4494-4688-bc57-3e594eab8fc7}</UniqueIdentifier>
+    <Filter Include="03.Level">
+      <UniqueIdentifier>{d7686fd6-ca73-40bf-a2c6-f61ea7339eb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="02.Manager">
+      <UniqueIdentifier>{c44f3d68-d4c1-4ee0-b329-818cd7781b72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Actor">
+      <UniqueIdentifier>{009b04dc-4e47-4a66-81bd-1c8e41f91d7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Actor\UIActor">
+      <UniqueIdentifier>{b808d85e-4264-4cd8-91b5-50fa67f99a4b}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Actor\UIActor\LogoLevel">
       <UniqueIdentifier>{12da1319-720b-4f27-b76d-a233340921bd}</UniqueIdentifier>
@@ -31,11 +34,8 @@
     <Filter Include="01.Actor\UIActor\PuzzleLevel">
       <UniqueIdentifier>{4300bea6-c886-450e-8858-9897d439b858}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03.Level">
-      <UniqueIdentifier>{d7686fd6-ca73-40bf-a2c6-f61ea7339eb8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="02.Manager">
-      <UniqueIdentifier>{c44f3d68-d4c1-4ee0-b329-818cd7781b72}</UniqueIdentifier>
+    <Filter Include="01.Actor\GridActor">
+      <UniqueIdentifier>{c123d8a8-4494-4688-bc57-3e594eab8fc7}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Actor\EffectActor">
       <UniqueIdentifier>{4f322c4a-c4e1-4b0c-9a91-3889bf2259d6}</UniqueIdentifier>

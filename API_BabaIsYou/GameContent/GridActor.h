@@ -44,8 +44,10 @@ public:
 	static void MoveAllYouBehavior(const int2& _Dir);
 	static void MoveAllMoveBehavior();
 
-	static GridActor* CreateGridActor(TEMP_ACTOR_TYPE _Type);
-	static std::map<int, GridActor*>& GetDefineActors(ACTOR_DEFINE _Define);
+	static GridActor* CreateGridActor(TEMP_ACTOR_INDEX _Type);
+
+	static std::map<int, GridActor*>& GetActors(TEMP_ACTOR_INDEX _ActorIndex);
+	static std::map<int, GridActor*>& GetActors(ACTOR_DEFINE _Define);
 
 	static bool IsAnyMove();
 	static void AnyMoveCheckReset();
@@ -69,7 +71,7 @@ private:
 	static std::vector<GridActor*> vecObjectPool;	
 
 	// 액터 타입별 데이터 정렬
-	static std::map<TEMP_ACTOR_TYPE, std::vector<GridActor*>> mapActorDatas;
+	static std::map<TEMP_ACTOR_INDEX, std::map<int, GridActor*>> mapActorDatas;
 	// 액터 Deinfe 데이터 정렬
 	static std::map<ACTOR_DEFINE, std::map<int, GridActor*>> mapDefineActorDatas;
 	// 타일 랜더이미지 Index	
@@ -88,7 +90,7 @@ public:
 	GridActor& operator=(const GridActor& _Other) = delete;
 	GridActor& operator=(GridActor&& _Other) noexcept = delete;
 
-	void LoadData(TEMP_ACTOR_TYPE _Actor);
+	void LoadData(TEMP_ACTOR_INDEX _Actor);
 	void SetGrid(const int2& _Pos);
 	void AddDefine(ACTOR_DEFINE _Info);
 	void RemoveDefine(ACTOR_DEFINE _Info);
@@ -103,7 +105,7 @@ protected:
 private:
 	std::string ActorName = "";
 
-	TEMP_ACTOR_TYPE ActorEnum = TEMP_ACTOR_TYPE::COUNT;
+	TEMP_ACTOR_INDEX ActorEnum = TEMP_ACTOR_INDEX::COUNT;
 	ACTOR_TYPE ActorType = ACTOR_TYPE::ACTOR;
 	ACTOR_RENDER_TYPE RenderType = ACTOR_RENDER_TYPE::STATIC;
 
