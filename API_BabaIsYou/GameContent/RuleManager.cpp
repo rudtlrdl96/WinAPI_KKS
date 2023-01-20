@@ -15,9 +15,6 @@ RuleManager::~RuleManager()
 
 void RuleManager::RuleCheck()
 {
-
-
-
 }
 
 void RuleManager::RuleReset()

@@ -121,17 +121,7 @@ void GridActorManager::Input(float _DT)
 		}
 
 		// Todo : RuleCheck 기능 추가
-
-		for (GridActor* Data : vecActors)
-		{
-			if (nullptr == Data)
-			{
-				MsgAssert("nullptr GridActor Data를 참조하려 했습니다.");
-				return;
-			}
-
-			Data->SaveBehaviorInfo();
-		}
+		GridActor::AllActorSaveBehavior();
 	}
 }
 

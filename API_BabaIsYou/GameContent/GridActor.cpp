@@ -288,6 +288,14 @@ void GridActor::AllActorUndo()
 	}
 }
 
+void GridActor::AllActorSaveBehavior()
+{
+	for (size_t i = 0; i < ObjectPoolCount; i++)
+	{
+		vecObjectPool[i]->SaveBehaviorInfo();
+	}
+}
+
 void GridActor::MoveAllYouBehavior(const int2& _Dir)
 {
 	for (const std::pair<int, GridActor*>& Data: mapDefineActorDatas[ACTOR_DEFINE::YOU])

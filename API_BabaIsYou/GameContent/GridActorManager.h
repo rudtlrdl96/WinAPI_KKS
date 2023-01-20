@@ -30,12 +30,6 @@ public:
 
 	void clear();
 	void LoadData(const std::string_view& _PuzzleName);
-
-	void ActiveUpdateBehavior()
-	{
-		UpdateBehavior = true;
-	}
-
 	bool IsPuzzleEnd() const;
 
 protected:
@@ -48,8 +42,6 @@ private:
 	GridActorManager(GridActorManager&& _Other) noexcept = delete;
 	GridActorManager& operator=(const GridActorManager& _Other) = delete;
 	GridActorManager& operator=(GridActorManager&& _Other) noexcept = delete;
-
-	bool UpdateBehavior = false;
 
 	std::list<INPUTBEHAVIOR> vecWaitInputs;
 	std::vector<GridActor*> vecActors;

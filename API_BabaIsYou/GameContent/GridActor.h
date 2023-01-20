@@ -41,6 +41,7 @@ public:
 	static float4 GetScreenPos(const int2& _GridPos);
 
 	static void AllActorUndo();
+	static void AllActorSaveBehavior();
 	static void MoveAllYouBehavior(const int2& _Dir);
 	static void MoveAllMoveBehavior();
 
