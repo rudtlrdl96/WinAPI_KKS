@@ -37,7 +37,7 @@ enum class TEMP_ACTOR_INDEX
 	FLAG, // Static Actor Start
 	FLOWER,
 	ROCK, // Static Actor End
-	BABA_TEXT,
+	BABA_TEXT, // Text Start
 	KEKE_TEXT,
 	ROBOT_TEXT,
 	BELT_TEXT,
@@ -61,7 +61,7 @@ enum class TEMP_ACTOR_INDEX
 	SINK_TEXT,
 	DEFEAT_TEXT,
 	HOT_TEXT,
-	MELT_TEXT,
+	MELT_TEXT, // Text End 
 	COUNT,
 };
 
@@ -108,10 +108,4 @@ enum class ACTOR_DEFINE
 	SINK = 1 << 6,
 	DEFEAT = 1 << 7,
 	WIN = 1 << 8,
-};
-
-enum class RULE_TYPE
-{
-	IS_SUBJECT,
-	IS_DEFINE,
 };

@@ -52,6 +52,7 @@ private:
 	bool UpdateBehavior = false;
 
 	std::list<INPUTBEHAVIOR> vecWaitInputs;
+	std::vector<GridActor*> vecActors;
 
 	GameEngineLevel* PuzzleLevel = nullptr;
 	BlackBackUI* GridBackActor = nullptr;
