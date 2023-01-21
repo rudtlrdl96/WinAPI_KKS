@@ -4,6 +4,7 @@
 #include <GameEngineCore/GameEngineLevel.h>
 #include "ContentConst.h"
 #include "WiggleRender.h"
+#include "Rule.h"
 
 /// GridData
 
@@ -60,11 +61,6 @@ void GridActor::GridData::Push(const int2& _Pos, const int2& _Dir, bool _IsInput
 		Data->SetDir(_Dir);
 		Data->Push();
 	}
-	
-	if (false == IsOver(NextPos))
-	{
-		vecGridDatas[NextPos.y][NextPos.x].DeathCheck();
-	}
 }
 
 
@@ -91,8 +87,9 @@ void GridActor::GridData::DeathCheck()
 			LoopIter = mapDatas.erase(LoopIter);
 			continue;
 		}
-		else if (true == SinkCheck && static_cast<size_t>(ACTOR_DEFINE::SINK) & GridDefine)
+		else if ((true == SinkCheck || IsSinkValue) && static_cast<size_t>(ACTOR_DEFINE::SINK) & GridDefine)
 		{
+			Sink();
 			LoopIter->second->ActorDeath();
 			LoopIter = mapDatas.erase(LoopIter);
 			continue;
@@ -134,7 +131,22 @@ size_t GridActor::GridData::GetDefine()
 		Info |= Data.second->GetDefine();
 	}
 
+	if (true == IsSinkValue)
+	{
+		Info |= static_cast<size_t>(ACTOR_DEFINE::SINK);
+	}
+
 	return Info;
+}
+
+void GridActor::GridData::SinkCheckReset()
+{
+	IsSinkValue = false;
+}
+
+void GridActor::GridData::Sink()
+{
+	IsSinkValue = true;
 }
 
 #pragma endregion
@@ -173,6 +185,11 @@ GridActor* GridActor::CreateGridActor(TEMP_ACTOR_INDEX _Type)
 
 	vecObjectPool[ObjectPoolCount]->On();
 	return vecObjectPool[ObjectPoolCount++];
+}
+
+GridActor* GridActor::GetTextActor(const int2& _Pos)
+{
+	return vecTextDatas[_Pos.y][_Pos.x];
 }
 
 std::map<int, GridActor*>& GridActor::GetActors(TEMP_ACTOR_INDEX _ActorIndex)
@@ -288,8 +305,17 @@ void GridActor::AllActorUndo()
 	}
 }
 
-void GridActor::AllActorSaveBehavior()
+void GridActor::GridActorEndCheck()
 {
+	for (size_t y = 0; y < vecGridDatas.size(); y++)
+	{
+		for (size_t x = 0; x < vecGridDatas[y].size(); x++)
+		{
+			vecGridDatas[y][x].DeathCheck();
+			vecGridDatas[y][x].SinkCheckReset();
+		}
+	}
+
 	for (size_t i = 0; i < ObjectPoolCount; i++)
 	{
 		vecObjectPool[i]->SaveBehaviorInfo();
@@ -374,8 +400,8 @@ void GridActor::AnyMoveCheckReset()
 GridActor::GridActor() :
 	ActorKey(NextActorKey++)
 {
-	vecBehaviors.reserve(32);
-	CurFramesBehaviors.reserve(4);
+	vecBehaviorBuffer.reserve(32);
+	CurFramesBehaviorBuffer.reserve(4);
 }
 
 GridActor::~GridActor()
@@ -442,7 +468,6 @@ void GridActor::LoadData(TEMP_ACTOR_INDEX _Actor)
 		return;
 	}
 
-
 	std::map<int, GridActor*>& PrevMapDatas = mapActorDatas[ActorEnum];
 
 	std::map<int, GridActor*>::iterator FindIter = PrevMapDatas.find(ActorKey);
@@ -459,7 +484,6 @@ void GridActor::LoadData(TEMP_ACTOR_INDEX _Actor)
 	// Todo : File Save/Load 시스템이 완성된 후 데이터베이스 로드
 
 	// 속성 값 초기화
-	ResetValues();
 	WiggleRender* WiggleRenderPtr = GetWiggleRender();
 
 
@@ -639,7 +663,7 @@ void GridActor::AddDefine(ACTOR_DEFINE _Info)
 	if (false == IsDefine(_Info))
 	{
 		mapDefineActorDatas[_Info][ActorKey] = this;
-		CurFramesBehaviors.push_back({BEHAVIOR::DEFINE_ADD, static_cast<int>(_Info)});
+		CurFramesBehaviorBuffer.push_back({BEHAVIOR::DEFINE_ADD, static_cast<int>(_Info)});
 	}
 
 	DefineData |= static_cast<size_t>(_Info);
@@ -662,7 +686,7 @@ void GridActor::RemoveDefine(ACTOR_DEFINE _Info)
 {
 	if (true == IsDefine(_Info))
 	{
-		CurFramesBehaviors.push_back({ BEHAVIOR::DEFINE_REMOVE, static_cast<int>(_Info) });
+		CurFramesBehaviorBuffer.push_back({ BEHAVIOR::DEFINE_REMOVE, static_cast<int>(_Info) });
 	}
 
 	std::map<int, GridActor*>& mapDatas = mapDefineActorDatas[_Info];
@@ -693,23 +717,33 @@ bool GridActor::IsDefine(ACTOR_DEFINE _Info)
 
 void GridActor::SaveBehaviorInfo()
 {
-	if (0 >= CurFramesBehaviors.size())
+	if (0 >= CurFramesBehaviorBuffer.size())
 	{
-		CurFramesBehaviors.push_back({ BEHAVIOR::WAIT, -1});
+		CurFramesBehaviorBuffer.push_back({ BEHAVIOR::WAIT, -1});
 	}
 
-	vecBehaviors.push_back(CurFramesBehaviors);
-	CurFramesBehaviors.clear();
+	vecBehaviorBuffer.push_back(CurFramesBehaviorBuffer);
+	CurFramesBehaviorBuffer.clear();
+}
+
+ACTOR_TYPE GridActor::GetActorType()
+{
+	return ActorType;
+}
+
+int2 GridActor::GetGridPos() const
+{
+	return GridPos;
 }
 
 void GridActor::Undo()
 {
-	if (0 >= vecBehaviors.size())
+	if (0 >= vecBehaviorBuffer.size())
 	{
 		return;
 	}
 
-	const std::vector<BehavoirData>& vecUndos = vecBehaviors.back();
+	const std::vector<BehavoirData>& vecUndos = vecBehaviorBuffer.back();
 
 	for (int i = static_cast<int>(vecUndos.size() - 1); i >= 0 ; --i)
 	{
@@ -747,7 +781,7 @@ void GridActor::Undo()
 		}
 	}
 
-	vecBehaviors.pop_back();
+	vecBehaviorBuffer.pop_back();
 }
 
 bool GridActor::Move(bool _IsInputMove)
@@ -783,9 +817,8 @@ bool GridActor::Move(bool _IsInputMove)
 
 	vecGridDatas[GridPos.y][GridPos.x].push_back(this);
 	vecGridDatas[PrevPos.y][PrevPos.x].erase(this);
-	vecGridDatas[GridPos.y][GridPos.x].DeathCheck();
 
-	CurFramesBehaviors.push_back({ BEHAVIOR::MOVE, -1});
+	CurFramesBehaviorBuffer.push_back({ BEHAVIOR::MOVE, -1});
 	GetWiggleRender()->NextAnim();
 
 	return true;
@@ -830,7 +863,7 @@ void GridActor::Push()
 	vecGridDatas[GridPos.y][GridPos.x].push_back(this);
 	vecGridDatas[PrevPos.y][PrevPos.x].erase(this);
 
-	CurFramesBehaviors.push_back({ BEHAVIOR::PUSH, -1});
+	CurFramesBehaviorBuffer.push_back({ BEHAVIOR::PUSH, -1});
 }
 
 void GridActor::UndoPush()
@@ -852,7 +885,7 @@ void GridActor::TurnLeft()
 		return;
 	}
 
-	CurFramesBehaviors.push_back({ BEHAVIOR::TURN_LEFT, -1 });
+	CurFramesBehaviorBuffer.push_back({ BEHAVIOR::TURN_LEFT, -1 });
 
 	if (int2::Left == MoveDir)
 	{
@@ -903,7 +936,7 @@ void GridActor::TurnRight()
 		return;
 	}
 
-	CurFramesBehaviors.push_back({ BEHAVIOR::TURN_RIGHT, -1});
+	CurFramesBehaviorBuffer.push_back({ BEHAVIOR::TURN_RIGHT, -1});
 
 	if (int2::Left == MoveDir)
 	{
@@ -970,7 +1003,7 @@ void GridActor::ActorDeath()
 	}
 
 	IsDeath = true;
-	CurFramesBehaviors.push_back({BEHAVIOR::DEATH, -1});
+	CurFramesBehaviorBuffer.push_back({BEHAVIOR::DEATH, -1});
 
 	GetWiggleRender()->RenderOff();
 }
@@ -1108,8 +1141,8 @@ void GridActor::SetTileRender()
 
 void GridActor::ResetValues()
 {
-	vecBehaviors.clear();
-	CurFramesBehaviors.clear();
+	vecBehaviorBuffer.clear();
+	CurFramesBehaviorBuffer.clear();
 
 	MoveDir = int2::Right;
 	PrevPos = { -1, -1 };

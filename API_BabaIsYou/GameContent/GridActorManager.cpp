@@ -5,7 +5,6 @@
 #include <GameEngineCore/GameEngineLevel.h>
 #include <GameEngineCore/GameEngineRender.h>
 
-#include "RuleManager.h"
 #include "ContentConst.h"
 #include "GridActor.h"
 #include "CongratulationsUI.h"
@@ -48,7 +47,6 @@ void GridActorManager::Init(GameEngineLevel* _PuzzleLevel)
 {
 	PuzzleLevel = _PuzzleLevel;
 	GridActor::InitGridActor(_PuzzleLevel);
-	vecActors.reserve(ContentConst::GRID_SIZE_X * ContentConst::GRID_SIZE_Y);
 	GridBackActor = PuzzleLevel->CreateActor<BlackBackUI>();
 }
 
@@ -121,7 +119,7 @@ void GridActorManager::Input(float _DT)
 		}
 
 		// Todo : RuleCheck 기능 추가
-		GridActor::AllActorSaveBehavior();
+		GridActor::GridActorEndCheck();
 	}
 }
 
@@ -151,15 +149,13 @@ void GridActorManager::LoadData(const std::string_view& _PuzzleName)
 					MsgAssert("nullptr Actor가 반환되었습니다.");
 				}
 
+				ActorData->ResetValues();
 				ActorData->LoadData(static_cast<TEMP_ACTOR_INDEX>(arrDatas[y][x]));
 				ActorData->On();
 				ActorData->SetGrid({static_cast<int>(x), static_cast<int>(y)});
-				vecActors.push_back(ActorData);
 			}
 		}
 	}
-
-
 
 	PuzzleLevel->SetCameraPos(-DiffSize.half());
 }
@@ -172,12 +168,6 @@ void GridActorManager::clear()
 void GridActorManager::Reset()
 {
 	GridActor::ResetGridActor();
-
-	for (size_t i = 0; i < vecActors.size(); i++)
-	{
-		vecActors[i]->Off();
-	}
-	vecActors.clear();
 }
 
 

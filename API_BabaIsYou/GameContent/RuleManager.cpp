@@ -1,8 +1,5 @@
 #include "RuleManager.h"
-#include <GameEngineBase/GameEngineDebug.h>
-
-#include "ContentEnum.h"
-#include "GridActor.h"
+#include "Rule.h"
 
 RuleManager::RuleManager()
 {
@@ -10,13 +7,24 @@ RuleManager::RuleManager()
 
 RuleManager::~RuleManager()
 {
+	std::map<int, Rule*>::iterator LoopIter = mapRules.begin();
+	std::map<int, Rule*>::iterator EndIter = mapRules.end();
+
+	for ( ;LoopIter != EndIter; ++LoopIter)
+	{
+		delete LoopIter->second;
+		LoopIter->second = nullptr;
+	}
+
+	mapRules.clear();
 }
 
-
-void RuleManager::RuleCheck()
+void AddRule(Rule* _Rule)
 {
+
 }
 
-void RuleManager::RuleReset()
+void RemoveRule(Rule* _Rule)
 {
+	
 }

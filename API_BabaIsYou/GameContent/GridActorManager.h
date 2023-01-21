@@ -44,7 +44,6 @@ private:
 	GridActorManager& operator=(GridActorManager&& _Other) noexcept = delete;
 
 	std::list<INPUTBEHAVIOR> vecWaitInputs;
-	std::vector<GridActor*> vecActors;
 
 	GameEngineLevel* PuzzleLevel = nullptr;
 	BlackBackUI* GridBackActor = nullptr;

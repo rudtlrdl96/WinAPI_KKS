@@ -7,6 +7,7 @@
 #include "WiggleActor.h"
 
 class GameEngineLevel;
+class Rule;
 class GridActor : public WiggleActor
 {
 private:
@@ -14,6 +15,7 @@ private:
 	{
 	public:
 		std::map<int, GridActor*> mapDatas;
+
 		void push_back(GridActor* _Actor);
 		void erase(GridActor* _Actor);
 		void clear();
@@ -21,6 +23,10 @@ private:
 		void DeathCheck();
 		bool equals(const std::string_view& _Name);
 		size_t GetDefine();
+		void SinkCheckReset();
+		void Sink();
+	private:
+		bool IsSinkValue = false;
 	};
 
 	class BehavoirData
@@ -41,12 +47,13 @@ public:
 	static float4 GetScreenPos(const int2& _GridPos);
 
 	static void AllActorUndo();
-	static void AllActorSaveBehavior();
+	static void GridActorEndCheck();
 	static void MoveAllYouBehavior(const int2& _Dir);
 	static void MoveAllMoveBehavior();
 
 	static GridActor* CreateGridActor(TEMP_ACTOR_INDEX _Type);
 
+	static GridActor* GetTextActor(const int2& _Pos);
 	static std::map<int, GridActor*>& GetActors(TEMP_ACTOR_INDEX _ActorIndex);
 	static std::map<int, GridActor*>& GetActors(ACTOR_DEFINE _Define);
 
@@ -92,13 +99,16 @@ public:
 	GridActor& operator=(GridActor&& _Other) noexcept = delete;
 
 	void LoadData(TEMP_ACTOR_INDEX _Actor);
+	void ResetValues();
 	void SetGrid(const int2& _Pos);
 	void AddDefine(ACTOR_DEFINE _Info);
 	void RemoveDefine(ACTOR_DEFINE _Info);
 	bool IsDefine(ACTOR_DEFINE _Info);
 	void SaveBehaviorInfo();
-	
-	
+
+	ACTOR_TYPE GetActorType();
+	int2 GetGridPos() const;
+
 protected:
 	void Start() override;
 	void Update(float _DT) override;
@@ -110,8 +120,9 @@ private:
 	ACTOR_TYPE ActorType = ACTOR_TYPE::ACTOR;
 	ACTOR_RENDER_TYPE RenderType = ACTOR_RENDER_TYPE::STATIC;
 
-	std::vector<BehavoirData> CurFramesBehaviors;
-	std::vector<std::vector<BehavoirData>> vecBehaviors;
+	std::vector<Rule> vecRules;
+	std::vector<BehavoirData> CurFramesBehaviorBuffer;
+	std::vector<std::vector<BehavoirData>> vecBehaviorBuffer;
 
 	const int ActorKey = 0;
 
@@ -158,5 +169,4 @@ private:
 	void RemoveRuleCheck();
 
 	void SetTileRender();
-	void ResetValues();
 };

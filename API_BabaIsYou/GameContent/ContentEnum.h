@@ -109,3 +109,9 @@ enum class ACTOR_DEFINE
 	DEFEAT = 1 << 7,
 	WIN = 1 << 8,
 };
+
+enum class RULE_TYPE
+{
+	IS_SUBJECT,
+	IS_DEFINE
+};
