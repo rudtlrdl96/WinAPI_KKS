@@ -24,6 +24,16 @@ public:
 	{
 		IsWiggle = false;
 	}
+
+	inline void ActiveText()
+	{
+		IsText = true;
+	}
+
+	inline void DisableText()
+	{
+		IsText = false;
+	}
 	
 	inline void ActiveTile()
 	{
@@ -61,6 +71,7 @@ public:
 	void SetRenderIndex();
 	void SetStartIndex(int _Index);
 	void SetAnimLength(int _Length);
+	void SetTextIndex(int _TextIndex);
 	void SetTileIndex(int _Index);
 	void SetDirInterval(size_t _DirInterval);
 	void SetAnimDir(const int2& _Dir);
@@ -78,6 +89,7 @@ private:
 	int CurIndex = 0;
 	int CurAnimationIndex = 0;
 	int CurWiggleIndex = 0;
+	int CurTextIndex = 0;
 	int CurTileIndex = 0;
 
 	int StartIndex = 0;
@@ -90,6 +102,7 @@ private:
 	bool IsWiggle = false;
 	bool IsTile = false;
 	bool IsDir = false;
+	bool IsText = false;
 	bool IsAnimation = false;
 
 	GameEngineRender* Render = nullptr;

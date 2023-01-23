@@ -456,6 +456,17 @@ void GridActor::Update(float _DT)
 		WinCheck();
 	}
 
+	if (ACTOR_TYPE::ACTOR != ActorType)
+	{
+		if (0 < mapRules.size())
+		{
+			GetWiggleRender()->SetTextIndex(0);
+		}
+		else
+		{
+			GetWiggleRender()->SetTextIndex(1);
+		}
+	}
 
 	if (false == IsDeath && true == IsMove)
 	{
@@ -682,7 +693,12 @@ void GridActor::LoadData(TEMP_ACTOR_INDEX _Actor, bool _IsInit)
 
 	if (ACTOR_TYPE::ACTOR != ActorType)
 	{
+		GetWiggleRender()->ActiveText();
 		SetDefine(ACTOR_DEFINE::PUSH);
+	}
+	else
+	{
+		GetWiggleRender()->DisableText();
 	}
 
 	SetDefine(RuleManager::GetInst()->GetActorRule(_Actor));

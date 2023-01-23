@@ -77,6 +77,11 @@ void WiggleRender::SetRenderIndex()
 		CurIndex += static_cast<int>(DirIndex);
 	}
 
+	if (true == IsText)
+	{
+		CurIndex += CurTextIndex;
+	}
+
 	if (true == IsTile)
 	{
 		CurIndex += CurTileIndex;
@@ -95,6 +100,12 @@ void WiggleRender::SetStartIndex(int _Index)
 void WiggleRender::SetAnimLength(int _Length)
 {
 	AnimLength = _Length;
+	SetRenderIndex();
+}
+
+void WiggleRender::SetTextIndex(int _TextIndex)
+{
+	CurTextIndex = _TextIndex;
 	SetRenderIndex();
 }
 
