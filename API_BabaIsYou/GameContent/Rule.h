@@ -1,10 +1,12 @@
 #pragma once
 
 class GridActor;
+class RuleManager;
 class Rule
 {
+	friend RuleManager;
 public:
-	Rule(int _RuleKey);
+	Rule(int _Key);
 	~Rule();
 
 	Rule(const Rule& _Other) = delete;
@@ -12,18 +14,15 @@ public:
 	Rule& operator=(const Rule& _Other) = delete;
 	Rule& operator=(Rule&& _Other) noexcept = delete;
 
-	static void CreateRule(GridActor* _Actor);
+	static void CreateRule(GridActor* _Actor, bool _IsInit = false);
+	static void RemoveRule(GridActor* _Actor);	
 
-	void ActiveRule();
-	void DisableRule();
-
+	const int RuleKey = -1;
 protected:
 
 private:
-	const int RuleKey = -1;
 
 	GridActor* SubjectActor = nullptr;
 	GridActor* VerbActor = nullptr;
 	GridActor* DefineActor = nullptr;
-
 };

@@ -76,6 +76,7 @@ enum class BEHAVIOR
 	WIN,
 	DEFINE_ADD,
 	DEFINE_REMOVE,
+	CHANGE_INFO,
 };
 
 

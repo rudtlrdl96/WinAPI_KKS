@@ -5,6 +5,8 @@
 #include "ContentConst.h"
 #include "WiggleRender.h"
 #include "Rule.h"
+#include "RuleManager.h"
+#include "GridActorManager.h"
 
 /// GridData
 
@@ -305,6 +307,17 @@ void GridActor::AllActorUndo()
 	}
 }
 
+void GridActor::AllActorRuleCheck()
+{
+	for (size_t i = 0; i < ObjectPoolCount; i++)
+	{
+		if (ACTOR_TYPE::ACTOR != vecObjectPool[i]->ActorType)
+		{
+			vecObjectPool[i]->RuleCheck();
+		}
+	}
+}
+
 void GridActor::GridActorEndCheck()
 {
 	for (size_t y = 0; y < vecGridDatas.size(); y++)
@@ -460,7 +473,7 @@ void GridActor::Update(float _DT)
 
 }
 
-void GridActor::LoadData(TEMP_ACTOR_INDEX _Actor)
+void GridActor::LoadData(TEMP_ACTOR_INDEX _Actor, bool _IsInit)
 {
 	if (_Actor < TEMP_ACTOR_INDEX::BABA || _Actor >= TEMP_ACTOR_INDEX::COUNT)
 	{
@@ -468,18 +481,43 @@ void GridActor::LoadData(TEMP_ACTOR_INDEX _Actor)
 		return;
 	}
 
-	std::map<int, GridActor*>& PrevMapDatas = mapActorDatas[ActorEnum];
-
-	std::map<int, GridActor*>::iterator FindIter = PrevMapDatas.find(ActorKey);
-	std::map<int, GridActor*>::iterator EndIter = PrevMapDatas.end();
-
-	if (FindIter != EndIter)
 	{
-		PrevMapDatas.erase(FindIter);
+		std::map<int, GridActor*>& PrevMapDatas = mapActorDatas[ActorEnum];
+
+		std::map<int, GridActor*>::iterator FindIter = PrevMapDatas.find(ActorKey);
+		std::map<int, GridActor*>::iterator EndIter = PrevMapDatas.end();
+
+		if (FindIter != EndIter)
+		{
+			PrevMapDatas.erase(FindIter);
+		}	
+	}
+
+	{
+		std::map<ACTOR_DEFINE, std::map<int, GridActor*>>::iterator LoopIter = mapDefineActorDatas.begin();
+		std::map<ACTOR_DEFINE, std::map<int, GridActor*>>::iterator EndIter = mapDefineActorDatas.end();
+
+		for (; LoopIter != EndIter; ++LoopIter)
+		{
+			std::map<int, GridActor*>::iterator FindIter = LoopIter->second.find(ActorKey);
+
+			if (FindIter != LoopIter->second.end())
+			{
+				GridActorManager::GetInst()->AddRemoveDefine(this, LoopIter->first);
+			}
+		}	
+	}
+
+	if (false == _IsInit)
+	{
+		CurFramesBehaviorBuffer.push_back({ BEHAVIOR::CHANGE_INFO, static_cast<int>(ActorEnum) });
 	}
 
 	ActorEnum = _Actor;
+	ArrowEnum = _Actor;
+
 	mapActorDatas[ActorEnum][ActorKey] = this;
+	DefineData = 0;
 
 	// Todo : File Save/Load 시스템이 완성된 후 데이터베이스 로드
 
@@ -502,8 +540,6 @@ void GridActor::LoadData(TEMP_ACTOR_INDEX _Actor)
 		WiggleRenderPtr->SetStartIndex(2);
 		ActorType = ACTOR_TYPE::ACTOR;
 		RenderType = ACTOR_RENDER_TYPE::CHARACTER;
-
-		SetDefine(ACTOR_DEFINE::YOU);
 	}
 
 	if (TEMP_ACTOR_INDEX::KEKE == _Actor)
@@ -512,9 +548,6 @@ void GridActor::LoadData(TEMP_ACTOR_INDEX _Actor)
 		WiggleRenderPtr->SetStartIndex(74);
 		ActorType = ACTOR_TYPE::ACTOR;
 		RenderType = ACTOR_RENDER_TYPE::CHARACTER;
-
-		SetDefine(ACTOR_DEFINE::PUSH);
-		SetDefine(ACTOR_DEFINE::HOT);
 	}
 
 	if (TEMP_ACTOR_INDEX::FLAG == _Actor)
@@ -523,8 +556,6 @@ void GridActor::LoadData(TEMP_ACTOR_INDEX _Actor)
 		WiggleRenderPtr->SetStartIndex(728);
 		ActorType = ACTOR_TYPE::ACTOR;
 		RenderType = ACTOR_RENDER_TYPE::STATIC;
-
-		SetDefine(ACTOR_DEFINE::WIN);
 	}
 
 	if (TEMP_ACTOR_INDEX::BABA_TEXT == _Actor)
@@ -533,7 +564,16 @@ void GridActor::LoadData(TEMP_ACTOR_INDEX _Actor)
 		WiggleRenderPtr->SetStartIndex(0);
 		ActorType = ACTOR_TYPE::SUBJECT_TEXT;
 		RenderType = ACTOR_RENDER_TYPE::STATIC;
-		SetDefine(ACTOR_DEFINE::PUSH);
+		ArrowEnum = TEMP_ACTOR_INDEX::BABA;
+	}
+
+	if (TEMP_ACTOR_INDEX::KEKE_TEXT == _Actor)
+	{
+		ActorName = "KEKE_TEXT";
+		WiggleRenderPtr->SetStartIndex(72);
+		ActorType = ACTOR_TYPE::SUBJECT_TEXT;
+		RenderType = ACTOR_RENDER_TYPE::STATIC;
+		ArrowEnum = TEMP_ACTOR_INDEX::KEKE;
 	}
 
 	if (TEMP_ACTOR_INDEX::IS_TEXT == _Actor)
@@ -542,7 +582,6 @@ void GridActor::LoadData(TEMP_ACTOR_INDEX _Actor)
 		WiggleRenderPtr->SetStartIndex(792);
 		ActorType = ACTOR_TYPE::VERB_TEXT;
 		RenderType = ACTOR_RENDER_TYPE::STATIC;
-		SetDefine(ACTOR_DEFINE::PUSH);
 	}
 
 	if (TEMP_ACTOR_INDEX::YOU_TEXT == _Actor)
@@ -551,7 +590,7 @@ void GridActor::LoadData(TEMP_ACTOR_INDEX _Actor)
 		WiggleRenderPtr->SetStartIndex(864);
 		ActorType = ACTOR_TYPE::DEFINE_TEXT;
 		RenderType = ACTOR_RENDER_TYPE::STATIC;
-		SetDefine(ACTOR_DEFINE::PUSH);
+		ArrowDefine = ACTOR_DEFINE::YOU;
 	}
 
 	if (TEMP_ACTOR_INDEX::LAVA == _Actor)
@@ -560,7 +599,6 @@ void GridActor::LoadData(TEMP_ACTOR_INDEX _Actor)
 		WiggleRenderPtr->SetStartIndex(434);
 		ActorType = ACTOR_TYPE::ACTOR;
 		RenderType = ACTOR_RENDER_TYPE::TILE;
-		SetDefine(ACTOR_DEFINE::MELT);
 	}
 
 	if (TEMP_ACTOR_INDEX::WATER == _Actor)
@@ -569,7 +607,6 @@ void GridActor::LoadData(TEMP_ACTOR_INDEX _Actor)
 		WiggleRenderPtr->SetStartIndex(362);
 		ActorType = ACTOR_TYPE::ACTOR;
 		RenderType = ACTOR_RENDER_TYPE::TILE;
-		SetDefine(ACTOR_DEFINE::SINK);
 	}
 
 	if (TEMP_ACTOR_INDEX::SKULL == _Actor)
@@ -578,16 +615,77 @@ void GridActor::LoadData(TEMP_ACTOR_INDEX _Actor)
 		WiggleRenderPtr->SetStartIndex(722);
 		ActorType = ACTOR_TYPE::ACTOR;
 		RenderType = ACTOR_RENDER_TYPE::DYNAMIC;
-		SetDefine(ACTOR_DEFINE::DEFEAT);
 	}
 
 	if (TEMP_ACTOR_INDEX::WIN_TEXT == _Actor)
 	{
 		ActorName = "WIN_TEXT";
 		WiggleRenderPtr->SetStartIndex(866);
-		ActorType = ACTOR_TYPE::ACTOR;
+		ActorType = ACTOR_TYPE::DEFINE_TEXT;
 		RenderType = ACTOR_RENDER_TYPE::STATIC;
+		ArrowDefine = ACTOR_DEFINE::WIN;
 	}
+
+	if (TEMP_ACTOR_INDEX::STOP_TEXT == _Actor)
+	{
+		ActorName = "STOP_TEXT";
+		WiggleRenderPtr->SetStartIndex(868);
+		ActorType = ACTOR_TYPE::DEFINE_TEXT;
+		RenderType = ACTOR_RENDER_TYPE::STATIC;
+		ArrowDefine = ACTOR_DEFINE::STOP;
+	}
+
+	if (TEMP_ACTOR_INDEX::PUSH_TEXT == _Actor)
+	{
+		ActorName = "PUSH_TEXT";
+		WiggleRenderPtr->SetStartIndex(870);
+		ActorType = ACTOR_TYPE::DEFINE_TEXT;
+		RenderType = ACTOR_RENDER_TYPE::STATIC;
+		ArrowDefine = ACTOR_DEFINE::PUSH;
+	}
+
+	if (TEMP_ACTOR_INDEX::SINK_TEXT == _Actor)
+	{
+		ActorName = "SINK_TEXT";
+		WiggleRenderPtr->SetStartIndex(872);
+		ActorType = ACTOR_TYPE::DEFINE_TEXT;
+		RenderType = ACTOR_RENDER_TYPE::STATIC;
+		ArrowDefine = ACTOR_DEFINE::SINK;
+	}
+
+	if (TEMP_ACTOR_INDEX::DEFEAT_TEXT == _Actor)
+	{
+		ActorName = "DEFEAT_TEXT";
+		WiggleRenderPtr->SetStartIndex(874);
+		ActorType = ACTOR_TYPE::DEFINE_TEXT;
+		RenderType = ACTOR_RENDER_TYPE::STATIC;
+		ArrowDefine = ACTOR_DEFINE::DEFEAT;
+	}
+
+	if (TEMP_ACTOR_INDEX::HOT_TEXT == _Actor)
+	{
+		ActorName = "HOT_TEXT";
+		WiggleRenderPtr->SetStartIndex(876);
+		ActorType = ACTOR_TYPE::DEFINE_TEXT;
+		RenderType = ACTOR_RENDER_TYPE::STATIC;
+		ArrowDefine = ACTOR_DEFINE::HOT;
+	}
+
+	if (TEMP_ACTOR_INDEX::MELT_TEXT == _Actor)
+	{
+		ActorName = "MELT_TEXT";
+		WiggleRenderPtr->SetStartIndex(878);
+		ActorType = ACTOR_TYPE::DEFINE_TEXT;
+		RenderType = ACTOR_RENDER_TYPE::STATIC;
+		ArrowDefine = ACTOR_DEFINE::MELT;
+	}
+
+	if (ACTOR_TYPE::ACTOR != ActorType)
+	{
+		SetDefine(ACTOR_DEFINE::PUSH);
+	}
+
+	SetDefine(RuleManager::GetInst()->GetActorRule(_Actor));
 
 	switch (RenderType)
 	{
@@ -634,6 +732,11 @@ void GridActor::LoadData(TEMP_ACTOR_INDEX _Actor)
 	GetWiggleRender()->SetAnimDir(int2::Right);
 }
 
+void GridActor::RuleCheck()
+{
+	Rule::CreateRule(this, true);
+}
+
 void GridActor::SetGrid(const int2& _Pos)
 {
 	if (false == IsOver(GridPos))
@@ -650,6 +753,12 @@ void GridActor::SetGrid(const int2& _Pos)
 	}
 
 	SetPos(GetScreenPos(GridPos));
+}
+
+void GridActor::SetDefine(size_t _Info)
+{
+	mapDefineActorDatas[static_cast<ACTOR_DEFINE>(_Info)][ActorKey] = this;
+	DefineData |= _Info;
 }
 
 void GridActor::SetDefine(ACTOR_DEFINE _Info)
@@ -726,6 +835,11 @@ void GridActor::SaveBehaviorInfo()
 	CurFramesBehaviorBuffer.clear();
 }
 
+ACTOR_DEFINE GridActor::GetArrowDefine() const
+{
+	return ArrowDefine;
+}
+
 ACTOR_TYPE GridActor::GetActorType()
 {
 	return ActorType;
@@ -774,7 +888,9 @@ void GridActor::Undo()
 		case BEHAVIOR::DEFINE_REMOVE:
 			UndoRemoveDefine(static_cast<ACTOR_DEFINE>(vecUndos[i].Value));
 			break;
-
+		case BEHAVIOR::CHANGE_INFO:
+			LoadData(static_cast<TEMP_ACTOR_INDEX>(vecUndos[i].Value), true);
+			break;
 		default:
 			MsgAssert("잘못된 Behavior Type 입니다.");
 			break;
@@ -796,11 +912,12 @@ bool GridActor::Move(bool _IsInputMove)
 		return false;
 	}
 
+	AnyActorMoveCheck = true;
 	AllPushDir(MoveDir, _IsInputMove);
 	
 	if (ACTOR_TYPE::ACTOR != ActorType)
 	{
-		RemoveRuleCheck();
+		RemoveRule();
 		vecTextDatas[GridPos.y][GridPos.x] = nullptr;
 	}
 
@@ -811,7 +928,7 @@ bool GridActor::Move(bool _IsInputMove)
 
 	if (ACTOR_TYPE::ACTOR != ActorType)
 	{
-		AddRuleCheck();
+		AddRule();
 		vecTextDatas[GridPos.y][GridPos.x] = this;
 	}
 
@@ -826,10 +943,22 @@ bool GridActor::Move(bool _IsInputMove)
 
 void GridActor::UndoMove()
 {
+	if (ACTOR_TYPE::ACTOR != ActorType)
+	{
+		RemoveRule();
+		vecTextDatas[GridPos.y][GridPos.x] = nullptr;
+	}
+
 	IsMove = true;
 	PrevPos = GridPos;
 	GridPos -= MoveDir;
 	MoveProgress = 0.0f;
+
+	if (ACTOR_TYPE::ACTOR != ActorType)
+	{
+		AddRule();
+		vecTextDatas[GridPos.y][GridPos.x] = this;
+	}
 
 	vecGridDatas[GridPos.y][GridPos.x].push_back(this);
 	vecGridDatas[PrevPos.y][PrevPos.x].erase(this);
@@ -845,7 +974,7 @@ void GridActor::Push()
 	}
 	if (ACTOR_TYPE::ACTOR != ActorType)
 	{
-		RemoveRuleCheck();
+		RemoveRule();
 		vecTextDatas[GridPos.y][GridPos.x] = nullptr;
 	}
 
@@ -856,7 +985,7 @@ void GridActor::Push()
 
 	if (ACTOR_TYPE::ACTOR != ActorType)
 	{
-		AddRuleCheck();
+		AddRule();
 		vecTextDatas[GridPos.y][GridPos.x] = this;
 	}
 
@@ -868,10 +997,22 @@ void GridActor::Push()
 
 void GridActor::UndoPush()
 {
+	if (ACTOR_TYPE::ACTOR != ActorType)
+	{
+		RemoveRule();
+		vecTextDatas[GridPos.y][GridPos.x] = nullptr;
+	}
+
 	IsMove = true;
 	PrevPos = GridPos;
 	GridPos = GridPos - MoveDir;
 	MoveProgress = 0.0f;
+
+	if (ACTOR_TYPE::ACTOR != ActorType)
+	{
+		AddRule();
+		vecTextDatas[GridPos.y][GridPos.x] = this;
+	}
 
 	vecGridDatas[GridPos.y][GridPos.x].push_back(this);
 	vecGridDatas[PrevPos.y][PrevPos.x].erase(this);
@@ -1097,14 +1238,14 @@ void GridActor::WinCheck()
 }
 
 
-void GridActor::AddRuleCheck()
+void GridActor::AddRule()
 {
-
+	Rule::CreateRule(this);
 }
 
-void GridActor::RemoveRuleCheck()
+void GridActor::RemoveRule()
 {
-
+	Rule::RemoveRule(this);
 }
 
 void GridActor::SetTileRender()

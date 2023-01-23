@@ -1,5 +1,6 @@
 #pragma once
 #include <map>
+#include "ContentEnum.h"
 
 class Rule;
 class RuleManager
@@ -12,6 +13,10 @@ public:
 		return &Instance;
 	}
 
+	void AddRule(Rule* _Rule);
+	void RemoveRule(Rule* _Rule);
+	size_t GetActorRule(TEMP_ACTOR_INDEX _Actor);
+
 protected:
 
 private:
@@ -23,8 +28,5 @@ private:
 	RuleManager& operator=(const RuleManager& _Other) = delete;
 	RuleManager& operator=(RuleManager&& _Other) noexcept = delete;
 
-	void AddRule(Rule* _Rule);
-	void RemoveRule(Rule* _Rule);
-
-	std::map<int, Rule*> mapRules;
+	std::map<int, Rule*> mapAllRules;
 };

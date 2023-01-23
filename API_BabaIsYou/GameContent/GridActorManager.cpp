@@ -20,9 +20,9 @@ int arrDatas[TEMP_Y][TEMP_X] =
 	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,},
 	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,},
 	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,11,-1,},
-	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1, 1, 1,-1,},
-	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,},
-	{-1,-1,-1,-1,-1, 0, 0,-1,-1, 14, 28, 31,-1,-1,-1,-1,-1,-1,-1,-1},
+	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,15,-1,-1,-1,-1,-1, 1, 1,-1,},
+	{-1,-1,-1,-1,-1,-1,-1,-1,-1,14,28,-1,-1,-1,-1,-1,-1,-1,-1,-1,},
+	{-1,-1,-1,-1,-1, 0, 0,-1,-1,14,28,31,-1,-1,-1,-1,-1,-1,-1,-1,},
 	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,},
 	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,},
 	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,10,-1,},
@@ -61,33 +61,33 @@ void GridActorManager::Input(float _DT)
 
 	if (GameEngineInput::IsDown("ArrowUp"))
 	{
-		vecWaitInputs.push_back(INPUTBEHAVIOR::MOVE_UP);
+		listInputBuffer.push_back(INPUTBEHAVIOR::MOVE_UP);
 	}
 	else if (GameEngineInput::IsDown("ArrowDown"))
 	{
-		vecWaitInputs.push_back(INPUTBEHAVIOR::MOVE_DOWN);
+		listInputBuffer.push_back(INPUTBEHAVIOR::MOVE_DOWN);
 	}
 	else if (GameEngineInput::IsDown("ArrowLeft"))
 	{
-		vecWaitInputs.push_back(INPUTBEHAVIOR::MOVE_LEFT);
+		listInputBuffer.push_back(INPUTBEHAVIOR::MOVE_LEFT);
 	}
 	else if (GameEngineInput::IsDown("ArrowRight"))
 	{
-		vecWaitInputs.push_back(INPUTBEHAVIOR::MOVE_RIGHT);
+		listInputBuffer.push_back(INPUTBEHAVIOR::MOVE_RIGHT);
 	}
 	else if (GameEngineInput::IsDown("Undo"))
 	{
-		vecWaitInputs.push_back(INPUTBEHAVIOR::UNDO);
+		listInputBuffer.push_back(INPUTBEHAVIOR::UNDO);
 	}
 	else if (GameEngineInput::IsDown("Wait"))
 	{
-		vecWaitInputs.push_back(INPUTBEHAVIOR::WAIT);
+		listInputBuffer.push_back(INPUTBEHAVIOR::WAIT);
 	}
 	
-	if (false == GridActor::IsAnyMove() && 0 < vecWaitInputs.size())
+	if (false == GridActor::IsAnyMove() && 0 < listInputBuffer.size())
 	{
-		INPUTBEHAVIOR NextBehavior = vecWaitInputs.front();
-		vecWaitInputs.pop_front();
+		INPUTBEHAVIOR NextBehavior = listInputBuffer.front();
+		listInputBuffer.pop_front();
 
 		switch (NextBehavior)
 		{
@@ -109,6 +109,14 @@ void GridActorManager::Input(float _DT)
 			break;
 		case INPUTBEHAVIOR::UNDO:
 			GridActor::AllActorUndo();
+
+			for (size_t i = 0; i < vecDefineRemoveActors.size(); i++)
+			{
+				vecDefineRemoveActors[i].ActorData->RemoveDefine(vecDefineRemoveActors[i].RemoveDefine);
+			}
+
+			vecDefineRemoveActors.clear();
+
 			return;
 		case INPUTBEHAVIOR::WAIT:
 			GridActor::MoveAllMoveBehavior();
@@ -118,8 +126,19 @@ void GridActorManager::Input(float _DT)
 			break;
 		}
 
-		// Todo : RuleCheck 기능 추가
+		if (false == GridActor::IsAnyMove())
+		{
+			return;
+		}
+
 		GridActor::GridActorEndCheck();
+
+		for (size_t i = 0; i < vecDefineRemoveActors.size(); i++)
+		{
+			vecDefineRemoveActors[i].ActorData->RemoveDefine(vecDefineRemoveActors[i].RemoveDefine);
+		}
+
+		vecDefineRemoveActors.clear();
 	}
 }
 
@@ -150,14 +169,20 @@ void GridActorManager::LoadData(const std::string_view& _PuzzleName)
 				}
 
 				ActorData->ResetValues();
-				ActorData->LoadData(static_cast<TEMP_ACTOR_INDEX>(arrDatas[y][x]));
+				ActorData->LoadData(static_cast<TEMP_ACTOR_INDEX>(arrDatas[y][x]), true);
 				ActorData->On();
 				ActorData->SetGrid({static_cast<int>(x), static_cast<int>(y)});
 			}
 		}
 	}
 
+	GridActor::AllActorRuleCheck();
 	PuzzleLevel->SetCameraPos(-DiffSize.half());
+}
+
+void GridActorManager::AddRemoveDefine(GridActor* _Actor, ACTOR_DEFINE _Define)
+{
+	vecDefineRemoveActors.push_back({ _Actor, _Define });
 }
 
 void GridActorManager::clear()

@@ -1,5 +1,6 @@
 #include "RuleManager.h"
 #include "Rule.h"
+#include "GridActor.h"
 
 RuleManager::RuleManager()
 {
@@ -7,24 +8,43 @@ RuleManager::RuleManager()
 
 RuleManager::~RuleManager()
 {
-	std::map<int, Rule*>::iterator LoopIter = mapRules.begin();
-	std::map<int, Rule*>::iterator EndIter = mapRules.end();
-
-	for ( ;LoopIter != EndIter; ++LoopIter)
+	for (const std::pair<int, Rule*>& Data : mapAllRules)
 	{
-		delete LoopIter->second;
-		LoopIter->second = nullptr;
+		if (nullptr != Data.second)
+		{
+			delete Data.second;
+		}
 	}
 
-	mapRules.clear();
+	mapAllRules.clear();
 }
 
-void AddRule(Rule* _Rule)
+void RuleManager::AddRule(Rule* _Rule)
 {
-
+	mapAllRules.insert({ _Rule->RuleKey, _Rule });
 }
 
-void RemoveRule(Rule* _Rule)
+void RuleManager::RemoveRule(Rule* _Rule)
 {
-	
+	std::map<int, Rule*>::iterator FindIter = mapAllRules.find(_Rule->RuleKey);
+
+	if (FindIter != mapAllRules.end())
+	{
+		mapAllRules.erase(FindIter);
+	}
+}
+
+size_t RuleManager::GetActorRule(TEMP_ACTOR_INDEX _Actor)
+{
+	size_t CheckDefine = 0;
+
+	for (const std::pair<int, Rule*>& Data : mapAllRules)
+	{
+		if (ACTOR_TYPE::DEFINE_TEXT == Data.second->DefineActor->GetActorType())
+		{
+			CheckDefine |= static_cast<size_t>(Data.second->DefineActor->GetArrowDefine());
+		}
+	}
+
+	return CheckDefine;
 }

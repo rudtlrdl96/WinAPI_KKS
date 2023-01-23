@@ -10,6 +10,7 @@ class GameEngineLevel;
 class Rule;
 class GridActor : public WiggleActor
 {
+	friend Rule;
 private:
 	class GridData
 	{
@@ -47,6 +48,7 @@ public:
 	static float4 GetScreenPos(const int2& _GridPos);
 
 	static void AllActorUndo();
+	static void AllActorRuleCheck();
 	static void GridActorEndCheck();
 	static void MoveAllYouBehavior(const int2& _Dir);
 	static void MoveAllMoveBehavior();
@@ -98,13 +100,15 @@ public:
 	GridActor& operator=(const GridActor& _Other) = delete;
 	GridActor& operator=(GridActor&& _Other) noexcept = delete;
 
-	void LoadData(TEMP_ACTOR_INDEX _Actor);
+	void LoadData(TEMP_ACTOR_INDEX _Actor, bool _IsInit);
+	void RuleCheck();
 	void ResetValues();
 	void SetGrid(const int2& _Pos);
 	void AddDefine(ACTOR_DEFINE _Info);
 	void RemoveDefine(ACTOR_DEFINE _Info);
 	bool IsDefine(ACTOR_DEFINE _Info);
 	void SaveBehaviorInfo();
+	ACTOR_DEFINE GetArrowDefine() const;
 
 	ACTOR_TYPE GetActorType();
 	int2 GetGridPos() const;
@@ -120,7 +124,10 @@ private:
 	ACTOR_TYPE ActorType = ACTOR_TYPE::ACTOR;
 	ACTOR_RENDER_TYPE RenderType = ACTOR_RENDER_TYPE::STATIC;
 
-	std::vector<Rule> vecRules;
+	TEMP_ACTOR_INDEX ArrowEnum = TEMP_ACTOR_INDEX::COUNT;
+	ACTOR_DEFINE ArrowDefine = ACTOR_DEFINE::NONE;
+
+	std::map<int, Rule*> mapRules;
 	std::vector<BehavoirData> CurFramesBehaviorBuffer;
 	std::vector<std::vector<BehavoirData>> vecBehaviorBuffer;
 
@@ -153,6 +160,7 @@ private:
 	void TurnRight();
 	void UndoTurnRight();
 
+	void SetDefine(size_t _Info);
 	void SetDefine(ACTOR_DEFINE _Info);
 	void UndoAddDefine(ACTOR_DEFINE _Info);
 	void UndoRemoveDefine(ACTOR_DEFINE _Info);
@@ -165,8 +173,8 @@ private:
 	void AllPushDir(const int2& _Dir, bool _IsInputMove);
 	bool CanMove(const int2& _NextPos);
 	void WinCheck();
-	void AddRuleCheck();
-	void RemoveRuleCheck();
+	void AddRule();
+	void RemoveRule();
 
 	void SetTileRender();
 };

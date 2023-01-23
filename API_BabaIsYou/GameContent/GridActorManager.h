@@ -3,6 +3,8 @@
 #include <vector>
 #include <list>
 
+#include "ContentEnum.h"
+
 class GameEngineLevel;
 class GridActor;
 class BlackBackUI;
@@ -18,6 +20,13 @@ private:
 		UNDO,
 		WAIT
 	};
+
+	class RemoveDefineData
+	{
+	public:
+		GridActor* ActorData = nullptr;
+		ACTOR_DEFINE RemoveDefine = ACTOR_DEFINE::NONE;
+	};
 public:
 	static GridActorManager* GetInst()
 	{
@@ -28,6 +37,7 @@ public:
 	void Init(GameEngineLevel* _PuzzleLevel);
 	void Input(float _DT);
 
+	void AddRemoveDefine(GridActor* _Actor, ACTOR_DEFINE _Define);
 	void clear();
 	void LoadData(const std::string_view& _PuzzleName);
 	bool IsPuzzleEnd() const;
@@ -35,6 +45,7 @@ public:
 protected:
 
 private:
+
 	GridActorManager();
 	~GridActorManager();
 
@@ -42,8 +53,9 @@ private:
 	GridActorManager(GridActorManager&& _Other) noexcept = delete;
 	GridActorManager& operator=(const GridActorManager& _Other) = delete;
 	GridActorManager& operator=(GridActorManager&& _Other) noexcept = delete;
-
-	std::list<INPUTBEHAVIOR> vecWaitInputs;
+		
+	std::vector<RemoveDefineData> vecDefineRemoveActors;
+	std::list<INPUTBEHAVIOR> listInputBuffer;
 
 	GameEngineLevel* PuzzleLevel = nullptr;
 	BlackBackUI* GridBackActor = nullptr;
