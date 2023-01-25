@@ -161,6 +161,8 @@ bool ContentDataLoader::SaveMapData(const std::string_view& _Path, const std::ve
 
 bool ContentDataLoader::LoadActorDataBase(const std::string_view& _Path, std::map<int, ActorData>& _mapActorDatas)
 {
+    static int LoadIndex = 0;
+
     std::ifstream OpenStream;
     OpenStream.open(_Path.data(), std::ios_base::in);
 
@@ -177,18 +179,18 @@ bool ContentDataLoader::LoadActorDataBase(const std::string_view& _Path, std::ma
 
     while (std::getline(OpenStream, LineData))
     {
-        ActorData LoadData(static_cast<int>(_mapActorDatas.size()));
+        ActorData LoadData(LoadIndex++);
 
         std::stringstream LineStream(LineData);
 
         std::getline(LineStream, ReadData, ','); // Name
-        LoadData.ActorName = ReadData;
+        LoadData.ActorName = GameEngineString::ToUpper(ReadData);
         
         std::getline(LineStream, ReadData, ','); // Index
         LoadData.RenderIndex = std::stoi(ReadData);
 
         std::getline(LineStream, ReadData, ','); // Color
-        LoadData.Color = ReadData;
+        LoadData.Color = GameEngineString::ToUpper(ReadData);
 
         std::getline(LineStream, ReadData, ','); // ActorType
         ReadData = GameEngineString::ToUpper(ReadData);
@@ -196,6 +198,17 @@ bool ContentDataLoader::LoadActorDataBase(const std::string_view& _Path, std::ma
         if ("ACTOR" == ReadData)
         {
             LoadData.ActorType = ACTOR_TYPE::ACTOR;
+
+            ActorData ActorText(LoadData.ActorEnum + 10000);
+            ActorText.ActorName = LoadData.ActorName + "_TEXT";
+            ActorText.RenderIndex = LoadData.RenderIndex - 2;
+            ActorText.Color = LoadData.Color;
+            ActorText.ActorType = ACTOR_TYPE::SUBJECT_TEXT;
+            ActorText.RenderType = ACTOR_RENDER_TYPE::STATIC;
+            ActorText.ArrowEnum = LoadData.ActorEnum;
+            ActorText.ArrowDefine = ACTOR_DEFINE::NONE;
+
+            _mapActorDatas.insert({ ActorText.ActorEnum, ActorText });
         }
         else if ("VERBTEXT" == ReadData)
         {
@@ -216,9 +229,6 @@ bool ContentDataLoader::LoadActorDataBase(const std::string_view& _Path, std::ma
         if ("CHARACTER" == ReadData)
         {
             LoadData.RenderType = ACTOR_RENDER_TYPE::CHARACTER;
-
-
-
         }
         else if ("BELT" == ReadData)
         {
@@ -239,6 +249,43 @@ bool ContentDataLoader::LoadActorDataBase(const std::string_view& _Path, std::ma
         else
         {
             MsgAssert("액터 데이터 로드 실패 잘못된 랜더 타입입니다");
+        }
+
+        if ("YOU" == LoadData.ActorName)
+        {
+            LoadData.ArrowDefine = ACTOR_DEFINE::YOU;
+        }
+        else if ("WIN" == LoadData.ActorName)
+        {
+            LoadData.ArrowDefine = ACTOR_DEFINE::WIN;
+        }
+        else if ("STOP" == LoadData.ActorName)
+        {
+            LoadData.ArrowDefine = ACTOR_DEFINE::STOP;
+        }
+        else if ("PUSH" == LoadData.ActorName)
+        {
+            LoadData.ArrowDefine = ACTOR_DEFINE::PUSH;
+        }
+        else if ("SINK" == LoadData.ActorName)
+        {
+            LoadData.ArrowDefine = ACTOR_DEFINE::SINK;
+        }
+        else if ("DEFEAT" == LoadData.ActorName)
+        {
+            LoadData.ArrowDefine = ACTOR_DEFINE::DEFEAT;
+        }
+        else if ("HOT" == LoadData.ActorName)
+        {
+            LoadData.ArrowDefine = ACTOR_DEFINE::HOT;
+        }
+        else if ("MELT" == LoadData.ActorName)
+        {
+            LoadData.ArrowDefine = ACTOR_DEFINE::MELT;
+        }
+        else
+        {
+            LoadData.ArrowDefine = ACTOR_DEFINE::NONE;
         }
 
         _mapActorDatas.insert({LoadData.ActorEnum, LoadData});

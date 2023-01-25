@@ -3,6 +3,7 @@
 #include <GameEnginePlatform/GameEngineWindow.h>
 
 #include "TitleLevel.h"
+#include "MapToolLevel.h"
 #include "WorldMapLevel.h"
 #include "PuzzleLevel.h"
 #include "EndingLevel.h"
@@ -25,6 +26,7 @@ void ContentCore::Start()
 	CreateLevel<WorldMapLevel>("Worldmap");
 	CreateLevel<PuzzleLevel>("Puzzle");
 	CreateLevel<EndingLevel>("Ending");
+	CreateLevel<MapToolLevel>("MapTool");
 
 	ChangeLevel("Puzzle");
 }

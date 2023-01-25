@@ -182,6 +182,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="ContentDataBase.h" />
     <ClInclude Include="ContentDataLoader.h">
       <SubType>
       </SubType>
@@ -230,6 +231,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="MapToolLevel.h" />
     <ClInclude Include="PuzzleLevel.h">
       <SubType>
       </SubType>
@@ -288,15 +290,8 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="ContentDataBase.cpp" />
     <ClCompile Include="ContentDataLoader.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="ContentEnum.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
-    <ClCompile Include="ContentFunc.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -336,6 +331,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="MapToolLevel.cpp" />
     <ClCompile Include="PuzzleLevel.cpp">
       <SubType>
       </SubType>

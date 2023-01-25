@@ -35,11 +35,22 @@ void TitleLevel::Loading()
 	TitleFadeActor = CreateActor<FadeUI>();
 	CreateActor<TitleLogoUI>();
 	CreateActor<BlackBackUI>();
+
+	if (false == GameEngineInput::IsKey("MapToolKey"))
+	{
+		GameEngineInput::CreateKey("MapToolKey", 'm');
+		GameEngineInput::CreateKey("GameKey", VK_SPACE);
+	}
+
 }
 
 void TitleLevel::Update(float _DT)
 {
-	if (false == TitleFadeActor->IsProgress() && true == GameEngineInput::IsAnyKey())
+	if (false == TitleFadeActor->IsProgress() && true == GameEngineInput::IsDown("MapToolKey"))
+	{
+		TitleFadeActor->Fade(FADE_STATE::FADEIN, ContentFunc::ChangeMapToolLevel);
+	}
+	else if (false == TitleFadeActor->IsProgress() && true == GameEngineInput::IsDown("GameKey"))
 	{
 		TitleFadeActor->Fade(FADE_STATE::FADEIN, ContentFunc::ChangeWorldmapLevel);
 	}

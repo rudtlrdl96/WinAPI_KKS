@@ -19,6 +19,7 @@ public:
 
 	static void PuzzleLevelExit();
 	static void SetPuzzleMapName(const std::string_view& _MapName);
+	void Restart();
 	void LoadPuzzleData();
 
 protected:

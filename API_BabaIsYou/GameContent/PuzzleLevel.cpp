@@ -32,6 +32,11 @@ void PuzzleLevel::SetPuzzleMapName(const std::string_view& _MapName)
 	LoadPuzzleName = _MapName;
 }
 
+void PuzzleLevel::Restart()
+{
+	PuzzleFadeActor->Fade(FADE_STATE::FADEIN, ContentFunc::ChangePuzzleLevel);
+}
+
 void PuzzleLevel::Loading()
 {
 	GameEngineDirectory Dir;
@@ -52,6 +57,7 @@ void PuzzleLevel::Loading()
 
 	if (false == GameEngineInput::IsKey("Wait"))
 	{
+		GameEngineInput::CreateKey("ReStart", 'R');
 		GameEngineInput::CreateKey("ArrowUp", VK_UP);
 		GameEngineInput::CreateKey("ArrowDown", VK_DOWN);
 		GameEngineInput::CreateKey("ArrowLeft", VK_LEFT);
@@ -93,6 +99,7 @@ void PuzzleLevel::LevelChangeStart(GameEngineLevel* _NextLevel)
 
 void PuzzleLevel::LevelChangeEnd(GameEngineLevel* _NextLevel)
 {
+	GridActorManager::GetInst()->Reset();
 	CongratulationActor->Off();
 }
 

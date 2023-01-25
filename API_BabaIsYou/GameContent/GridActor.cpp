@@ -275,7 +275,16 @@ void GridActor::ResetGridActor()
 			return;
 		}
 
+		vecObjectPool[i]->ResetValues();
 		vecObjectPool[i]->Off();
+	}
+
+	for (size_t y = 0; y < vecTextDatas.size(); y++)
+	{
+		for (size_t x = 0; x < vecTextDatas[y].size(); x++)
+		{
+			vecTextDatas[y][x] = nullptr;
+		}
 	}
 
 	for (size_t y = 0; y < vecGridDatas.size(); y++)

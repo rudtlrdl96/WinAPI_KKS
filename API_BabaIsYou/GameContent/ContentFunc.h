@@ -14,6 +14,11 @@ public:
 		GameEngineCore::GetInst()->ChangeLevel("Title");
 	}
 
+	static void ChangeMapToolLevel()
+	{
+		GameEngineCore::GetInst()->ChangeLevel("MapTool");	
+	}
+
 	static void ChangeWorldmapLevel()
 	{
 		GameEngineCore::GetInst()->ChangeLevel("Worldmap");
@@ -32,8 +37,8 @@ public:
 protected:
 
 private:
-	ContentFunc();
-	~ContentFunc();
+	ContentFunc() {}
+	~ContentFunc() {}
 
 	ContentFunc(const ContentFunc& _Other) = delete;
 	ContentFunc(ContentFunc&& _Other) noexcept = delete;

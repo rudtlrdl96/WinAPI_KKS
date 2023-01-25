@@ -120,6 +120,12 @@
     <ClInclude Include="ActorData.h">
       <Filter>01.Actor\GridActor</Filter>
     </ClInclude>
+    <ClInclude Include="MapToolLevel.h">
+      <Filter>03.Level</Filter>
+    </ClInclude>
+    <ClInclude Include="ContentDataBase.h">
+      <Filter>00.Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GridActorManager.cpp">
@@ -182,12 +188,6 @@
     <ClCompile Include="WiggleRender.cpp">
       <Filter>00.Base</Filter>
     </ClCompile>
-    <ClCompile Include="ContentFunc.cpp">
-      <Filter>00.Base</Filter>
-    </ClCompile>
-    <ClCompile Include="ContentEnum.cpp">
-      <Filter>00.Base</Filter>
-    </ClCompile>
     <ClCompile Include="Rule.cpp">
       <Filter>01.Actor\GridActor</Filter>
     </ClCompile>
@@ -199,6 +199,12 @@
     </ClCompile>
     <ClCompile Include="ActorData.cpp">
       <Filter>01.Actor\GridActor</Filter>
+    </ClCompile>
+    <ClCompile Include="MapToolLevel.cpp">
+      <Filter>03.Level</Filter>
+    </ClCompile>
+    <ClCompile Include="ContentDataBase.cpp">
+      <Filter>00.Base</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

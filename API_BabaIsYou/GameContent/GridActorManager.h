@@ -5,7 +5,7 @@
 
 #include "ContentEnum.h"
 
-class GameEngineLevel;
+class PuzzleLevel;
 class GridActor;
 class BlackBackUI;
 class GridActorManager sealed
@@ -36,7 +36,8 @@ public:
 		return &Instance;
 	}
 
-	void Init(GameEngineLevel* _PuzzleLevel);
+	void Init(PuzzleLevel* _PuzzleLevel);
+	void Reset();
 	void Input(float _DT);
 
 	void AddDefine(GridActor* _Actor, ACTOR_DEFINE _Define, bool _IsRemove);
@@ -59,8 +60,7 @@ private:
 	std::vector<DefineData> vecDefineActors;
 	std::list<INPUTBEHAVIOR> listInputBuffer;
 
-	GameEngineLevel* PuzzleLevel = nullptr;
+	PuzzleLevel* MainPuzzleLevel = nullptr;
 	BlackBackUI* GridBackActor = nullptr;
 
-	void Reset();
 };

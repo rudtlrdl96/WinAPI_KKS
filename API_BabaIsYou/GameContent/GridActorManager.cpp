@@ -9,6 +9,7 @@
 #include "GridActor.h"
 #include "CongratulationsUI.h"
 #include "BlackBackUI.h"
+#include "PuzzleLevel.h"
 
 const int TEMP_X = 20;
 const int TEMP_Y = 15;
@@ -40,14 +41,13 @@ GridActorManager::GridActorManager()
 
 GridActorManager::~GridActorManager()
 {
-	GridActor::DeleteGridActor();
 }
 
-void GridActorManager::Init(GameEngineLevel* _PuzzleLevel)
+void GridActorManager::Init(PuzzleLevel* _PuzzleLevel)
 {
-	PuzzleLevel = _PuzzleLevel;
+	MainPuzzleLevel = _PuzzleLevel;
 	GridActor::InitGridActor(_PuzzleLevel);
-	GridBackActor = PuzzleLevel->CreateActor<BlackBackUI>();
+	GridBackActor = MainPuzzleLevel->CreateActor<BlackBackUI>();
 }
 
 void GridActorManager::Input(float _DT)
@@ -59,7 +59,12 @@ void GridActorManager::Input(float _DT)
 	GridActor::GetActors(ACTOR_DEFINE::YOU);
 	int2 MoveDir = int2::Zero;
 
-	if (GameEngineInput::IsDown("ArrowUp"))
+	if (GameEngineInput::IsDown("ReStart"))
+	{
+		MainPuzzleLevel->Restart();
+		return;
+	}
+	else if (GameEngineInput::IsDown("ArrowUp"))
 	{
 		listInputBuffer.push_back(INPUTBEHAVIOR::MOVE_UP);
 	}
@@ -192,7 +197,7 @@ void GridActorManager::LoadData(const std::string_view& _PuzzleName)
 	}
 
 	GridActor::AllActorRuleCheck();
-	PuzzleLevel->SetCameraPos(-DiffSize.half());
+	MainPuzzleLevel->SetCameraPos(-DiffSize.half());
 }
 
 void GridActorManager::AddDefine(GridActor* _Actor, ACTOR_DEFINE _Define, bool _IsRemove)
@@ -208,6 +213,8 @@ void GridActorManager::clear()
 void GridActorManager::Reset()
 {
 	GridActor::ResetGridActor();
+	listInputBuffer.clear();
+	vecDefineActors.clear();
 }
 
 
