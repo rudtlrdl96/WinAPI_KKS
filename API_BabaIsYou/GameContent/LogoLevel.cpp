@@ -9,6 +9,8 @@
 #include "BlackBackUI.h"
 #include "ContentFunc.h"
 
+#include "ContentDataLoader.h"
+
 LogoLevel::LogoLevel()
 {
 }

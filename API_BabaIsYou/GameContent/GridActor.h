@@ -49,7 +49,8 @@ public:
 
 	static void AllActorUndo();
 	static void AllActorRuleCheck();
-	static void GridActorEndCheck();
+	static void GridActorDeathCheck();
+	static void GridActorSaveBehavior();
 	static void MoveAllYouBehavior(const int2& _Dir);
 	static void MoveAllMoveBehavior();
 
@@ -108,6 +109,7 @@ public:
 	void RemoveDefine(ACTOR_DEFINE _Info);
 	bool IsDefine(ACTOR_DEFINE _Info);
 	void SaveBehaviorInfo();
+	TEMP_ACTOR_INDEX GetArrowEnum() const;
 	ACTOR_DEFINE GetArrowDefine() const;
 
 	ACTOR_TYPE GetActorType();

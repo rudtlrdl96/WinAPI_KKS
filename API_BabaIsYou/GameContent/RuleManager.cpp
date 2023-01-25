@@ -1,6 +1,7 @@
 #include "RuleManager.h"
 #include "Rule.h"
 #include "GridActor.h"
+#include "GridActorManager.h"
 
 RuleManager::RuleManager()
 {
@@ -34,17 +35,13 @@ void RuleManager::RemoveRule(Rule* _Rule)
 	}
 }
 
-size_t RuleManager::GetActorRule(TEMP_ACTOR_INDEX _Actor)
+void RuleManager::AddActorRule(GridActor* _Actor, TEMP_ACTOR_INDEX _ActorIndex)
 {
-	size_t CheckDefine = 0;
-
 	for (const std::pair<int, Rule*>& Data : mapAllRules)
 	{
-		if (ACTOR_TYPE::DEFINE_TEXT == Data.second->DefineActor->GetActorType())
+		if (_ActorIndex == Data.second->SubjectActor->GetArrowEnum() && ACTOR_TYPE::DEFINE_TEXT == Data.second->DefineActor->GetActorType())
 		{
-			CheckDefine |= static_cast<size_t>(Data.second->DefineActor->GetArrowDefine());
+			GridActorManager::GetInst()->AddDefine(_Actor, Data.second->DefineActor->GetArrowDefine(), false);
 		}
 	}
-
-	return CheckDefine;
 }

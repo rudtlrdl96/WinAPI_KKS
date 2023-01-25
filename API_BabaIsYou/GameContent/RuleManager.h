@@ -3,6 +3,7 @@
 #include "ContentEnum.h"
 
 class Rule;
+class GridActor;
 class RuleManager
 {
 	friend Rule;
@@ -15,7 +16,7 @@ public:
 
 	void AddRule(Rule* _Rule);
 	void RemoveRule(Rule* _Rule);
-	size_t GetActorRule(TEMP_ACTOR_INDEX _Actor);
+	void AddActorRule(GridActor* _Actor, TEMP_ACTOR_INDEX _ActorIndex);
 
 protected:
 

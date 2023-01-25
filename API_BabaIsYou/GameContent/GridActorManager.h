@@ -21,11 +21,13 @@ private:
 		WAIT
 	};
 
-	class RemoveDefineData
+	class DefineData
 	{
 	public:
 		GridActor* ActorData = nullptr;
 		ACTOR_DEFINE RemoveDefine = ACTOR_DEFINE::NONE;
+
+		bool IsRemove = false;
 	};
 public:
 	static GridActorManager* GetInst()
@@ -37,7 +39,7 @@ public:
 	void Init(GameEngineLevel* _PuzzleLevel);
 	void Input(float _DT);
 
-	void AddRemoveDefine(GridActor* _Actor, ACTOR_DEFINE _Define);
+	void AddDefine(GridActor* _Actor, ACTOR_DEFINE _Define, bool _IsRemove);
 	void clear();
 	void LoadData(const std::string_view& _PuzzleName);
 	bool IsPuzzleEnd() const;
@@ -54,7 +56,7 @@ private:
 	GridActorManager& operator=(const GridActorManager& _Other) = delete;
 	GridActorManager& operator=(GridActorManager&& _Other) noexcept = delete;
 		
-	std::vector<RemoveDefineData> vecDefineRemoveActors;
+	std::vector<DefineData> vecDefineActors;
 	std::list<INPUTBEHAVIOR> listInputBuffer;
 
 	GameEngineLevel* PuzzleLevel = nullptr;

@@ -106,7 +106,7 @@ void Rule::CreateRule(GridActor* _Actor, bool _IsInit)
 				}
 				else
 				{
-					Data.second->AddDefine(HorizontalDefineActor->ArrowDefine);
+					GridActorManager::GetInst()->AddDefine(Data.second, HorizontalDefineActor->ArrowDefine, false);
 				}
 			}
 		}
@@ -144,7 +144,7 @@ void Rule::CreateRule(GridActor* _Actor, bool _IsInit)
 		{
 			for (const std::pair<int, GridActor*>& Data : mapSubjectActors)
 			{
-				Data.second->AddDefine(VerticalDefineActor->ArrowDefine);
+				GridActorManager::GetInst()->AddDefine(Data.second, VerticalDefineActor->ArrowDefine, false);
 			}
 		}
 
@@ -187,7 +187,7 @@ void Rule::CreateRule(GridActor* _Actor, bool _IsInit)
 				}
 				else
 				{
-					Data.second->AddDefine(BackHorizontalDefineActor->ArrowDefine);
+					GridActorManager::GetInst()->AddDefine(Data.second, BackHorizontalDefineActor->ArrowDefine, false);
 				}
 			}
 		}
@@ -225,7 +225,7 @@ void Rule::CreateRule(GridActor* _Actor, bool _IsInit)
 		{
 			for (const std::pair<int, GridActor*>& Data : mapSubjectActors)
 			{
-				Data.second->AddDefine(BackVerticalDefineActor->ArrowDefine);
+				GridActorManager::GetInst()->AddDefine(Data.second, BackVerticalDefineActor->ArrowDefine, false);
 			}
 		}
 
@@ -267,7 +267,7 @@ void Rule::RemoveRule(GridActor* _Actor)
 
 			for (const std::pair<int, GridActor*> Data : mapSubjectActors)
 			{
-				GridActorManager::GetInst()->AddRemoveDefine(Data.second, DefineActor->ArrowDefine);
+				GridActorManager::GetInst()->AddDefine(Data.second, DefineActor->ArrowDefine, true);
 			}
 		}
 

@@ -56,7 +56,7 @@ void GridActorManager::Input(float _DT)
 	{
 		return;
 	}
-
+	GridActor::GetActors(ACTOR_DEFINE::YOU);
 	int2 MoveDir = int2::Zero;
 
 	if (GameEngineInput::IsDown("ArrowUp"))
@@ -110,12 +110,18 @@ void GridActorManager::Input(float _DT)
 		case INPUTBEHAVIOR::UNDO:
 			GridActor::AllActorUndo();
 
-			for (size_t i = 0; i < vecDefineRemoveActors.size(); i++)
+			for (size_t i = 0; i < vecDefineActors.size(); i++)
 			{
-				vecDefineRemoveActors[i].ActorData->RemoveDefine(vecDefineRemoveActors[i].RemoveDefine);
+				if (true == vecDefineActors[i].IsRemove)
+				{
+					vecDefineActors[i].ActorData->RemoveDefine(vecDefineActors[i].RemoveDefine);
+				}
+				else
+				{
+					vecDefineActors[i].ActorData->AddDefine(vecDefineActors[i].RemoveDefine);
+				}
 			}
-
-			vecDefineRemoveActors.clear();
+			vecDefineActors.clear();
 
 			return;
 		case INPUTBEHAVIOR::WAIT:
@@ -131,14 +137,23 @@ void GridActorManager::Input(float _DT)
 			return;
 		}
 
-		GridActor::GridActorEndCheck();
+		GridActor::GridActorDeathCheck();
 
-		for (size_t i = 0; i < vecDefineRemoveActors.size(); i++)
+		for (size_t i = 0; i < vecDefineActors.size(); i++)
 		{
-			vecDefineRemoveActors[i].ActorData->RemoveDefine(vecDefineRemoveActors[i].RemoveDefine);
+			if (true == vecDefineActors[i].IsRemove)
+			{
+				vecDefineActors[i].ActorData->RemoveDefine(vecDefineActors[i].RemoveDefine);
+			}
+			else
+			{
+				vecDefineActors[i].ActorData->AddDefine(vecDefineActors[i].RemoveDefine);
+			}
 		}
 
-		vecDefineRemoveActors.clear();
+		GridActor::GridActorSaveBehavior();
+
+		vecDefineActors.clear();
 	}
 }
 
@@ -180,9 +195,9 @@ void GridActorManager::LoadData(const std::string_view& _PuzzleName)
 	PuzzleLevel->SetCameraPos(-DiffSize.half());
 }
 
-void GridActorManager::AddRemoveDefine(GridActor* _Actor, ACTOR_DEFINE _Define)
+void GridActorManager::AddDefine(GridActor* _Actor, ACTOR_DEFINE _Define, bool _IsRemove)
 {
-	vecDefineRemoveActors.push_back({ _Actor, _Define });
+	vecDefineActors.push_back({ _Actor, _Define, _IsRemove });
 }
 
 void GridActorManager::clear()

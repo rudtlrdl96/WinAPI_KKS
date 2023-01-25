@@ -162,6 +162,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ActorData.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="BlackBackUI.h">
       <SubType>
       </SubType>
@@ -175,6 +179,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="ContentCore.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="ContentDataLoader.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -260,6 +268,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ActorData.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="BlackBackUI.cpp">
       <SubType>
       </SubType>
@@ -273,6 +285,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="ContentCore.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="ContentDataLoader.cpp">
       <SubType>
       </SubType>
     </ClCompile>

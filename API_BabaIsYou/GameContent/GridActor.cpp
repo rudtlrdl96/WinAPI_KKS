@@ -318,7 +318,8 @@ void GridActor::AllActorRuleCheck()
 	}
 }
 
-void GridActor::GridActorEndCheck()
+
+void GridActor::GridActorDeathCheck()
 {
 	for (size_t y = 0; y < vecGridDatas.size(); y++)
 	{
@@ -328,7 +329,10 @@ void GridActor::GridActorEndCheck()
 			vecGridDatas[y][x].SinkCheckReset();
 		}
 	}
+}
 
+void GridActor::GridActorSaveBehavior()
+{
 	for (size_t i = 0; i < ObjectPoolCount; i++)
 	{
 		vecObjectPool[i]->SaveBehaviorInfo();
@@ -481,7 +485,6 @@ void GridActor::Update(float _DT)
 
 		SetPos(Lerp(GetScreenPos(PrevPos), GetScreenPos(GridPos), MoveProgress));
 	}
-
 }
 
 void GridActor::LoadData(TEMP_ACTOR_INDEX _Actor, bool _IsInit)
@@ -514,7 +517,7 @@ void GridActor::LoadData(TEMP_ACTOR_INDEX _Actor, bool _IsInit)
 
 			if (FindIter != LoopIter->second.end())
 			{
-				GridActorManager::GetInst()->AddRemoveDefine(this, LoopIter->first);
+				GridActorManager::GetInst()->AddDefine(this, LoopIter->first, true);
 			}
 		}	
 	}
@@ -701,7 +704,7 @@ void GridActor::LoadData(TEMP_ACTOR_INDEX _Actor, bool _IsInit)
 		GetWiggleRender()->DisableText();
 	}
 
-	SetDefine(RuleManager::GetInst()->GetActorRule(_Actor));
+	RuleManager::GetInst()->AddActorRule(this, _Actor);
 
 	switch (RenderType)
 	{
@@ -849,6 +852,11 @@ void GridActor::SaveBehaviorInfo()
 
 	vecBehaviorBuffer.push_back(CurFramesBehaviorBuffer);
 	CurFramesBehaviorBuffer.clear();
+}
+
+TEMP_ACTOR_INDEX GridActor::GetArrowEnum() const
+{
+	return ArrowEnum;
 }
 
 ACTOR_DEFINE GridActor::GetArrowDefine() const
