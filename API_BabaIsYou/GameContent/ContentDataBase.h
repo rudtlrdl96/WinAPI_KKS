@@ -14,6 +14,7 @@ public:
 	void InitDataBase();
 	const ActorData* GetData(int _Index);
 	const ActorData* GetData(std::string _Name);
+	const std::map<int, ActorData>& GetAllData();
 
 protected:
 

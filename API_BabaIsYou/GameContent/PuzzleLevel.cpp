@@ -10,6 +10,7 @@
 #include "CongratulationsUI.h"
 #include "ContentFunc.h"
 #include "ContentConst.h"
+#include "ContentDataBase.h"
 
 std::string PuzzleLevel::LoadPuzzleName = "";
 bool PuzzleLevel::IsExitValue = false;
@@ -44,10 +45,12 @@ void PuzzleLevel::Loading()
 	Dir.MoveParentToDirectory("ContentsResources");
 	Dir.Move("ContentsResources");
 	Dir.Move("Bitmap");
+	Dir.Move("Puzzle");
 
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("actor.BMP"))->Cut(24, 40);
-	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("CongratulationsAnim.BMP"))->Cut(1, 11);
-	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("CongratulationsWiggle.BMP"))->Cut(1, 3);
+	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("CongratulationsAnim.BMP"))->Cut(1, 37);
+	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("CongratulationsWiggle.BMP"))->Cut(1, 9);
+	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("Effect.BMP"))->Cut(1, 1);
 		
 	CreateActor<GrayBackUI>();
 	PuzzleFadeActor = CreateActor<FadeUI>();
@@ -65,6 +68,8 @@ void PuzzleLevel::Loading()
 		GameEngineInput::CreateKey("Undo", 'Z');
 		GameEngineInput::CreateKey("Wait", VK_SPACE);
 	}
+
+	ContentDataBase::GetInst()->InitDataBase();
 }
 
 void PuzzleLevel::Update(float _DT)

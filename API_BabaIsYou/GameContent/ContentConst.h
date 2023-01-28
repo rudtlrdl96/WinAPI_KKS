@@ -19,6 +19,7 @@ public:
 	static const int2 GRID_SIZE;
 	static const float4 GRID_BITMAP_SIZE;
 	static const float4 ACTOR_SIZE;
+	static const float4 MAPTOOL_PALLET_SIZE;
 
 public:
 	ContentConst(const ContentConst& _Other) = delete;

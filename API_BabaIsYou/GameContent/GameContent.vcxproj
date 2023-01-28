@@ -170,6 +170,10 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="ButtonUI.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="CongratulationsUI.h">
       <SubType>
       </SubType>
@@ -231,7 +235,19 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="MapGridData.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="MapToolLevel.h" />
+    <ClInclude Include="PalletActor.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="PalletSelect.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="PuzzleLevel.h">
       <SubType>
       </SubType>
@@ -260,6 +276,10 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="PalletButton.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="WiggleRender.h">
       <SubType>
       </SubType>
@@ -275,6 +295,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="BlackBackUI.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="ButtonUI.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -331,7 +355,19 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="MapGridData.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="MapToolLevel.cpp" />
+    <ClCompile Include="PalletActor.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="PalletSelect.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="PuzzleLevel.cpp">
       <SubType>
       </SubType>
@@ -357,6 +393,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="WiggleActor.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="PalletButton.cpp">
       <SubType>
       </SubType>
     </ClCompile>

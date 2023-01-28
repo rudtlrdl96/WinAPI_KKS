@@ -40,6 +40,9 @@
     <Filter Include="01.Actor\EffectActor">
       <UniqueIdentifier>{4f322c4a-c4e1-4b0c-9a91-3889bf2259d6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Actor\UIActor\MapTool">
+      <UniqueIdentifier>{5390147c-82a5-4cc5-8785-439ff55aa9f1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GridActorManager.h">
@@ -126,6 +129,21 @@
     <ClInclude Include="ContentDataBase.h">
       <Filter>00.Base</Filter>
     </ClInclude>
+    <ClInclude Include="ButtonUI.h">
+      <Filter>01.Actor\UIActor\Defalut</Filter>
+    </ClInclude>
+    <ClInclude Include="PalletButton.h">
+      <Filter>01.Actor\UIActor\MapTool</Filter>
+    </ClInclude>
+    <ClInclude Include="PalletSelect.h">
+      <Filter>01.Actor\UIActor\MapTool</Filter>
+    </ClInclude>
+    <ClInclude Include="PalletActor.h">
+      <Filter>01.Actor\UIActor\MapTool</Filter>
+    </ClInclude>
+    <ClInclude Include="MapGridData.h">
+      <Filter>01.Actor\UIActor\MapTool</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GridActorManager.cpp">
@@ -205,6 +223,21 @@
     </ClCompile>
     <ClCompile Include="ContentDataBase.cpp">
       <Filter>00.Base</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonUI.cpp">
+      <Filter>01.Actor\UIActor\Defalut</Filter>
+    </ClCompile>
+    <ClCompile Include="PalletButton.cpp">
+      <Filter>01.Actor\UIActor\MapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="PalletSelect.cpp">
+      <Filter>01.Actor\UIActor\MapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="PalletActor.cpp">
+      <Filter>01.Actor\UIActor\MapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="MapGridData.cpp">
+      <Filter>01.Actor\UIActor\MapTool</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

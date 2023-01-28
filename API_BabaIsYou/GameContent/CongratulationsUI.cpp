@@ -16,21 +16,21 @@ void CongratulationsUI::Start()
 {
 	CongratulationRender = CreateRender(RENDER_ORDER::UIIMAGE);
 
-	CongratulationRender->SetScale({480, 80});
+	CongratulationRender->SetScale({540, 180});
 	CongratulationRender->SetPosition(GameEngineWindow::GetScreenSize().half());
 
 	CongratulationRender->CreateAnimation({
 		.AnimationName = "CongratulationsAnim",
 		.ImageName = "CongratulationsAnim.BMP",
-		.Start = 0, .End = 10,
-		.InterTime = ContentConst::CONGRATULATION_TIME / 11,
+		.Start = 0, .End = 36,
+		.InterTime = ContentConst::CONGRATULATION_TIME / 36,
 		.Loop = false });
 
 	CongratulationRender->CreateAnimation({
 		.AnimationName = "CongratulationsWiggle",
 		.ImageName = "CongratulationsWiggle.BMP",
-		.Start = 0, .End = 2,
-		.InterTime = ContentConst::WIGGLE_TIME,
+		.Start = 0, .End = 8,
+		.InterTime = ContentConst::WIGGLE_TIME / 3,
 		.Loop = true });
 
 	CongratulationRender->EffectCameraOff();

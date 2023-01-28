@@ -48,3 +48,8 @@ const ActorData* ContentDataBase::GetData(std::string _Name)
 {
 	return GetData(mapActorIndex[_Name]);
 }
+
+const std::map<int, ActorData>& ContentDataBase::GetAllData()
+{
+	return mapActorDB;
+}
