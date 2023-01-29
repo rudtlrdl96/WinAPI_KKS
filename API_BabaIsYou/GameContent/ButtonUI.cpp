@@ -23,8 +23,10 @@ void ButtonUI::SetImage(const std::string_view& _ImageName, float4 _Scale)
 		return;
 	}
 
+	SetColSize(_Scale);
 	ImageRender = CreateRender(_ImageName, RENDER_ORDER::BUTTON);
 	ImageRender->SetScale(_Scale);
+	ImageRender->EffectCameraOff();
 }
 
 void ButtonUI::Start()
@@ -54,7 +56,14 @@ void ButtonUI::Update(float _DT)
 	
 		if (nullptr != ImageRender)
 		{
-			ImageRender->SetFrame(1);
+			if (true == IsSelectValue)
+			{
+				ImageRender->SetFrame(3);
+			}
+			else
+			{
+				ImageRender->SetFrame(1);
+			}
 		}
 
 		if (true == GameEngineInput::IsPress("MouseLeft"))
@@ -79,7 +88,14 @@ void ButtonUI::Update(float _DT)
 	{
 		if (nullptr != ImageRender)
 		{
-			ImageRender->SetFrame(0);
+			if (true == IsSelectValue)
+			{
+				ImageRender->SetFrame(2);
+			}
+			else
+			{
+				ImageRender->SetFrame(0);
+			}
 		}
 
 		IsOverlapValue = false;

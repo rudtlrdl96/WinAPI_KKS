@@ -45,7 +45,8 @@ void PalletButton::Start()
 	.StartIndex = 2,
 	.AnimLength = 0,
 	.Order = 10,
-	.BitmapInterval = 3 }); 
+	.BitmapInterval = 3,
+	.IsUI = true}); 
 
 	GetWiggleRender()->ActiveWiggle();
 
@@ -53,6 +54,7 @@ void PalletButton::Start()
 
 	ActorRender = CreateRender("Actor.BMP", 11);
 	ActorRender->SetScale(ContentConst::ACTOR_SIZE);
+	ActorRender->EffectCameraOff();
 	ActorRender->Off();
 }
 

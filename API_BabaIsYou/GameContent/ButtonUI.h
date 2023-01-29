@@ -29,6 +29,20 @@ public:
 	{
 		return IsUpValue;
 	}
+
+	inline void ButtonOff()
+	{
+		Off();
+		IsOverlapValue = false;
+		IsClickValue = false;
+		IsUpValue = false;
+	}
+
+	void SetSelect(bool _Select)
+	{
+		IsSelectValue = _Select;
+	}
+
 protected:
 	void Start() override;
 	void Update(float _DT) override;
@@ -40,6 +54,7 @@ private:
 	bool IsOverlapValue = false;
 	bool IsClickValue = false;
 	bool IsUpValue = false;
+	bool IsSelectValue = false;
 
 	GameEngineRender* ImageRender = nullptr;
 };

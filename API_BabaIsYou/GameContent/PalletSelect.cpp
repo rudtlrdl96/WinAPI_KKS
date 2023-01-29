@@ -18,5 +18,6 @@ void PalletSelect::Start()
 	.StartIndex = 0,
 	.AnimLength = 0,
 	.Order = 15,
-	.BitmapInterval = 1 });
+	.BitmapInterval = 1,
+	.IsUI = true});
 }

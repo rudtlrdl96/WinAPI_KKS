@@ -20,13 +20,17 @@ public:
 	void ActivePallet();
 	void DisablePallet();
 
+	inline int GetPenEnum() const
+	{
+		return PenEnum;
+	}
+
 protected:
 	void Start() override;
 	void Update(float _DT) override;
 private:
 	
 	std::vector<PalletButton*> vecLoadActors;
-	ButtonUI* CloseButton = nullptr;
 	PalletSelect* PalletSelectActor = nullptr;
 
 	int PenEnum = -1;

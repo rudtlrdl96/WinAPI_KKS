@@ -235,7 +235,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="MapGridData.h">
+    <ClInclude Include="MapToolGridData.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -355,7 +355,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="MapGridData.cpp">
+    <ClCompile Include="MapToolGridData.cpp">
       <SubType>
       </SubType>
     </ClCompile>

@@ -48,23 +48,12 @@ void PalletActor::Start()
 		++Index;
 	}
 
-	CloseButton = GetLevel()->CreateActor<ButtonUI>();
-	CloseButton->SetImage("CloseButton.BMP", {80, 80});
-	CloseButton->SetColSize({ 80, 80 });
-	CloseButton->SetPos({1200, 60});
-
 	PalletSelectActor = GetLevel()->CreateActor<PalletSelect>();
 	SelectPen(0);
 }
 
 void PalletActor::Update(float _DT)
 {
-	if (true == CloseButton->IsUp())
-	{
-		DisablePallet();
-		return;
-	}
-
 	for (size_t i = 0; i < vecLoadActors.size(); i++)
 	{
 		if (true == vecLoadActors[i]->IsUp())
@@ -94,14 +83,12 @@ void PalletActor::ActivePallet()
 	}
 
 	PalletSelectActor->On();
-	CloseButton->On();
 	On();
 }
 
 void PalletActor::DisablePallet()
 {
 	Off();
-	CloseButton->Off();
 	PalletSelectActor->Off();
 
 	for (size_t i = 0; i < vecLoadActors.size(); i++)

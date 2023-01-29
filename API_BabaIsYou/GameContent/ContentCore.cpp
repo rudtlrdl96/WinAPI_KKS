@@ -28,7 +28,7 @@ void ContentCore::Start()
 	CreateLevel<EndingLevel>("Ending");
 	CreateLevel<MapToolLevel>("MapTool");
 
-	ChangeLevel("MapTool");
+	ChangeLevel("Puzzle");
 }
 
 void ContentCore::Update()

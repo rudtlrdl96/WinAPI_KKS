@@ -141,7 +141,7 @@
     <ClInclude Include="PalletActor.h">
       <Filter>01.Actor\UIActor\MapTool</Filter>
     </ClInclude>
-    <ClInclude Include="MapGridData.h">
+    <ClInclude Include="MapToolGridData.h">
       <Filter>01.Actor\UIActor\MapTool</Filter>
     </ClInclude>
   </ItemGroup>
@@ -236,7 +236,7 @@
     <ClCompile Include="PalletActor.cpp">
       <Filter>01.Actor\UIActor\MapTool</Filter>
     </ClCompile>
-    <ClCompile Include="MapGridData.cpp">
+    <ClCompile Include="MapToolGridData.cpp">
       <Filter>01.Actor\UIActor\MapTool</Filter>
     </ClCompile>
   </ItemGroup>
