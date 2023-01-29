@@ -21,8 +21,9 @@ public:
 protected:
 
 private:
-
 	GridActor* SubjectActor = nullptr;
 	GridActor* VerbActor = nullptr;
 	GridActor* DefineActor = nullptr;
+
+	static void CheckRule(GridActor* _SubjectActor, GridActor* _VerbActor, GridActor* _DefineActor, bool _IsInit);
 };

@@ -318,14 +318,14 @@ void MapToolLevel::ResizeMap(const int2& _MapSize)
 void MapToolLevel::SaveMap()
 {
 	std::vector<std::vector<int>> SaveData;
-	SaveData.reserve(vecMapDatas.size());
+	SaveData.reserve(MapSize.y);
 
-	for (size_t y = 0; y < vecMapDatas.size(); y++)
+	for (size_t y = 0; y < MapSize.y; y++)
 	{
 		SaveData.push_back(std::vector<int>());
-		SaveData[y].reserve(vecMapDatas[y].size());
+		SaveData[y].reserve(MapSize.x);
 
-		for (size_t x = 0; x < vecMapDatas[y].size(); x++)
+		for (size_t x = 0; x < MapSize.x; x++)
 		{
 			SaveData[y].push_back(-1);
 			SaveData[y][x] = vecMapDatas[y][x]->GetIndex();
@@ -337,20 +337,31 @@ void MapToolLevel::SaveMap()
 
 void MapToolLevel::LoadMap()
 {
+
 	std::vector<std::vector<int>> LoadData;
 
 	if (true == ContentDataLoader::LoadMapData(ContentDataLoader::GetOpenFilePath(), LoadData))
 	{
-		ResizeMap({static_cast<int>(LoadData.size()), static_cast<int>(LoadData[0].size())});
-
-		for (size_t y = 0; y < LoadData.size(); y++)
+		for (size_t y = 0; y < vecMapDatas.size(); y++)
 		{
-			for (size_t x = 0; x < LoadData[y].size(); x++)
+			for (size_t x = 0; x < vecMapDatas[y].size(); x++)
 			{
-				vecMapDatas[y][x]->SetIndex(LoadData[y][x]);
+				vecMapDatas[y][x]->SetIndex(-1);
+				vecMapDatas[y][x]->Off();
 			}
 		}
 
+		MapSize = { static_cast<int>(LoadData[0].size()), static_cast<int>(LoadData.size()) };
+		ResizeMap(MapSize);
+
+		for (size_t y = 0; y < MapSize.y; y++)
+		{
+			for (size_t x = 0; x < MapSize.x; x++)
+			{
+				vecMapDatas[y][x]->On();
+				vecMapDatas[y][x]->SetIndex(LoadData[y][x]);
+			}
+		}
 	}
 }
 

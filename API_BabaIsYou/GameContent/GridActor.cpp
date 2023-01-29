@@ -84,7 +84,7 @@ void GridActor::GridData::DeathCheck()
 			LoopIter = mapDatas.erase(LoopIter);
 			continue;
 		}
-		else if (LoopIter->second->IsDefine(ACTOR_DEFINE::HOT) && static_cast<size_t>(ACTOR_DEFINE::MELT) & GridDefine)
+		else if (LoopIter->second->IsDefine(ACTOR_DEFINE::MELT) && static_cast<size_t>(ACTOR_DEFINE::HOT) & GridDefine)
 		{
 			LoopIter->second->ActorDeath();
 			LoopIter = mapDatas.erase(LoopIter);
@@ -824,7 +824,11 @@ bool GridActor::Move(bool _IsInputMove)
 	if (ACTOR_TYPE::ACTOR != ActorType)
 	{
 		RemoveRule();
-		vecTextDatas[GridPos.y][GridPos.x] = nullptr;
+
+		if (this == vecTextDatas[GridPos.y][GridPos.x])
+		{
+			vecTextDatas[GridPos.y][GridPos.x] = nullptr;
+		}
 	}
 
 	IsMove = true;
@@ -834,8 +838,8 @@ bool GridActor::Move(bool _IsInputMove)
 
 	if (ACTOR_TYPE::ACTOR != ActorType)
 	{
-		AddRule();
 		vecTextDatas[GridPos.y][GridPos.x] = this;
+		AddRule();
 	}
 
 	vecGridDatas[GridPos.y][GridPos.x].push_back(this);
@@ -852,7 +856,11 @@ void GridActor::UndoMove()
 	if (ACTOR_TYPE::ACTOR != ActorType)
 	{
 		RemoveRule();
-		vecTextDatas[GridPos.y][GridPos.x] = nullptr;
+
+		if (this == vecTextDatas[GridPos.y][GridPos.x])
+		{
+			vecTextDatas[GridPos.y][GridPos.x] = nullptr;
+		}
 	}
 
 	IsMove = true;
@@ -862,8 +870,8 @@ void GridActor::UndoMove()
 
 	if (ACTOR_TYPE::ACTOR != ActorType)
 	{
-		AddRule();
 		vecTextDatas[GridPos.y][GridPos.x] = this;
+		AddRule();
 	}
 
 	vecGridDatas[GridPos.y][GridPos.x].push_back(this);
@@ -881,7 +889,11 @@ void GridActor::Push()
 	if (ACTOR_TYPE::ACTOR != ActorType)
 	{
 		RemoveRule();
-		vecTextDatas[GridPos.y][GridPos.x] = nullptr;
+
+		if (this == vecTextDatas[GridPos.y][GridPos.x])
+		{
+			vecTextDatas[GridPos.y][GridPos.x] = nullptr;
+		}
 	}
 
 	IsMove = true;
@@ -891,8 +903,8 @@ void GridActor::Push()
 
 	if (ACTOR_TYPE::ACTOR != ActorType)
 	{
-		AddRule();
 		vecTextDatas[GridPos.y][GridPos.x] = this;
+		AddRule();
 	}
 
 	vecGridDatas[GridPos.y][GridPos.x].push_back(this);
@@ -906,7 +918,11 @@ void GridActor::UndoPush()
 	if (ACTOR_TYPE::ACTOR != ActorType)
 	{
 		RemoveRule();
-		vecTextDatas[GridPos.y][GridPos.x] = nullptr;
+
+		if (this == vecTextDatas[GridPos.y][GridPos.x])
+		{
+			vecTextDatas[GridPos.y][GridPos.x] = nullptr;
+		}
 	}
 
 	IsMove = true;
@@ -916,8 +932,8 @@ void GridActor::UndoPush()
 
 	if (ACTOR_TYPE::ACTOR != ActorType)
 	{
-		AddRule();
 		vecTextDatas[GridPos.y][GridPos.x] = this;
+		AddRule();
 	}
 
 	vecGridDatas[GridPos.y][GridPos.x].push_back(this);
