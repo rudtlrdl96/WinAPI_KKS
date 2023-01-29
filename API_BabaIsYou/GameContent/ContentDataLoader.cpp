@@ -46,7 +46,6 @@ std::string ContentDataLoader::GetOpenFilePath()
     }
 
     SetCurrentDirectory(PrevPath);
-    MsgAssert("경로 불러오기 실패");
     return "";
 }
 
@@ -82,12 +81,16 @@ std::string ContentDataLoader::GetSaveFilePath()
     }
 
     SetCurrentDirectory(PrevPath);
-    MsgAssert("경로 불러오기 실패");
     return "";
 }
 
 bool ContentDataLoader::LoadMapData(const std::string_view& _Path, std::vector<std::vector<int>>& _MapLoad)
 {
+    if ("" == _Path)
+    {
+        return false;
+    }
+
     if (0 < _MapLoad.size())
     {
         for (size_t y = 0; y < _MapLoad.size(); y++)
@@ -131,6 +134,11 @@ bool ContentDataLoader::LoadMapData(const std::string_view& _Path, std::vector<s
 
 bool ContentDataLoader::SaveMapData(const std::string_view& _Path, const std::vector<std::vector<int>>& _MapData)
 {
+    if ("" == _Path)
+    {
+        return false;
+    }
+
     std::ofstream SaveStream;
     SaveStream.open(_Path.data());
 

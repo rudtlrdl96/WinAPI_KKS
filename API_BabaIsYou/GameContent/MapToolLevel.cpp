@@ -11,6 +11,7 @@
 #include "PalletActor.h"
 #include "ButtonUI.h"
 #include "MapToolGridData.h"
+#include "ContentDataLoader.h"
 
 MapToolLevel::MapToolLevel() :
 	MapToolFadeActor(nullptr)
@@ -40,6 +41,8 @@ void MapToolLevel::Loading()
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("EraseBrushButton.BMP"))->Cut(2, 2);
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("MapSizePlusButton.BMP"))->Cut(1, 2);
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("MapSizeMinusButton.BMP"))->Cut(1, 2);
+	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("MapToolSave.BMP"))->Cut(1, 2);
+	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("MapToolLoad.BMP"))->Cut(1, 2);
 
 	if (false == GameEngineInput::IsKey("MapEscape"))
 	{
@@ -85,7 +88,12 @@ void MapToolLevel::Loading()
 	MapSizeDownButtonX->SetPos({ 780, 690 });
 
 	MapSaveButton = CreateActor<ButtonUI>();
+	MapSaveButton->SetImage("MapToolSave.BMP", { 80, 40 });
+	MapSaveButton->SetPos({ 50, 690 });
+
 	MapLoadButton = CreateActor<ButtonUI>();
+	MapLoadButton->SetImage("MapToolLoad.BMP", { 80, 40 });
+	MapLoadButton->SetPos({ 140, 690 });
 
 	vecMapDatas.reserve(ContentConst::GRID_SIZE_Y);
 
@@ -156,6 +164,14 @@ void MapToolLevel::Update(float _DT)
 	else if (true == MapSizeDownButtonY->IsUp())
 	{
 		ResizeMap(MapSize + int2{ 0, -1 });
+	}
+	else if (true == MapSaveButton->IsUp())
+	{
+		SaveMap();
+	}
+	else if (true == MapLoadButton->IsUp())
+	{
+		LoadMap();
 	}
 	else if (GameEngineInput::IsDown("MapEscape"))
 	{
@@ -296,6 +312,46 @@ void MapToolLevel::ResizeMap(const int2& _MapSize)
     SetCameraPos(-DiffSize.half());
 
 	ActiveMap();
+}
+
+
+void MapToolLevel::SaveMap()
+{
+	std::vector<std::vector<int>> SaveData;
+	SaveData.reserve(vecMapDatas.size());
+
+	for (size_t y = 0; y < vecMapDatas.size(); y++)
+	{
+		SaveData.push_back(std::vector<int>());
+		SaveData[y].reserve(vecMapDatas[y].size());
+
+		for (size_t x = 0; x < vecMapDatas[y].size(); x++)
+		{
+			SaveData[y].push_back(-1);
+			SaveData[y][x] = vecMapDatas[y][x]->GetIndex();
+		}
+	}
+
+	ContentDataLoader::SaveMapData(ContentDataLoader::GetSaveFilePath(), SaveData);
+}
+
+void MapToolLevel::LoadMap()
+{
+	std::vector<std::vector<int>> LoadData;
+
+	if (true == ContentDataLoader::LoadMapData(ContentDataLoader::GetOpenFilePath(), LoadData))
+	{
+		ResizeMap({static_cast<int>(LoadData.size()), static_cast<int>(LoadData[0].size())});
+
+		for (size_t y = 0; y < LoadData.size(); y++)
+		{
+			for (size_t x = 0; x < LoadData[y].size(); x++)
+			{
+				vecMapDatas[y][x]->SetIndex(LoadData[y][x]);
+			}
+		}
+
+	}
 }
 
 void MapToolLevel::ActiveMainButton()

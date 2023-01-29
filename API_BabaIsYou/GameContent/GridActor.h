@@ -54,10 +54,10 @@ public:
 	static void MoveAllYouBehavior(const int2& _Dir);
 	static void MoveAllMoveBehavior();
 
-	static GridActor* CreateGridActor(TEMP_ACTOR_INDEX _Type);
+	static GridActor* CreateGridActor(int _Type);
 
 	static GridActor* GetTextActor(const int2& _Pos);
-	static std::map<int, GridActor*>& GetActors(TEMP_ACTOR_INDEX _ActorIndex);
+	static std::map<int, GridActor*>& GetActors(int _ActorIndex);
 	static std::map<int, GridActor*>& GetActors(ACTOR_DEFINE _Define);
 
 	static bool IsAnyMove();
@@ -82,7 +82,7 @@ private:
 	static std::vector<GridActor*> vecObjectPool;	
 
 	// 액터 타입별 데이터 정렬
-	static std::map<TEMP_ACTOR_INDEX, std::map<int, GridActor*>> mapActorDatas;
+	static std::map<int, std::map<int, GridActor*>> mapActorDatas;
 	// 액터 Deinfe 데이터 정렬
 	static std::map<ACTOR_DEFINE, std::map<int, GridActor*>> mapDefineActorDatas;
 	// 타일 랜더이미지 Index	
@@ -101,7 +101,7 @@ public:
 	GridActor& operator=(const GridActor& _Other) = delete;
 	GridActor& operator=(GridActor&& _Other) noexcept = delete;
 
-	void LoadData(TEMP_ACTOR_INDEX _Actor, bool _IsInit);
+	void LoadData(int _Actor, bool _IsInit);
 	void RuleCheck();
 	void ResetValues();
 	void SetGrid(const int2& _Pos);
@@ -109,7 +109,7 @@ public:
 	void RemoveDefine(ACTOR_DEFINE _Info);
 	bool IsDefine(ACTOR_DEFINE _Info);
 	void SaveBehaviorInfo();
-	TEMP_ACTOR_INDEX GetArrowEnum() const;
+	int GetArrowEnum() const;
 	ACTOR_DEFINE GetArrowDefine() const;
 
 	ACTOR_TYPE GetActorType();
@@ -122,11 +122,11 @@ protected:
 private:
 	std::string ActorName = "";
 
-	TEMP_ACTOR_INDEX ActorEnum = TEMP_ACTOR_INDEX::COUNT;
+	int ActorEnum = -1;
 	ACTOR_TYPE ActorType = ACTOR_TYPE::ACTOR;
 	ACTOR_RENDER_TYPE RenderType = ACTOR_RENDER_TYPE::STATIC;
 
-	TEMP_ACTOR_INDEX ArrowEnum = TEMP_ACTOR_INDEX::COUNT;
+	int ArrowEnum = -1;
 	ACTOR_DEFINE ArrowDefine = ACTOR_DEFINE::NONE;
 
 	std::map<int, Rule*> mapRules;

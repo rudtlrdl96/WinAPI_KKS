@@ -35,7 +35,7 @@ void RuleManager::RemoveRule(Rule* _Rule)
 	}
 }
 
-void RuleManager::AddActorRule(GridActor* _Actor, TEMP_ACTOR_INDEX _ActorIndex)
+void RuleManager::AddActorRule(GridActor* _Actor, int _ActorIndex)
 {
 	for (const std::pair<int, Rule*>& Data : mapAllRules)
 	{

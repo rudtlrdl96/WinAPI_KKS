@@ -7,6 +7,7 @@
 #include "Rule.h"
 #include "RuleManager.h"
 #include "GridActorManager.h"
+#include "ContentDataBase.h"
 
 /// GridData
 
@@ -167,11 +168,11 @@ std::vector<GridActor*> GridActor::vecObjectPool;
 std::vector<std::vector<GridActor::GridData>> GridActor::vecGridDatas;
 std::vector<std::vector<GridActor*>> GridActor::vecTextDatas;
 
-std::map<TEMP_ACTOR_INDEX, std::map<int, GridActor*>> GridActor::mapActorDatas;
+std::map<int, std::map<int, GridActor*>> GridActor::mapActorDatas;
 std::map<ACTOR_DEFINE, std::map<int, GridActor*>> GridActor::mapDefineActorDatas;
 std::map<int, int> GridActor::mapTileRenderImageIndex;
 
-GridActor* GridActor::CreateGridActor(TEMP_ACTOR_INDEX _Type)
+GridActor* GridActor::CreateGridActor(int _Type)
 {
 	if (ObjectPoolCount >= vecObjectPool.size())
 	{
@@ -191,10 +192,20 @@ GridActor* GridActor::CreateGridActor(TEMP_ACTOR_INDEX _Type)
 
 GridActor* GridActor::GetTextActor(const int2& _Pos)
 {
+	if (0 > _Pos.x || ContentConst::GRID_SIZE_X <= _Pos.x)
+	{
+		return nullptr;
+	}
+
+	if (0 > _Pos.y || ContentConst::GRID_SIZE_Y <= _Pos.y)
+	{
+		return nullptr;
+	}
+
 	return vecTextDatas[_Pos.y][_Pos.x];
 }
 
-std::map<int, GridActor*>& GridActor::GetActors(TEMP_ACTOR_INDEX _ActorIndex)
+std::map<int, GridActor*>& GridActor::GetActors(int _ActorIndex)
 {
 	return mapActorDatas[_ActorIndex];
 }
@@ -496,9 +507,11 @@ void GridActor::Update(float _DT)
 	}
 }
 
-void GridActor::LoadData(TEMP_ACTOR_INDEX _Actor, bool _IsInit)
+void GridActor::LoadData(int _Actor, bool _IsInit)
 {
-	if (_Actor < TEMP_ACTOR_INDEX::BABA || _Actor >= TEMP_ACTOR_INDEX::COUNT)
+	const ActorData* LoadDB = ContentDataBase::GetInst()->GetData(_Actor);
+
+	if (nullptr == LoadDB)
 	{
 		MsgAssert("잘못된 Actor Type이 입력되었습니다.");
 		return;
@@ -536,10 +549,6 @@ void GridActor::LoadData(TEMP_ACTOR_INDEX _Actor, bool _IsInit)
 		CurFramesBehaviorBuffer.push_back({ BEHAVIOR::CHANGE_INFO, static_cast<int>(ActorEnum) });
 	}
 
-	ActorEnum = _Actor;
-	ArrowEnum = _Actor;
-
-	mapActorDatas[ActorEnum][ActorKey] = this;
 	DefineData = 0;
 
 	// Todo : File Save/Load 시스템이 완성된 후 데이터베이스 로드
@@ -556,152 +565,16 @@ void GridActor::LoadData(TEMP_ACTOR_INDEX _Actor, bool _IsInit)
 
 	WiggleRenderPtr->Reset();
 
-	// Todo : 테스트용 임시 호출 추후 데이터시스템이 생성되면 삭제
-	if (TEMP_ACTOR_INDEX::BABA == _Actor)
-	{
-		ActorName = "BABA";
-		WiggleRenderPtr->SetStartIndex(2);
-		ActorType = ACTOR_TYPE::ACTOR;
-		RenderType = ACTOR_RENDER_TYPE::CHARACTER;
-	}
+	ActorEnum = LoadDB->ActorEnum;
+	ArrowEnum = LoadDB->ArrowEnum;
+	ActorName = LoadDB->ActorName;
+	ActorType = LoadDB->ActorType;
+	RenderType = LoadDB->RenderType;
+	ArrowDefine = LoadDB->ArrowDefine;
 
-	if (TEMP_ACTOR_INDEX::KEKE == _Actor)
-	{
-		ActorName = "KEKE";
-		WiggleRenderPtr->SetStartIndex(74);
-		ActorType = ACTOR_TYPE::ACTOR;
-		RenderType = ACTOR_RENDER_TYPE::CHARACTER;
-	}
+	mapActorDatas[ActorEnum][ActorKey] = this;
 
-	if (TEMP_ACTOR_INDEX::FLAG == _Actor)
-	{
-		ActorName = "FLAG";
-		WiggleRenderPtr->SetStartIndex(728);
-		ActorType = ACTOR_TYPE::ACTOR;
-		RenderType = ACTOR_RENDER_TYPE::STATIC;
-	}
-
-	if (TEMP_ACTOR_INDEX::BABA_TEXT == _Actor)
-	{
-		ActorName = "BABA_TEXT";
-		WiggleRenderPtr->SetStartIndex(0);
-		ActorType = ACTOR_TYPE::SUBJECT_TEXT;
-		RenderType = ACTOR_RENDER_TYPE::STATIC;
-		ArrowEnum = TEMP_ACTOR_INDEX::BABA;
-	}
-
-	if (TEMP_ACTOR_INDEX::KEKE_TEXT == _Actor)
-	{
-		ActorName = "KEKE_TEXT";
-		WiggleRenderPtr->SetStartIndex(72);
-		ActorType = ACTOR_TYPE::SUBJECT_TEXT;
-		RenderType = ACTOR_RENDER_TYPE::STATIC;
-		ArrowEnum = TEMP_ACTOR_INDEX::KEKE;
-	}
-
-	if (TEMP_ACTOR_INDEX::IS_TEXT == _Actor)
-	{
-		ActorName = "IS_TEXT";
-		WiggleRenderPtr->SetStartIndex(792);
-		ActorType = ACTOR_TYPE::VERB_TEXT;
-		RenderType = ACTOR_RENDER_TYPE::STATIC;
-	}
-
-	if (TEMP_ACTOR_INDEX::YOU_TEXT == _Actor)
-	{
-		ActorName = "YOU_TEXT";
-		WiggleRenderPtr->SetStartIndex(864);
-		ActorType = ACTOR_TYPE::DEFINE_TEXT;
-		RenderType = ACTOR_RENDER_TYPE::STATIC;
-		ArrowDefine = ACTOR_DEFINE::YOU;
-	}
-
-	if (TEMP_ACTOR_INDEX::LAVA == _Actor)
-	{
-		ActorName = "LAVA";
-		WiggleRenderPtr->SetStartIndex(434);
-		ActorType = ACTOR_TYPE::ACTOR;
-		RenderType = ACTOR_RENDER_TYPE::TILE;
-	}
-
-	if (TEMP_ACTOR_INDEX::WATER == _Actor)
-	{
-		ActorName = "WATER";
-		WiggleRenderPtr->SetStartIndex(362);
-		ActorType = ACTOR_TYPE::ACTOR;
-		RenderType = ACTOR_RENDER_TYPE::TILE;
-	}
-
-	if (TEMP_ACTOR_INDEX::SKULL == _Actor)
-	{
-		ActorName = "SKULL";
-		WiggleRenderPtr->SetStartIndex(722);
-		ActorType = ACTOR_TYPE::ACTOR;
-		RenderType = ACTOR_RENDER_TYPE::DYNAMIC;
-	}
-
-	if (TEMP_ACTOR_INDEX::WIN_TEXT == _Actor)
-	{
-		ActorName = "WIN_TEXT";
-		WiggleRenderPtr->SetStartIndex(866);
-		ActorType = ACTOR_TYPE::DEFINE_TEXT;
-		RenderType = ACTOR_RENDER_TYPE::STATIC;
-		ArrowDefine = ACTOR_DEFINE::WIN;
-	}
-
-	if (TEMP_ACTOR_INDEX::STOP_TEXT == _Actor)
-	{
-		ActorName = "STOP_TEXT";
-		WiggleRenderPtr->SetStartIndex(868);
-		ActorType = ACTOR_TYPE::DEFINE_TEXT;
-		RenderType = ACTOR_RENDER_TYPE::STATIC;
-		ArrowDefine = ACTOR_DEFINE::STOP;
-	}
-
-	if (TEMP_ACTOR_INDEX::PUSH_TEXT == _Actor)
-	{
-		ActorName = "PUSH_TEXT";
-		WiggleRenderPtr->SetStartIndex(870);
-		ActorType = ACTOR_TYPE::DEFINE_TEXT;
-		RenderType = ACTOR_RENDER_TYPE::STATIC;
-		ArrowDefine = ACTOR_DEFINE::PUSH;
-	}
-
-	if (TEMP_ACTOR_INDEX::SINK_TEXT == _Actor)
-	{
-		ActorName = "SINK_TEXT";
-		WiggleRenderPtr->SetStartIndex(872);
-		ActorType = ACTOR_TYPE::DEFINE_TEXT;
-		RenderType = ACTOR_RENDER_TYPE::STATIC;
-		ArrowDefine = ACTOR_DEFINE::SINK;
-	}
-
-	if (TEMP_ACTOR_INDEX::DEFEAT_TEXT == _Actor)
-	{
-		ActorName = "DEFEAT_TEXT";
-		WiggleRenderPtr->SetStartIndex(874);
-		ActorType = ACTOR_TYPE::DEFINE_TEXT;
-		RenderType = ACTOR_RENDER_TYPE::STATIC;
-		ArrowDefine = ACTOR_DEFINE::DEFEAT;
-	}
-
-	if (TEMP_ACTOR_INDEX::HOT_TEXT == _Actor)
-	{
-		ActorName = "HOT_TEXT";
-		WiggleRenderPtr->SetStartIndex(876);
-		ActorType = ACTOR_TYPE::DEFINE_TEXT;
-		RenderType = ACTOR_RENDER_TYPE::STATIC;
-		ArrowDefine = ACTOR_DEFINE::HOT;
-	}
-
-	if (TEMP_ACTOR_INDEX::MELT_TEXT == _Actor)
-	{
-		ActorName = "MELT_TEXT";
-		WiggleRenderPtr->SetStartIndex(878);
-		ActorType = ACTOR_TYPE::DEFINE_TEXT;
-		RenderType = ACTOR_RENDER_TYPE::STATIC;
-		ArrowDefine = ACTOR_DEFINE::MELT;
-	}
+	WiggleRenderPtr->SetStartIndex(LoadDB->RenderIndex);
 
 	if (ACTOR_TYPE::ACTOR != ActorType)
 	{
@@ -863,7 +736,7 @@ void GridActor::SaveBehaviorInfo()
 	CurFramesBehaviorBuffer.clear();
 }
 
-TEMP_ACTOR_INDEX GridActor::GetArrowEnum() const
+int GridActor::GetArrowEnum() const
 {
 	return ArrowEnum;
 }
@@ -922,7 +795,7 @@ void GridActor::Undo()
 			UndoRemoveDefine(static_cast<ACTOR_DEFINE>(vecUndos[i].Value));
 			break;
 		case BEHAVIOR::CHANGE_INFO:
-			LoadData(static_cast<TEMP_ACTOR_INDEX>(vecUndos[i].Value), true);
+			LoadData(vecUndos[i].Value, true);
 			break;
 		default:
 			MsgAssert("잘못된 Behavior Type 입니다.");

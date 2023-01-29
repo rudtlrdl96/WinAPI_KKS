@@ -16,7 +16,7 @@ public:
 
 	void AddRule(Rule* _Rule);
 	void RemoveRule(Rule* _Rule);
-	void AddActorRule(GridActor* _Actor, TEMP_ACTOR_INDEX _ActorIndex);
+	void AddActorRule(GridActor* _Actor, int _ActorIndex);
 
 protected:
 

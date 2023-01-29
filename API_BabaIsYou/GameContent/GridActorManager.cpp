@@ -1,4 +1,5 @@
 #include "GridActorManager.h"
+#include <GameEngineBase/GameEngineDirectory.h>
 #include <GameEngineBase/GameEngineDebug.h>
 #include <GameEnginePlatform/GameEngineWindow.h>
 #include <GameEnginePlatform/GameEngineInput.h>
@@ -10,32 +11,7 @@
 #include "CongratulationsUI.h"
 #include "BlackBackUI.h"
 #include "PuzzleLevel.h"
-
-const int TEMP_X = 33;
-const int TEMP_Y = 18;
-
-// Todo : Data Save/Load System이 생성되면 제거
-int arrDatas[TEMP_Y][TEMP_X] =
-{
-	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,},
-	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,},
-	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,},
-	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,11,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,},
-	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,32,-1,-1,-1,-1,-1, 1, 1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,},
-	{-1,-1,-1,-1,-1,-1,-1,-1,-1,15,28,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,},
-	{-1,-1,-1,-1,-1, 0, 0,-1,-1,14,28,31,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,},
-	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,},
-	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,},
-	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,10,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,},
-	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,},
-	{-1,-1,-1,-1,-1,-1,-1,-1,-1, 6, 6,-1, 5, 5,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,},
-	{-1,-1,-1,-1,-1,-1,-1,-1, 6, 6, 6,-1, 5, 5,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,},
-	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,},
-	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,},
-	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,},
-	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,},
-	{-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,},
-};
+#include "ContentDataLoader.h"
 
 GridActorManager::GridActorManager()
 {
@@ -169,22 +145,38 @@ void GridActorManager::LoadData(const std::string_view& _PuzzleName)
 {
 	Reset();
 
-	// Todo : DataLoad System
-	GridActor::SetGridLength(int2{ TEMP_X, TEMP_Y});
 
-	float4 TotalGridSize = { ContentConst::ACTOR_SIZE.x * TEMP_X, ContentConst::ACTOR_SIZE.y * TEMP_Y };
+	GameEngineDirectory Dir;
+	Dir.MoveParentToDirectory("Data");
+	Dir.Move("Data");
+	Dir.Move("Map");
+
+	std::vector<std::vector<int>> LoadData;
+	
+	if (false == ContentDataLoader::LoadMapData(Dir.GetPlusFileName(_PuzzleName).GetPathToString(), LoadData))
+	{
+		MsgAssert("맵 데이터를 불러오는데 실패했습니다.");
+		return;
+	}
+
+	int2 MapSize = { static_cast<int>(LoadData[0].size()), static_cast<int>(LoadData.size())};
+
+	// Todo : DataLoad System
+	GridActor::SetGridLength(MapSize);
+
+	float4 TotalGridSize = { ContentConst::ACTOR_SIZE.x * MapSize.x, ContentConst::ACTOR_SIZE.y * MapSize.y };
 	float4 WindowSize = GameEngineWindow::GetScreenSize();
 	float4 DiffSize = WindowSize - TotalGridSize;
 
 	GridBackActor->SetScale(TotalGridSize);
 
-	for (size_t y = 0; y < TEMP_Y; y++)
+	for (size_t y = 0; y < MapSize.y; y++)
 	{
-		for (size_t x = 0; x < TEMP_X; x++)
+		for (size_t x = 0; x < MapSize.x; x++)
 		{
-			if (0 <= arrDatas[y][x])
+			if (0 <= LoadData[y][x])
 			{
-				GridActor* ActorData = GridActor::CreateGridActor(static_cast<TEMP_ACTOR_INDEX>(arrDatas[y][x]));
+				GridActor* ActorData = GridActor::CreateGridActor(LoadData[y][x]);
 
 				if (nullptr == ActorData)
 				{
@@ -192,7 +184,7 @@ void GridActorManager::LoadData(const std::string_view& _PuzzleName)
 				}
 
 				ActorData->ResetValues();
-				ActorData->LoadData(static_cast<TEMP_ACTOR_INDEX>(arrDatas[y][x]), true);
+				ActorData->LoadData(LoadData[y][x], true);
 				ActorData->On();
 				ActorData->SetGrid({static_cast<int>(x), static_cast<int>(y)});
 			}

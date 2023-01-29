@@ -60,6 +60,9 @@ private:
 	void ActiveMap();
 	void ResizeMap(const int2& _MapSize);
 
+	void SaveMap();
+	void LoadMap();
+
 	void ActiveMainButton();
 	void ActivePalletButton();
 	void DisableMainButton();

@@ -12,7 +12,7 @@
 #include "ContentConst.h"
 #include "ContentDataBase.h"
 
-std::string PuzzleLevel::LoadPuzzleName = "";
+std::string PuzzleLevel::LoadPuzzleName = "babaisyou";
 bool PuzzleLevel::IsExitValue = false;
 
 PuzzleLevel::PuzzleLevel()
