@@ -13,7 +13,7 @@ MapBackgroundUI::~MapBackgroundUI()
 
 void MapBackgroundUI::Start()
 {
-	InitRender({
+	InitWiggleRender({
 	.FileName = "WorldMap.BMP",
 	.Pos = GameEngineWindow::GetScreenSize().half(),
 	.Scale = GameEngineWindow::GetScreenSize() - float4{ 90, 70 },

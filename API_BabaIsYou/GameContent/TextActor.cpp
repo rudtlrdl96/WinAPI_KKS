@@ -1,6 +1,5 @@
 #include "TextActor.h"
 
-
 TextActor::TextActor()
 {
 }

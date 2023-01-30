@@ -1,7 +1,11 @@
 #pragma once
 #include <GameEngineCore/GameEngineLevel.h>
+#include <vector>
+#include "ContentMath.h"
 
 class FadeUI;
+class WorldMapActor;
+class WorldMapSelect;
 class WorldMapLevel : public GameEngineLevel
 {
 public:
@@ -22,4 +26,11 @@ protected:
 
 private:
 	FadeUI* WorldMapFadeActor = nullptr;
+	std::vector<std::vector<WorldMapActor*>> vecWorldMapDatas;
+	WorldMapSelect* WorldMapSelectActor = nullptr;
+
+	int2 MapSize = int2::Zero;
+	int2 SelectPuzzlePos = int2::Zero;
+
+	void MoveWorldMap(const int2& _Move);
 };

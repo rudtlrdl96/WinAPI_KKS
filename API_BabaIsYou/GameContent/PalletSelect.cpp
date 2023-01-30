@@ -11,7 +11,7 @@ PalletSelect::~PalletSelect()
 
 void PalletSelect::Start()
 {
-	InitRender({
+	InitWiggleRender({
 	.FileName = "SelectPallet.BMP",
 	.Pos = float4::Zero,
 	.Scale = ContentConst::MAPTOOL_PALLET_SIZE,

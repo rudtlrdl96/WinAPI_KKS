@@ -39,7 +39,7 @@ void WiggleActor::Update(float _DT)
 	}
 }
 
-void WiggleActor::InitRender(const WiggleAnimationParameter& _Parameter)
+void WiggleActor::InitWiggleRender(const WiggleAnimationParameter& _Parameter)
 {
 	if (nullptr != Render)
 	{

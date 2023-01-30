@@ -447,7 +447,7 @@ GridActor::~GridActor()
 
 void GridActor::Start()
 {
-	InitRender({
+	InitWiggleRender({
 		.FileName = "actor.BMP",
 		.Pos = float4::Zero,
 		.Scale = ContentConst::GRID_BITMAP_SIZE,

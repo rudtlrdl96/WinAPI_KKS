@@ -38,7 +38,7 @@ void PalletButton::SetActorImageFrame(int _Frame)
 
 void PalletButton::Start()
 {
-	InitRender({
+	InitWiggleRender({
 	.FileName = "Pallet.BMP",
 	.Pos = float4::Zero,
 	.Scale = ContentConst::MAPTOOL_PALLET_SIZE,

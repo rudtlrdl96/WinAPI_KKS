@@ -13,7 +13,7 @@ TitleLogoUI::~TitleLogoUI()
 
 void TitleLogoUI::Start()
 {
-	InitRender({
+	InitWiggleRender({
 		.FileName = "TitleLogo.BMP",
 		.Pos = GameEngineWindow::GetScreenSize().half() - float4{ 0.0f, 135.0f },
 		.Scale = { 600, 250 },

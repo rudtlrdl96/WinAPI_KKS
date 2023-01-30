@@ -30,7 +30,7 @@ public:
 	WiggleActor& operator=(WiggleActor&& _Other) noexcept = delete;
 protected:
 	void Update(float _DT) override;
-	void InitRender(const WiggleAnimationParameter& _Parameter);
+	void InitWiggleRender(const WiggleAnimationParameter& _Parameter);
 	WiggleRender* GetWiggleRender() const;
 private:
 	float ProgressTime = 0.0f;

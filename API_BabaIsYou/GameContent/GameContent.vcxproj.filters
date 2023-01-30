@@ -144,6 +144,15 @@
     <ClInclude Include="MapToolGridData.h">
       <Filter>01.Actor\UIActor\MapTool</Filter>
     </ClInclude>
+    <ClInclude Include="TextActor.h">
+      <Filter>01.Actor\UIActor\Defalut</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldMapActor.h">
+      <Filter>01.Actor\UIActor\WorldMapLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldMapSelect.h">
+      <Filter>01.Actor\UIActor\WorldMapLevel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GridActorManager.cpp">
@@ -238,6 +247,15 @@
     </ClCompile>
     <ClCompile Include="MapToolGridData.cpp">
       <Filter>01.Actor\UIActor\MapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="TextActor.cpp">
+      <Filter>01.Actor\UIActor\Defalut</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldMapActor.cpp">
+      <Filter>01.Actor\UIActor\WorldMapLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldMapSelect.cpp">
+      <Filter>01.Actor\UIActor\WorldMapLevel</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

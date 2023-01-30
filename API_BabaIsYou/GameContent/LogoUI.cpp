@@ -13,7 +13,7 @@ LogoUI::~LogoUI()
 
 void LogoUI::Start()
 {
-	InitRender({
+	InitWiggleRender({
 	.FileName = "Logo.BMP",
 	.Pos = GameEngineWindow::GetScreenSize().half(),
 	.Scale = GameEngineWindow::GetScreenSize(),

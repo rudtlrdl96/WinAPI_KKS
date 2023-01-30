@@ -37,6 +37,8 @@ private:
 	FadeUI* MapToolFadeActor = nullptr;
 	BlackBackUI* GridBackActor = nullptr;
 	PalletActor* Pallet = nullptr;
+
+	// Todo : UI System이 엔진에 추가되면 수정
 	ButtonUI* PalletCloseButton = nullptr;
 	ButtonUI* ObjectButton = nullptr;
 	ButtonUI* PenBrushButton = nullptr;
