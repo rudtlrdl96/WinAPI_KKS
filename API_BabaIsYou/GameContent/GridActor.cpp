@@ -170,7 +170,6 @@ std::vector<std::vector<GridActor*>> GridActor::vecTextDatas;
 
 std::map<int, std::map<int, GridActor*>> GridActor::mapActorDatas;
 std::map<ACTOR_DEFINE, std::map<int, GridActor*>> GridActor::mapDefineActorDatas;
-std::map<int, int> GridActor::mapTileRenderImageIndex;
 
 GridActor* GridActor::CreateGridActor(int _Type)
 {
@@ -256,23 +255,6 @@ void GridActor::InitGridActor(GameEngineLevel* _PuzzleLevel)
 	{
 		PuzzleLevel->CreateActor<GridActor>();
 	}
-
-	mapTileRenderImageIndex[DIR_FLAG::NONE] = 0;
-	mapTileRenderImageIndex[DIR_FLAG::RIGHT] = 1;
-	mapTileRenderImageIndex[DIR_FLAG::UP] = 2;
-	mapTileRenderImageIndex[DIR_FLAG::RIGHT | DIR_FLAG::UP] = 3;
-	mapTileRenderImageIndex[DIR_FLAG::LEFT] = 4;
-	mapTileRenderImageIndex[DIR_FLAG::LEFT | DIR_FLAG::RIGHT] = 5;
-	mapTileRenderImageIndex[DIR_FLAG::LEFT | DIR_FLAG::UP] = 6;
-	mapTileRenderImageIndex[DIR_FLAG::LEFT | DIR_FLAG::UP | DIR_FLAG::RIGHT] = 7;
-	mapTileRenderImageIndex[DIR_FLAG::DOWN] = 8;
-	mapTileRenderImageIndex[DIR_FLAG::DOWN | DIR_FLAG::RIGHT] = 9;
-	mapTileRenderImageIndex[DIR_FLAG::UP | DIR_FLAG::DOWN] = 10;
-	mapTileRenderImageIndex[DIR_FLAG::UP | DIR_FLAG::DOWN | DIR_FLAG::RIGHT] = 11;
-	mapTileRenderImageIndex[DIR_FLAG::LEFT | DIR_FLAG::DOWN] = 12;
-	mapTileRenderImageIndex[DIR_FLAG::LEFT | DIR_FLAG::DOWN | DIR_FLAG::RIGHT] = 13;
-	mapTileRenderImageIndex[DIR_FLAG::UP | DIR_FLAG::DOWN | DIR_FLAG::LEFT] = 14;
-	mapTileRenderImageIndex[DIR_FLAG::UP | DIR_FLAG::DOWN | DIR_FLAG::LEFT | DIR_FLAG::RIGHT] = 15;
 }
 
 
@@ -1199,7 +1181,7 @@ void GridActor::SetTileRender()
 		RenderKey |= DIR_FLAG::RIGHT;
 	}
 
-	GetWiggleRender()->SetTileIndex(mapTileRenderImageIndex[RenderKey]);
+	GetWiggleRender()->SetTileIndex(ContentConst::GetTile(RenderKey));
 }
 
 void GridActor::ResetValues()

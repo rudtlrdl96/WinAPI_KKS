@@ -85,8 +85,6 @@ private:
 	static std::map<int, std::map<int, GridActor*>> mapActorDatas;
 	// 액터 Deinfe 데이터 정렬
 	static std::map<ACTOR_DEFINE, std::map<int, GridActor*>> mapDefineActorDatas;
-	// 타일 랜더이미지 Index	
-	static std::map<int, int> mapTileRenderImageIndex;
 
 
 #pragma endregion

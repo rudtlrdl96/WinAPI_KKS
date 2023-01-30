@@ -25,7 +25,19 @@ public:
 		return PuzzleName;
 	}
 
+	inline bool IsWalkable() const
+	{
+		return IsWalkableValue;
+	}
+
+	inline bool IsLine() const
+	{
+		return IsLineValue;
+	}
+
 	void InitWorldMapActor(const std::string_view& _PuzzleName, const std::string_view& _PuzzleInfo, size_t PuzzleNumber);
+	void InitWorldMapActorLine();
+	void SetTileIndex(const int _Key);
 
 protected:
 
@@ -36,4 +48,6 @@ private:
 	std::string PuzzleInfo = "";
 	size_t PuzzleNumber = 0;
 
+	bool IsWalkableValue = false;
+	bool IsLineValue = false;
 };

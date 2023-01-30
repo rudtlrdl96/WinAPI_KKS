@@ -1,5 +1,6 @@
 #pragma once
 
+#include <map>
 #include <GameEngineBase/GameEngineMath.h>
 #include "ContentMath.h"
 
@@ -21,6 +22,8 @@ public:
 	static const float4 ACTOR_SIZE;
 	static const float4 MAPTOOL_PALLET_SIZE;
 
+	static int GetTile(const int _Key);
+
 public:
 	ContentConst(const ContentConst& _Other) = delete;
 	ContentConst(ContentConst&& _Other) noexcept = delete;
@@ -32,4 +35,8 @@ protected:
 private:
 	ContentConst();
 	~ContentConst();
+
+	static std::map<int, int> mapTileRenderImageIndex;
+
+	static void TileImageIndexInit();
 };

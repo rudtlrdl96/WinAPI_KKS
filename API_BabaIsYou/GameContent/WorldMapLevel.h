@@ -33,4 +33,6 @@ private:
 	int2 SelectPuzzlePos = int2::Zero;
 
 	void MoveWorldMap(const int2& _Move);
+	void LineActorInit(const int2& _Pos);
+	bool MapOverCheck(const int2& _Pos) const;
 };

@@ -116,43 +116,5 @@ static DataType Lerp(const DataType& _Start, const DataType& _Dest, float _Time)
 		_Time = 1.0f;
 	}
 
-	DataType ReturnPos = _Start;
-	ReturnPos += (_Dest - _Start) * _Time;
-	return ReturnPos;
-}
-
-static float4 Lerp(const float4& _Start, const float4& _Dest, float _Time)
-{
-	if (1.0f < _Time)
-	{
-		_Time = 1.0f;
-	}
-
-	float4 ReturnPos = _Start;
-	ReturnPos += (_Dest - _Start) * _Time;
-	return ReturnPos;
-}
-
-static int Lerp(int _Start, int _Dest, float _Time)
-{
-	if (1.0f < _Time)
-	{
-		_Time = 1.0f;
-	}
-
-	int ReturnValue = _Start;
-	ReturnValue += static_cast<int>((_Dest - _Start) * _Time);
-	return ReturnValue;
-}
-
-static float Lerp(float _Start, float _Dest, float _Time)
-{
-	if (1.0f < _Time)
-	{
-		_Time = 1.0f;
-	}
-
-	float ReturnValue = _Start;
-	ReturnValue += (_Dest - _Start) * _Time;
-	return ReturnValue;
+	return _Start + ((_Dest - _Start) * _Time);
 }

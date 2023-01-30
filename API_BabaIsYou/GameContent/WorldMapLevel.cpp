@@ -8,6 +8,7 @@
 #include "MapBackgroundUI.h"
 #include "FadeUI.h"
 #include "ContentFunc.h"
+#include "ContentEnum.h"
 #include "GrayBackUI.h"
 #include "WorldMapActor.h"
 #include "PuzzleLevel.h"
@@ -33,6 +34,7 @@ void WorldMapLevel::Loading()
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("WorldMap.BMP"))->Cut(1, 3);
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("WorldMapActorBack.BMP"))->Cut(1, 3);
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("WorldMapSelect.BMP"))->Cut(1, 3);
+	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("WorldMapLine.BMP"))->Cut(16, 3);
 
 	WorldMapFadeActor = CreateActor<FadeUI>();
 	CreateActor<MapBackgroundUI>();
@@ -69,6 +71,20 @@ void WorldMapLevel::Loading()
 	vecWorldMapDatas[4][1]->InitWorldMapActor("Stage_0_5", "Test", 0);
 	vecWorldMapDatas[3][3]->InitWorldMapActor("Stage_0_6", "Test", 0);
 	vecWorldMapDatas[4][2]->InitWorldMapActor("Stage_0_7", "Test", 0);
+
+
+	vecWorldMapDatas[0][1]->InitWorldMapActorLine();
+	vecWorldMapDatas[1][1]->InitWorldMapActorLine();
+	vecWorldMapDatas[4][3]->InitWorldMapActorLine();
+	vecWorldMapDatas[2][3]->InitWorldMapActorLine();
+
+	for (int y = 0; y < vecWorldMapDatas.size(); y++)
+	{
+		for (int x = 0; x < vecWorldMapDatas[y].size(); x++)
+		{
+			LineActorInit({x, y});
+		}
+	}
 
 	WorldMapSelectActor->SetPos(vecWorldMapDatas[0][0]->GetPos());
 }
@@ -135,6 +151,11 @@ void WorldMapLevel::MoveWorldMap(const int2& _Move)
 		return;
 	}
 
+	if (false == vecWorldMapDatas[NextPos.y][NextPos.x]->IsWalkable())
+	{
+		return;
+	}
+
 	SelectPuzzlePos = NextPos;
 
 	if (nullptr == WorldMapSelectActor)
@@ -144,4 +165,62 @@ void WorldMapLevel::MoveWorldMap(const int2& _Move)
 	}
 
 	WorldMapSelectActor->SetPos(vecWorldMapDatas[SelectPuzzlePos.y][SelectPuzzlePos.x]->GetPos());
+}
+
+
+void WorldMapLevel::LineActorInit(const int2& _Pos)
+{
+	if (true == MapOverCheck(_Pos))
+	{
+		MsgAssert("월드맵을 벗어나 접근하려 했습니다.");
+		return;
+	}
+
+	if (false == vecWorldMapDatas[_Pos.y][_Pos.x]->IsLine())
+	{
+		return;
+	}
+
+	int DirKey = 0;
+
+	int2 CheckPos = _Pos + int2::Left;
+	if (false == MapOverCheck(CheckPos) && true == vecWorldMapDatas[CheckPos.y][CheckPos.x]->IsWalkable())
+	{
+		DirKey |= DIR_FLAG::LEFT;
+	}
+
+	CheckPos = _Pos + int2::Right;
+	if (false == MapOverCheck(CheckPos) && true == vecWorldMapDatas[CheckPos.y][CheckPos.x]->IsWalkable())
+	{
+		DirKey |= DIR_FLAG::RIGHT;
+	}	
+
+	CheckPos = _Pos + int2::Up;
+	if (false == MapOverCheck(CheckPos) && true == vecWorldMapDatas[CheckPos.y][CheckPos.x]->IsWalkable())
+	{
+		DirKey |= DIR_FLAG::DOWN;
+	}	
+
+	CheckPos = _Pos + int2::Down;
+	if (false == MapOverCheck(CheckPos) && true == vecWorldMapDatas[CheckPos.y][CheckPos.x]->IsWalkable())
+	{
+		DirKey |= DIR_FLAG::UP;
+	}
+
+	vecWorldMapDatas[_Pos.y][_Pos.x]->SetTileIndex(DirKey);
+}
+
+bool WorldMapLevel::MapOverCheck(const int2& _Pos) const
+{
+	if (0 > _Pos.x || MapSize.x <= _Pos.x)
+	{
+		return true;
+	}
+
+	if (0 > _Pos.y || MapSize.y <= _Pos.y)
+	{
+		return true;
+	}
+
+	return false;
 }
