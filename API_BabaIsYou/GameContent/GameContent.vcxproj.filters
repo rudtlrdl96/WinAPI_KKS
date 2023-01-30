@@ -144,15 +144,22 @@
     <ClInclude Include="MapToolGridData.h">
       <Filter>01.Actor\UIActor\MapTool</Filter>
     </ClInclude>
-    <ClInclude Include="TextActor.h">
-      <Filter>01.Actor\UIActor\Defalut</Filter>
-    </ClInclude>
     <ClInclude Include="WorldMapActor.h">
       <Filter>01.Actor\UIActor\WorldMapLevel</Filter>
     </ClInclude>
     <ClInclude Include="WorldMapSelect.h">
       <Filter>01.Actor\UIActor\WorldMapLevel</Filter>
     </ClInclude>
+    <ClInclude Include="WiggleStringUI.h">
+      <Filter>01.Actor\UIActor\Defalut</Filter>
+    </ClInclude>
+    <ClInclude Include="StringUI.h">
+      <Filter>01.Actor\UIActor\Defalut</Filter>
+    </ClInclude>
+    <ClInclude Include="TextUI.h">
+      <Filter>01.Actor\UIActor\Defalut</Filter>
+    </ClInclude>
+    <ClInclude Include="WiggleTextUI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GridActorManager.cpp">
@@ -248,14 +255,21 @@
     <ClCompile Include="MapToolGridData.cpp">
       <Filter>01.Actor\UIActor\MapTool</Filter>
     </ClCompile>
-    <ClCompile Include="TextActor.cpp">
-      <Filter>01.Actor\UIActor\Defalut</Filter>
-    </ClCompile>
     <ClCompile Include="WorldMapActor.cpp">
       <Filter>01.Actor\UIActor\WorldMapLevel</Filter>
     </ClCompile>
     <ClCompile Include="WorldMapSelect.cpp">
       <Filter>01.Actor\UIActor\WorldMapLevel</Filter>
     </ClCompile>
+    <ClCompile Include="WiggleStringUI.cpp">
+      <Filter>01.Actor\UIActor\Defalut</Filter>
+    </ClCompile>
+    <ClCompile Include="StringUI.cpp">
+      <Filter>01.Actor\UIActor\Defalut</Filter>
+    </ClCompile>
+    <ClCompile Include="TextUI.cpp">
+      <Filter>01.Actor\UIActor\Defalut</Filter>
+    </ClCompile>
+    <ClCompile Include="WiggleTextUI.cpp" />
   </ItemGroup>
 </Project>

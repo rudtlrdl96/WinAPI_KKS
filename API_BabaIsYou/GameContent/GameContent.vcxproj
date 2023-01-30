@@ -264,7 +264,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="TextActor.h">
+    <ClInclude Include="TextUI.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -285,6 +285,18 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="WiggleRender.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="WiggleStringUI.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="StringUI.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="WiggleTextUI.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -396,7 +408,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="TextActor.cpp">
+    <ClCompile Include="TextUI.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -417,6 +429,18 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="WiggleRender.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="WiggleStringUI.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="StringUI.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="WiggleTextUI.cpp">
       <SubType>
       </SubType>
     </ClCompile>

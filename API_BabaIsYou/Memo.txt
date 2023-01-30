@@ -1,49 +1,3 @@
-Subject(주어) Actor 
-[Subject, Text]
-
-ㄴ normal subject
-
-Flag
-Rock
-Skull
-flower
-
-ㄴ character subject
-
-Baba
-keke
-robot
-
-ㄴ tile subject
-
-Wall
-Water
-Lava
-Grass
-brick
-plank
-
-Verb(동사) Actor
-[Text]
-
-Is
-and
-
-Adjective(형용사) Actor
-[Text]
-
-You
-Win
-Stop
-Push
-Sink
-Defeat
-Hot
-Melt
-
-Effect Actor
-UI Actor
-
 구해야할 리소스
 
 Subject Move Effect OK
@@ -72,7 +26,6 @@ Win 사운드 - Win
 Sink 사운드 - Sink_00 ~ 04
 Defeat 사운드 - Defeat_00 ~ 03 
 
-
 UI 사운드 
 
 버튼 오버랩 사운드 - ButtonOverlap_00 ~ 04
@@ -80,11 +33,7 @@ UI 사운드
 기본 Level 변경 사운드 - LevelEnter
 Map -> Puzzle Level 변경 사운드 - PuzzleEnter
 
-
-
-실행되는 행동이 없을 경우 wait가 실행되지 않는다
 사운드 랜덤실행 시스템
-
 
 Sprite Bitamp Size
 
@@ -101,3 +50,27 @@ FadeCircle 256 x 256 [256 x 256]
 
 GridTileSize 32 x 18
 GridActorSize 40 x 40
+
+Walk
+
+1. 버그 수정 
+Push를 할 수 있는 회수를 제한
+You -> Push 1회
+Move -> Push 1회
+2. 맵툴에서 방향을 지정할 수 있도록 수정
+3. 이펙트 시스템 추가
+4. 텍스트 액터를 추가하여 글자를 출력할 수 있도록 수정
+5. 월드맵 연출 추가
+6. 미포함 된 타일액터 추가
+7. Title 화면에서 키보드로 조작하는 기능 추가
+9. FadeInOut 상황에서 중간에 글자연출을 넣을 수 있도록 수정
+10. Rule 우선순위 기능 추가.
+11. 사운드 추가
+12. Death 카메라 연출 추가
+13. Move 이펙트 추가
+14. Death 상황별로 이펙트 추가
+15. ESC 기능 추가
+16. 승리조건 이펙트 추가
+17. 승리 이펙트 추가
+18. RenderOreder 추가
+19. 특정 스테이지 튜토리얼 키 UI 추가
