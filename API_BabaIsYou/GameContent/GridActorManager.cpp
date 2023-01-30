@@ -145,7 +145,6 @@ void GridActorManager::LoadData(const std::string_view& _PuzzleName)
 {
 	Reset();
 
-
 	GameEngineDirectory Dir;
 	Dir.MoveParentToDirectory("Data");
 	Dir.Move("Data");

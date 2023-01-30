@@ -1206,6 +1206,7 @@ void GridActor::ResetValues()
 {
 	vecBehaviorBuffer.clear();
 	CurFramesBehaviorBuffer.clear();
+	RemoveRule();
 
 	MoveDir = int2::Right;
 	PrevPos = { -1, -1 };
