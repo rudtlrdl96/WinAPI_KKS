@@ -13,7 +13,7 @@ public:
 
 	void InitDataBase();
 	const ActorData* GetData(int _Index);
-	const ActorData* GetData(std::string _Name);
+	const ActorData* GetData(const std::string_view& _Name);
 	const std::map<int, ActorData>& GetAllData();
 
 protected:

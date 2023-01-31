@@ -44,9 +44,9 @@ const ActorData* ContentDataBase::GetData(int _Index)
 	}
 }
 
-const ActorData* ContentDataBase::GetData(std::string _Name)
+const ActorData* ContentDataBase::GetData(const std::string_view& _Name)
 {
-	return GetData(mapActorIndex[_Name]);
+	return GetData(mapActorIndex[_Name.data()]);
 }
 
 const std::map<int, ActorData>& ContentDataBase::GetAllData()

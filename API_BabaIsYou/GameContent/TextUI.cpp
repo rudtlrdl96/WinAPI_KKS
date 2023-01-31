@@ -30,6 +30,10 @@ void TextUI::SetText(char _Text)
 	{
 		TextRender->SetFrame(11 + _Text - 'A');
 	}
+	else if ('?' == _Text)
+	{
+		TextRender->SetFrame(37);
+	}
 	else
 	{
 		TextRender->SetFrame(0);

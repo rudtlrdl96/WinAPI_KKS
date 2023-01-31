@@ -34,18 +34,18 @@
     <Filter Include="01.Actor\UIActor\PuzzleLevel">
       <UniqueIdentifier>{4300bea6-c886-450e-8858-9897d439b858}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Actor\GridActor">
-      <UniqueIdentifier>{c123d8a8-4494-4688-bc57-3e594eab8fc7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Actor\EffectActor">
       <UniqueIdentifier>{4f322c4a-c4e1-4b0c-9a91-3889bf2259d6}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Actor\UIActor\MapTool">
       <UniqueIdentifier>{5390147c-82a5-4cc5-8785-439ff55aa9f1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Actor\PuzzleActor">
+      <UniqueIdentifier>{c123d8a8-4494-4688-bc57-3e594eab8fc7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GridActorManager.h">
+    <ClInclude Include="PuzzleActorManager.h">
       <Filter>02.Manager</Filter>
     </ClInclude>
     <ClInclude Include="ContentCore.h">
@@ -78,8 +78,8 @@
     <ClInclude Include="WiggleActor.h">
       <Filter>01.Actor</Filter>
     </ClInclude>
-    <ClInclude Include="GridActor.h">
-      <Filter>01.Actor\GridActor</Filter>
+    <ClInclude Include="PuzzleActor.h">
+      <Filter>01.Actor\PuzzleActor</Filter>
     </ClInclude>
     <ClInclude Include="LogoUI.h">
       <Filter>01.Actor\UIActor\LogoLevel</Filter>
@@ -112,7 +112,7 @@
       <Filter>00.Base</Filter>
     </ClInclude>
     <ClInclude Include="Rule.h">
-      <Filter>01.Actor\GridActor</Filter>
+      <Filter>01.Actor\PuzzleActor</Filter>
     </ClInclude>
     <ClInclude Include="RuleManager.h">
       <Filter>02.Manager</Filter>
@@ -121,7 +121,7 @@
       <Filter>00.Base</Filter>
     </ClInclude>
     <ClInclude Include="ActorData.h">
-      <Filter>01.Actor\GridActor</Filter>
+      <Filter>01.Actor\PuzzleActor</Filter>
     </ClInclude>
     <ClInclude Include="MapToolLevel.h">
       <Filter>03.Level</Filter>
@@ -162,9 +162,12 @@
     <ClInclude Include="WiggleTextUI.h">
       <Filter>01.Actor\UIActor\Defalut</Filter>
     </ClInclude>
+    <ClInclude Include="WiggleGridActor.h">
+      <Filter>01.Actor\UIActor\MapTool</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="GridActorManager.cpp">
+    <ClCompile Include="PuzzleActorManager.cpp">
       <Filter>02.Manager</Filter>
     </ClCompile>
     <ClCompile Include="ContentCore.cpp">
@@ -197,8 +200,8 @@
     <ClCompile Include="WiggleActor.cpp">
       <Filter>01.Actor</Filter>
     </ClCompile>
-    <ClCompile Include="GridActor.cpp">
-      <Filter>01.Actor\GridActor</Filter>
+    <ClCompile Include="PuzzleActor.cpp">
+      <Filter>01.Actor\PuzzleActor</Filter>
     </ClCompile>
     <ClCompile Include="LogoUI.cpp">
       <Filter>01.Actor\UIActor\LogoLevel</Filter>
@@ -225,7 +228,7 @@
       <Filter>00.Base</Filter>
     </ClCompile>
     <ClCompile Include="Rule.cpp">
-      <Filter>01.Actor\GridActor</Filter>
+      <Filter>01.Actor\PuzzleActor</Filter>
     </ClCompile>
     <ClCompile Include="RuleManager.cpp">
       <Filter>02.Manager</Filter>
@@ -234,7 +237,7 @@
       <Filter>00.Base</Filter>
     </ClCompile>
     <ClCompile Include="ActorData.cpp">
-      <Filter>01.Actor\GridActor</Filter>
+      <Filter>01.Actor\PuzzleActor</Filter>
     </ClCompile>
     <ClCompile Include="MapToolLevel.cpp">
       <Filter>03.Level</Filter>
@@ -274,6 +277,9 @@
     </ClCompile>
     <ClCompile Include="WiggleTextUI.cpp">
       <Filter>01.Actor\UIActor\Defalut</Filter>
+    </ClCompile>
+    <ClCompile Include="WiggleGridActor.cpp">
+      <Filter>01.Actor\UIActor\MapTool</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

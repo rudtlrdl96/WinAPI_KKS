@@ -1,4 +1,4 @@
-#include "GridActor.h"
+#include "PuzzleActor.h"
 #include <GameEngineBase/GameEngineDebug.h>
 #include <GameEnginePlatform/GameEngineInput.h>
 #include <GameEngineCore/GameEngineLevel.h>
@@ -6,21 +6,21 @@
 #include "WiggleRender.h"
 #include "Rule.h"
 #include "RuleManager.h"
-#include "GridActorManager.h"
+#include "PuzzleActorManager.h"
 #include "ContentDataBase.h"
 
 /// GridData
 
 #pragma region GridData
 
-void GridActor::GridData::push_back(GridActor* _Actor)
+void PuzzleActor::GridData::push_back(PuzzleActor* _Actor)
 {
 	mapDatas[_Actor->ActorKey] = _Actor;
 }
 
-void GridActor::GridData::erase(GridActor* _Actor)
+void PuzzleActor::GridData::erase(PuzzleActor* _Actor)
 {
-	std::map<int, GridActor*>::iterator FindIter = mapDatas.find(_Actor->ActorKey);
+	std::map<int, PuzzleActor*>::iterator FindIter = mapDatas.find(_Actor->ActorKey);
 
 	if (FindIter != mapDatas.end())
 	{
@@ -28,24 +28,24 @@ void GridActor::GridData::erase(GridActor* _Actor)
 	}
 }
 
-void GridActor::GridData::clear()
+void PuzzleActor::GridData::clear()
 {
 	mapDatas.clear();
 }
 
-void GridActor::GridData::Push(const int2& _Pos, const int2& _Dir, bool _IsInputMove)
+void PuzzleActor::GridData::Push(const int2& _Pos, const int2& _Dir, bool _IsInputMove)
 {
 	if (0 >= mapDatas.size())
 	{
 		return;
 	}
 
-	std::vector<GridActor*> vecPushErase;
+	std::vector<PuzzleActor*> vecPushErase;
 	vecPushErase.reserve(mapDatas.size());
 
 	int2 NextPos = _Pos + _Dir;
 
-	for (const std::pair<int, GridActor*>& Data : mapDatas)
+	for (const std::pair<int, PuzzleActor*>& Data : mapDatas)
 	{
 		if (true == Data.second->IsDeath)
 		{
@@ -59,7 +59,7 @@ void GridActor::GridData::Push(const int2& _Pos, const int2& _Dir, bool _IsInput
 		}
 	}
 
-	for (GridActor* Data : vecPushErase)
+	for (PuzzleActor* Data : vecPushErase)
 	{
 		Data->SetDir(_Dir);
 		Data->Push();
@@ -67,12 +67,12 @@ void GridActor::GridData::Push(const int2& _Pos, const int2& _Dir, bool _IsInput
 }
 
 
-void GridActor::GridData::DeathCheck()
+void PuzzleActor::GridData::DeathCheck()
 {
 	size_t GridDefine = GetDefine();
 
-	std::map<int, GridActor*>::iterator LoopIter = mapDatas.begin();
-	std::map<int, GridActor*>::iterator EndIter = mapDatas.end();
+	std::map<int, PuzzleActor*>::iterator LoopIter = mapDatas.begin();
+	std::map<int, PuzzleActor*>::iterator EndIter = mapDatas.end();
 
 	bool SinkCheck = 1 < mapDatas.size();
 
@@ -102,9 +102,9 @@ void GridActor::GridData::DeathCheck()
 	}
 }
 
-bool GridActor::GridData::equals(const std::string_view& _Name)
+bool PuzzleActor::GridData::equals(const std::string_view& _Name)
 {
-	for (const std::pair<int, GridActor*>& Data : mapDatas)
+	for (const std::pair<int, PuzzleActor*>& Data : mapDatas)
 	{
 		if (true == Data.second->IsDeath)
 		{
@@ -120,11 +120,11 @@ bool GridActor::GridData::equals(const std::string_view& _Name)
 	return false;
 }
 
-size_t GridActor::GridData::GetDefine()
+size_t PuzzleActor::GridData::GetDefine()
 {
 	size_t Info = static_cast<size_t>(ACTOR_DEFINE::NONE);
 
-	for (const std::pair<int, GridActor*>& Data : mapDatas)
+	for (const std::pair<int, PuzzleActor*>& Data : mapDatas)
 	{
 		if (true == Data.second->IsDeath)
 		{
@@ -142,12 +142,12 @@ size_t GridActor::GridData::GetDefine()
 	return Info;
 }
 
-void GridActor::GridData::SinkCheckReset()
+void PuzzleActor::GridData::SinkCheckReset()
 {
 	IsSinkValue = false;
 }
 
-void GridActor::GridData::Sink()
+void PuzzleActor::GridData::Sink()
 {
 	IsSinkValue = true;
 }
@@ -157,21 +157,21 @@ void GridActor::GridData::Sink()
 /// static GridActor
 #pragma region StaticFunc
 
-GameEngineLevel* GridActor::PuzzleLevel = nullptr;
-size_t GridActor::ObjectPoolCount = 0;
-bool GridActor::AnyActorMoveCheck = false;
-bool GridActor::WinCheckValue = false;
-int GridActor::NextActorKey = 0;
-int2 GridActor::GridLength = int2::Zero;
+GameEngineLevel* PuzzleActor::PuzzleLevel = nullptr;
+size_t PuzzleActor::ObjectPoolCount = 0;
+bool PuzzleActor::AnyActorMoveCheck = false;
+bool PuzzleActor::WinCheckValue = false;
+int PuzzleActor::NextActorKey = 0;
+int2 PuzzleActor::GridLength = int2::Zero;
 
-std::vector<GridActor*> GridActor::vecObjectPool;
-std::vector<std::vector<GridActor::GridData>> GridActor::vecGridDatas;
-std::vector<std::vector<GridActor*>> GridActor::vecTextDatas;
+std::vector<PuzzleActor*> PuzzleActor::vecObjectPool;
+std::vector<std::vector<PuzzleActor::GridData>> PuzzleActor::vecGridDatas;
+std::vector<std::vector<PuzzleActor*>> PuzzleActor::vecTextDatas;
 
-std::map<int, std::map<int, GridActor*>> GridActor::mapActorDatas;
-std::map<ACTOR_DEFINE, std::map<int, GridActor*>> GridActor::mapDefineActorDatas;
+std::map<int, std::map<int, PuzzleActor*>> PuzzleActor::mapActorDatas;
+std::map<ACTOR_DEFINE, std::map<int, PuzzleActor*>> PuzzleActor::mapDefineActorDatas;
 
-GridActor* GridActor::CreateGridActor(int _Type)
+PuzzleActor* PuzzleActor::CreatePuzzlActor(int _Type)
 {
 	if (ObjectPoolCount >= vecObjectPool.size())
 	{
@@ -189,7 +189,7 @@ GridActor* GridActor::CreateGridActor(int _Type)
 	return vecObjectPool[ObjectPoolCount++];
 }
 
-GridActor* GridActor::GetTextActor(const int2& _Pos)
+PuzzleActor* PuzzleActor::GetTextActor(const int2& _Pos)
 {
 	if (0 > _Pos.x || ContentConst::GRID_SIZE_X <= _Pos.x)
 	{
@@ -204,18 +204,18 @@ GridActor* GridActor::GetTextActor(const int2& _Pos)
 	return vecTextDatas[_Pos.y][_Pos.x];
 }
 
-std::map<int, GridActor*>& GridActor::GetActors(int _ActorIndex)
+std::map<int, PuzzleActor*>& PuzzleActor::GetActors(int _ActorIndex)
 {
 	return mapActorDatas[_ActorIndex];
 }
 
-std::map<int, GridActor*>& GridActor::GetActors(ACTOR_DEFINE _Define)
+std::map<int, PuzzleActor*>& PuzzleActor::GetActors(ACTOR_DEFINE _Define)
 {
 	return mapDefineActorDatas[_Define];
 }
 
 
-void GridActor::InitGridActor(GameEngineLevel* _PuzzleLevel)
+void PuzzleActor::InitGridActor(GameEngineLevel* _PuzzleLevel)
 {
 	if (nullptr != PuzzleLevel)
 	{
@@ -253,12 +253,12 @@ void GridActor::InitGridActor(GameEngineLevel* _PuzzleLevel)
 
 	for (size_t i = 0; i < vecObjectPool.capacity(); i++)
 	{
-		PuzzleLevel->CreateActor<GridActor>();
+		PuzzleLevel->CreateActor<PuzzleActor>();
 	}
 }
 
 
-void GridActor::ResetGridActor()
+void PuzzleActor::ResetPuzzleActor()
 {
 	for (size_t i = 0; i < vecObjectPool.size(); i++)
 	{
@@ -295,13 +295,13 @@ void GridActor::ResetGridActor()
 	AnyActorMoveCheck = false;
 }
 
-void GridActor::DeleteGridActor()
+void PuzzleActor::DeletePuzzleActor()
 {
-	ResetGridActor();
+	ResetPuzzleActor();
 	vecObjectPool.clear();
 }
 
-void GridActor::AllActorUndo()
+void PuzzleActor::AllActorUndo()
 {
 	for (size_t i = 0; i < ObjectPoolCount; i++)
 	{
@@ -309,7 +309,7 @@ void GridActor::AllActorUndo()
 	}
 }
 
-void GridActor::AllActorRuleCheck()
+void PuzzleActor::AllActorRuleCheck()
 {
 	for (size_t i = 0; i < ObjectPoolCount; i++)
 	{
@@ -321,7 +321,7 @@ void GridActor::AllActorRuleCheck()
 }
 
 
-void GridActor::GridActorDeathCheck()
+void PuzzleActor::PuzzleActorDeathCheck()
 {
 	for (size_t y = 0; y < vecGridDatas.size(); y++)
 	{
@@ -333,7 +333,7 @@ void GridActor::GridActorDeathCheck()
 	}
 }
 
-void GridActor::GridActorSaveBehavior()
+void PuzzleActor::PuzzleActorSaveBehavior()
 {
 	for (size_t i = 0; i < ObjectPoolCount; i++)
 	{
@@ -341,13 +341,13 @@ void GridActor::GridActorSaveBehavior()
 	}
 }
 
-void GridActor::MoveAllYouBehavior(const int2& _Dir)
+void PuzzleActor::MoveAllYouBehavior(const int2& _Dir)
 {
-	for (const std::pair<int, GridActor*>& Data: mapDefineActorDatas[ACTOR_DEFINE::YOU])
+	for (const std::pair<int, PuzzleActor*>& Data: mapDefineActorDatas[ACTOR_DEFINE::YOU])
 	{
 		if (nullptr == Data.second)
 		{
-			MsgAssert("nullptr GridActor Data를 참조하려 합니다.");
+			MsgAssert("nullptr PuzzleActor Data를 참조하려 합니다.");
 			return;
 		}
 
@@ -356,13 +356,13 @@ void GridActor::MoveAllYouBehavior(const int2& _Dir)
 	}
 }
 
-void GridActor::MoveAllMoveBehavior()
+void PuzzleActor::MoveAllMoveBehavior()
 {
-	for (const std::pair<int, GridActor*>& Data : mapDefineActorDatas[ACTOR_DEFINE::MOVE])
+	for (const std::pair<int, PuzzleActor*>& Data : mapDefineActorDatas[ACTOR_DEFINE::MOVE])
 	{
 		if (nullptr == Data.second)
 		{
-			MsgAssert("nullptr GridActor Data를 참조하려 합니다.");
+			MsgAssert("nullptr PuzzleActor Data를 참조하려 합니다.");
 			return;
 		}
 
@@ -371,12 +371,12 @@ void GridActor::MoveAllMoveBehavior()
 }
 
 
-void GridActor::SetGridLength(const int2& _Length)
+void PuzzleActor::SetGridLength(const int2& _Length)
 {
 	GridLength = _Length;
 }
 
-float4 GridActor::GetScreenPos(const int2& _GridPos)
+float4 PuzzleActor::GetScreenPos(const int2& _GridPos)
 {
 	return {
 		((ContentConst::ACTOR_SIZE.x)* _GridPos.x) + ContentConst::ACTOR_SIZE.half().x,
@@ -384,7 +384,7 @@ float4 GridActor::GetScreenPos(const int2& _GridPos)
 }
 
 
-bool GridActor::IsOver(const int2& _GridPos)
+bool PuzzleActor::IsOver(const int2& _GridPos)
 {
 	if (_GridPos.x < 0 ||
 		_GridPos.y < 0 ||
@@ -397,17 +397,17 @@ bool GridActor::IsOver(const int2& _GridPos)
 	return false;
 }
 
-bool GridActor::IsWin()
+bool PuzzleActor::IsWin()
 {
 	return WinCheckValue;
 }
 
-bool GridActor::IsAnyMove()
+bool PuzzleActor::IsAnyMove()
 {
 	return AnyActorMoveCheck;
 }
 
-void GridActor::AnyMoveCheckReset()
+void PuzzleActor::AnyMoveCheckReset()
 {
 	AnyActorMoveCheck = false;
 }
@@ -416,18 +416,18 @@ void GridActor::AnyMoveCheckReset()
 
 /// static GridActor
 
-GridActor::GridActor() :
+PuzzleActor::PuzzleActor() :
 	ActorKey(NextActorKey++)
 {
 	vecBehaviorBuffer.reserve(32);
 	CurFramesBehaviorBuffer.reserve(4);
 }
 
-GridActor::~GridActor()
+PuzzleActor::~PuzzleActor()
 {
 }
 
-void GridActor::Start()
+void PuzzleActor::Start()
 {
 	InitWiggleRender({
 		.FileName = "actor.BMP",
@@ -442,7 +442,7 @@ void GridActor::Start()
 	Off();
 }
 
-void GridActor::Update(float _DT)
+void PuzzleActor::Update(float _DT)
 {
 	WiggleActor::Update(_DT);
 
@@ -489,7 +489,7 @@ void GridActor::Update(float _DT)
 	}
 }
 
-void GridActor::LoadData(int _Actor, bool _IsInit)
+void PuzzleActor::LoadData(int _Actor, bool _IsInit)
 {
 	const ActorData* LoadDB = ContentDataBase::GetInst()->GetData(_Actor);
 
@@ -500,10 +500,10 @@ void GridActor::LoadData(int _Actor, bool _IsInit)
 	}
 
 	{
-		std::map<int, GridActor*>& PrevMapDatas = mapActorDatas[ActorEnum];
+		std::map<int, PuzzleActor*>& PrevMapDatas = mapActorDatas[ActorEnum];
 
-		std::map<int, GridActor*>::iterator FindIter = PrevMapDatas.find(ActorKey);
-		std::map<int, GridActor*>::iterator EndIter = PrevMapDatas.end();
+		std::map<int, PuzzleActor*>::iterator FindIter = PrevMapDatas.find(ActorKey);
+		std::map<int, PuzzleActor*>::iterator EndIter = PrevMapDatas.end();
 
 		if (FindIter != EndIter)
 		{
@@ -512,16 +512,16 @@ void GridActor::LoadData(int _Actor, bool _IsInit)
 	}
 
 	{
-		std::map<ACTOR_DEFINE, std::map<int, GridActor*>>::iterator LoopIter = mapDefineActorDatas.begin();
-		std::map<ACTOR_DEFINE, std::map<int, GridActor*>>::iterator EndIter = mapDefineActorDatas.end();
+		std::map<ACTOR_DEFINE, std::map<int, PuzzleActor*>>::iterator LoopIter = mapDefineActorDatas.begin();
+		std::map<ACTOR_DEFINE, std::map<int, PuzzleActor*>>::iterator EndIter = mapDefineActorDatas.end();
 
 		for (; LoopIter != EndIter; ++LoopIter)
 		{
-			std::map<int, GridActor*>::iterator FindIter = LoopIter->second.find(ActorKey);
+			std::map<int, PuzzleActor*>::iterator FindIter = LoopIter->second.find(ActorKey);
 
 			if (FindIter != LoopIter->second.end())
 			{
-				GridActorManager::GetInst()->AddDefine(this, LoopIter->first, true);
+				PuzzleActorManager::GetInst()->AddDefine(this, LoopIter->first, true);
 			}
 		}	
 	}
@@ -615,12 +615,12 @@ void GridActor::LoadData(int _Actor, bool _IsInit)
 	GetWiggleRender()->SetAnimDir(int2::Right);
 }
 
-void GridActor::RuleCheck()
+void PuzzleActor::RuleCheck()
 {
 	Rule::CreateRule(this, true);
 }
 
-void GridActor::SetGrid(const int2& _Pos)
+void PuzzleActor::SetGrid(const int2& _Pos)
 {
 	if (false == IsOver(GridPos))
 	{
@@ -638,19 +638,19 @@ void GridActor::SetGrid(const int2& _Pos)
 	SetPos(GetScreenPos(GridPos));
 }
 
-void GridActor::SetDefine(size_t _Info)
+void PuzzleActor::SetDefine(size_t _Info)
 {
 	mapDefineActorDatas[static_cast<ACTOR_DEFINE>(_Info)][ActorKey] = this;
 	DefineData |= _Info;
 }
 
-void GridActor::SetDefine(ACTOR_DEFINE _Info)
+void PuzzleActor::SetDefine(ACTOR_DEFINE _Info)
 {
 	mapDefineActorDatas[_Info][ActorKey] = this;
 	DefineData |= static_cast<size_t>(_Info);
 }
 
-void GridActor::AddDefine(ACTOR_DEFINE _Info)
+void PuzzleActor::AddDefine(ACTOR_DEFINE _Info)
 {
 	if (false == IsDefine(_Info))
 	{
@@ -661,10 +661,10 @@ void GridActor::AddDefine(ACTOR_DEFINE _Info)
 	DefineData |= static_cast<size_t>(_Info);
 }
 
-void GridActor::UndoAddDefine(ACTOR_DEFINE _Info)
+void PuzzleActor::UndoAddDefine(ACTOR_DEFINE _Info)
 {
-	std::map<int, GridActor*>& mapDatas = mapDefineActorDatas[_Info];
-	std::map<int, GridActor*>::iterator FindIter = mapDatas.find(ActorKey);
+	std::map<int, PuzzleActor*>& mapDatas = mapDefineActorDatas[_Info];
+	std::map<int, PuzzleActor*>::iterator FindIter = mapDatas.find(ActorKey);
 
 	if (FindIter != mapDatas.end())
 	{
@@ -674,15 +674,15 @@ void GridActor::UndoAddDefine(ACTOR_DEFINE _Info)
 	DefineData &= ~static_cast<size_t>(_Info);
 }
 
-void GridActor::RemoveDefine(ACTOR_DEFINE _Info)
+void PuzzleActor::RemoveDefine(ACTOR_DEFINE _Info)
 {
 	if (true == IsDefine(_Info))
 	{
 		CurFramesBehaviorBuffer.push_back({ BEHAVIOR::DEFINE_REMOVE, static_cast<int>(_Info) });
 	}
 
-	std::map<int, GridActor*>& mapDatas = mapDefineActorDatas[_Info];
-	std::map<int, GridActor*>::iterator FindIter = mapDatas.find(ActorKey);
+	std::map<int, PuzzleActor*>& mapDatas = mapDefineActorDatas[_Info];
+	std::map<int, PuzzleActor*>::iterator FindIter = mapDatas.find(ActorKey);
 
 	if (FindIter != mapDatas.end())
 	{
@@ -692,7 +692,7 @@ void GridActor::RemoveDefine(ACTOR_DEFINE _Info)
 	DefineData &= ~static_cast<size_t>(_Info);
 }
 
-void GridActor::UndoRemoveDefine(ACTOR_DEFINE _Info)
+void PuzzleActor::UndoRemoveDefine(ACTOR_DEFINE _Info)
 {
 	if (false == IsDefine(_Info))
 	{
@@ -702,12 +702,12 @@ void GridActor::UndoRemoveDefine(ACTOR_DEFINE _Info)
 	DefineData |= static_cast<size_t>(_Info);
 }
 
-bool GridActor::IsDefine(ACTOR_DEFINE _Info)
+bool PuzzleActor::IsDefine(ACTOR_DEFINE _Info)
 {
 	return DefineData & static_cast<size_t>(_Info);
 }
 
-void GridActor::SaveBehaviorInfo()
+void PuzzleActor::SaveBehaviorInfo()
 {
 	if (0 >= CurFramesBehaviorBuffer.size())
 	{
@@ -718,27 +718,27 @@ void GridActor::SaveBehaviorInfo()
 	CurFramesBehaviorBuffer.clear();
 }
 
-int GridActor::GetArrowEnum() const
+int PuzzleActor::GetArrowEnum() const
 {
 	return ArrowEnum;
 }
 
-ACTOR_DEFINE GridActor::GetArrowDefine() const
+ACTOR_DEFINE PuzzleActor::GetArrowDefine() const
 {
 	return ArrowDefine;
 }
 
-ACTOR_TYPE GridActor::GetActorType()
+ACTOR_TYPE PuzzleActor::GetActorType() const
 {
 	return ActorType;
 }
 
-int2 GridActor::GetGridPos() const
+int2 PuzzleActor::GetGridPos() const
 {
 	return GridPos;
 }
 
-void GridActor::Undo()
+void PuzzleActor::Undo()
 {
 	if (0 >= vecBehaviorBuffer.size())
 	{
@@ -788,7 +788,7 @@ void GridActor::Undo()
 	vecBehaviorBuffer.pop_back();
 }
 
-bool GridActor::Move(bool _IsInputMove)
+bool PuzzleActor::Move(bool _IsInputMove)
 {
 	if (true == IsDeath)
 	{
@@ -833,7 +833,7 @@ bool GridActor::Move(bool _IsInputMove)
 	return true;
 }
 
-void GridActor::UndoMove()
+void PuzzleActor::UndoMove()
 {
 	if (ACTOR_TYPE::ACTOR != ActorType)
 	{
@@ -862,7 +862,7 @@ void GridActor::UndoMove()
 	GetWiggleRender()->PrevAnim();
 }
 
-void GridActor::Push()
+void PuzzleActor::Push()
 {
 	if (true == IsDeath)
 	{
@@ -895,7 +895,7 @@ void GridActor::Push()
 	CurFramesBehaviorBuffer.push_back({ BEHAVIOR::PUSH, -1});
 }
 
-void GridActor::UndoPush()
+void PuzzleActor::UndoPush()
 {
 	if (ACTOR_TYPE::ACTOR != ActorType)
 	{
@@ -923,7 +923,7 @@ void GridActor::UndoPush()
 
 }
 
-void GridActor::TurnLeft()
+void PuzzleActor::TurnLeft()
 {
 	if (true == IsDeath)
 	{
@@ -952,7 +952,7 @@ void GridActor::TurnLeft()
 	GetWiggleRender()->SetAnimDir(MoveDir);
 }
 
-void GridActor::UndoTurnLeft()
+void PuzzleActor::UndoTurnLeft()
 {
 	if (int2::Left == MoveDir)
 	{
@@ -974,7 +974,7 @@ void GridActor::UndoTurnLeft()
 	GetWiggleRender()->SetAnimDir(MoveDir);
 }
 
-void GridActor::TurnRight()
+void PuzzleActor::TurnRight()
 {
 	if (true == IsDeath)
 	{
@@ -1003,7 +1003,7 @@ void GridActor::TurnRight()
 	GetWiggleRender()->SetAnimDir(MoveDir);
 }
 
-void GridActor::UndoTurnRight()
+void PuzzleActor::UndoTurnRight()
 {
 	if (int2::Left == MoveDir)
 	{
@@ -1026,7 +1026,7 @@ void GridActor::UndoTurnRight()
 	GetWiggleRender()->SetAnimDir(MoveDir);
 }
 
-void GridActor::SetDir(const int2& _Dir)
+void PuzzleActor::SetDir(const int2& _Dir)
 {
 	if (true == IsDeath)
 	{
@@ -1039,11 +1039,11 @@ void GridActor::SetDir(const int2& _Dir)
 	} 
 }
 
-void GridActor::ActorDeath()
+void PuzzleActor::ActorDeath()
 {
 	if (true == IsDeath)
 	{
-		MsgAssert("이미 죽은상태의 GridActor입니다.");
+		MsgAssert("이미 죽은상태의 PuzzleActor입니다.");
 		return;
 	}
 
@@ -1053,14 +1053,14 @@ void GridActor::ActorDeath()
 	GetWiggleRender()->RenderOff();
 }
 
-void GridActor::UndoActorDeath()
+void PuzzleActor::UndoActorDeath()
 {
 	vecGridDatas[GridPos.y][GridPos.x].push_back(this);
 	IsDeath = false;
 	GetWiggleRender()->RenderOn();
 }
 
-void GridActor::AllPushDir(const int2& _Dir, bool _IsInputMove)
+void PuzzleActor::AllPushDir(const int2& _Dir, bool _IsInputMove)
 {
 	int2 PushPos = GridPos + _Dir;
 
@@ -1090,7 +1090,7 @@ void GridActor::AllPushDir(const int2& _Dir, bool _IsInputMove)
 	}
 }
 
-bool GridActor::CanMove(const int2& _NextPos)
+bool PuzzleActor::CanMove(const int2& _NextPos)
 {
 	if (true == IsOver(_NextPos))
 	{
@@ -1131,7 +1131,7 @@ bool GridActor::CanMove(const int2& _NextPos)
 	return true;
 }
 
-void GridActor::WinCheck()
+void PuzzleActor::WinCheck()
 {
 	size_t DefineInfo = vecGridDatas[GridPos.y][GridPos.x].GetDefine();
 
@@ -1142,17 +1142,17 @@ void GridActor::WinCheck()
 }
 
 
-void GridActor::AddRule()
+void PuzzleActor::AddRule()
 {
 	Rule::CreateRule(this);
 }
 
-void GridActor::RemoveRule()
+void PuzzleActor::RemoveRule()
 {
 	Rule::RemoveRule(this);
 }
 
-void GridActor::SetTileRender()
+void PuzzleActor::SetTileRender()
 {
 	int RenderKey = DIR_FLAG::NONE;
 	int2 CheckPos = GridPos;
@@ -1184,7 +1184,7 @@ void GridActor::SetTileRender()
 	GetWiggleRender()->SetTileIndex(ContentConst::GetTile(RenderKey));
 }
 
-void GridActor::ResetValues()
+void PuzzleActor::ResetValues()
 {
 	vecBehaviorBuffer.clear();
 	CurFramesBehaviorBuffer.clear();

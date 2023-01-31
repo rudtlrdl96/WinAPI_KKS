@@ -215,7 +215,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="GridActor.h">
+    <ClInclude Include="PuzzleActor.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -252,7 +252,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="GridActorManager.h">
+    <ClInclude Include="PuzzleActorManager.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -281,6 +281,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="PalletButton.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="WiggleGridActor.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -359,7 +363,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="GridActor.cpp">
+    <ClCompile Include="PuzzleActor.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -396,7 +400,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="GridActorManager.cpp">
+    <ClCompile Include="PuzzleActorManager.cpp">
       <SubType>
       </SubType>
     </ClCompile>
@@ -425,6 +429,10 @@
       </SubType>
     </ClCompile>
     <ClCompile Include="PalletButton.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="WiggleGridActor.cpp">
       <SubType>
       </SubType>
     </ClCompile>

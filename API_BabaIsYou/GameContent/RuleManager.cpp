@@ -1,7 +1,7 @@
 #include "RuleManager.h"
 #include "Rule.h"
-#include "GridActor.h"
-#include "GridActorManager.h"
+#include "PuzzleActor.h"
+#include "PuzzleActorManager.h"
 
 RuleManager::RuleManager()
 {
@@ -35,13 +35,13 @@ void RuleManager::RemoveRule(Rule* _Rule)
 	}
 }
 
-void RuleManager::AddActorRule(GridActor* _Actor, int _ActorIndex)
+void RuleManager::AddActorRule(PuzzleActor* _Actor, int _ActorIndex)
 {
 	for (const std::pair<int, Rule*>& Data : mapAllRules)
 	{
 		if (_ActorIndex == Data.second->SubjectActor->GetArrowEnum() && ACTOR_TYPE::DEFINE_TEXT == Data.second->DefineActor->GetActorType())
 		{
-			GridActorManager::GetInst()->AddDefine(_Actor, Data.second->DefineActor->GetArrowDefine(), false);
+			PuzzleActorManager::GetInst()->AddDefine(_Actor, Data.second->DefineActor->GetArrowDefine(), false);
 		}
 	}
 }

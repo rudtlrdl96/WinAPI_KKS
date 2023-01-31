@@ -1,4 +1,4 @@
-#include "GridActorManager.h"
+#include "PuzzleActorManager.h"
 #include <GameEngineBase/GameEngineDirectory.h>
 #include <GameEngineBase/GameEngineDebug.h>
 #include <GameEnginePlatform/GameEngineWindow.h>
@@ -7,35 +7,35 @@
 #include <GameEngineCore/GameEngineRender.h>
 
 #include "ContentConst.h"
-#include "GridActor.h"
+#include "PuzzleActor.h"
 #include "CongratulationsUI.h"
 #include "BlackBackUI.h"
 #include "PuzzleLevel.h"
 #include "ContentDataLoader.h"
 
-GridActorManager::GridActorManager()
+PuzzleActorManager::PuzzleActorManager()
 {
 
 }
 
-GridActorManager::~GridActorManager()
+PuzzleActorManager::~PuzzleActorManager()
 {
 }
 
-void GridActorManager::Init(PuzzleLevel* _PuzzleLevel)
+void PuzzleActorManager::Init(PuzzleLevel* _PuzzleLevel)
 {
 	MainPuzzleLevel = _PuzzleLevel;
-	GridActor::InitGridActor(_PuzzleLevel);
+	PuzzleActor::InitGridActor(_PuzzleLevel);
 	GridBackActor = MainPuzzleLevel->CreateActor<BlackBackUI>();
 }
 
-void GridActorManager::Input(float _DT)
+void PuzzleActorManager::Input(float _DT)
 {
-	if (true == GridActor::IsWin())
+	if (true == PuzzleActor::IsWin())
 	{
 		return;
 	}
-	GridActor::GetActors(ACTOR_DEFINE::YOU);
+	PuzzleActor::GetActors(ACTOR_DEFINE::YOU);
 	int2 MoveDir = int2::Zero;
 
 	if (GameEngineInput::IsDown("ReStart"))
@@ -68,7 +68,7 @@ void GridActorManager::Input(float _DT)
 		listInputBuffer.push_back(INPUTBEHAVIOR::WAIT);
 	}
 	
-	if (false == GridActor::IsAnyMove() && 0 < listInputBuffer.size())
+	if (false == PuzzleActor::IsAnyMove() && 0 < listInputBuffer.size())
 	{
 		INPUTBEHAVIOR NextBehavior = listInputBuffer.front();
 		listInputBuffer.pop_front();
@@ -76,23 +76,23 @@ void GridActorManager::Input(float _DT)
 		switch (NextBehavior)
 		{
 		case INPUTBEHAVIOR::MOVE_LEFT:
-			GridActor::MoveAllYouBehavior(int2::Left);
-			GridActor::MoveAllMoveBehavior();
+			PuzzleActor::MoveAllYouBehavior(int2::Left);
+			PuzzleActor::MoveAllMoveBehavior();
 			break;
 		case INPUTBEHAVIOR::MOVE_RIGHT:
-			GridActor::MoveAllYouBehavior(int2::Right);
-			GridActor::MoveAllMoveBehavior();
+			PuzzleActor::MoveAllYouBehavior(int2::Right);
+			PuzzleActor::MoveAllMoveBehavior();
 			break;
 		case INPUTBEHAVIOR::MOVE_UP:
-			GridActor::MoveAllYouBehavior(int2::Up);
-			GridActor::MoveAllMoveBehavior();
+			PuzzleActor::MoveAllYouBehavior(int2::Up);
+			PuzzleActor::MoveAllMoveBehavior();
 			break;
 		case INPUTBEHAVIOR::MOVE_DOWN:
-			GridActor::MoveAllYouBehavior(int2::Down);
-			GridActor::MoveAllMoveBehavior();
+			PuzzleActor::MoveAllYouBehavior(int2::Down);
+			PuzzleActor::MoveAllMoveBehavior();
 			break;
 		case INPUTBEHAVIOR::UNDO:
-			GridActor::AllActorUndo();
+			PuzzleActor::AllActorUndo();
 
 			for (size_t i = 0; i < vecDefineActors.size(); i++)
 			{
@@ -109,19 +109,19 @@ void GridActorManager::Input(float _DT)
 
 			return;
 		case INPUTBEHAVIOR::WAIT:
-			GridActor::MoveAllMoveBehavior();
+			PuzzleActor::MoveAllMoveBehavior();
 			break;
 		default:
 			MsgAssert("잘못된 Input enum값 입니다.");
 			break;
 		}
 
-		if (false == GridActor::IsAnyMove())
+		if (false == PuzzleActor::IsAnyMove())
 		{
 			return;
 		}
 
-		GridActor::GridActorDeathCheck();
+		PuzzleActor::PuzzleActorDeathCheck();
 
 		for (size_t i = 0; i < vecDefineActors.size(); i++)
 		{
@@ -135,13 +135,13 @@ void GridActorManager::Input(float _DT)
 			}
 		}
 
-		GridActor::GridActorSaveBehavior();
+		PuzzleActor::PuzzleActorSaveBehavior();
 
 		vecDefineActors.clear();
 	}
 }
 
-void GridActorManager::LoadData(const std::string_view& _PuzzleName)
+void PuzzleActorManager::LoadData(const std::string_view& _PuzzleName)
 {
 	Reset();
 
@@ -161,7 +161,7 @@ void GridActorManager::LoadData(const std::string_view& _PuzzleName)
 	int2 MapSize = { static_cast<int>(LoadData[0].size()), static_cast<int>(LoadData.size())};
 
 	// Todo : DataLoad System
-	GridActor::SetGridLength(MapSize);
+	PuzzleActor::SetGridLength(MapSize);
 
 	float4 TotalGridSize = { ContentConst::ACTOR_SIZE.x * MapSize.x, ContentConst::ACTOR_SIZE.y * MapSize.y };
 	float4 WindowSize = GameEngineWindow::GetScreenSize();
@@ -175,7 +175,7 @@ void GridActorManager::LoadData(const std::string_view& _PuzzleName)
 		{
 			if (0 <= LoadData[y][x])
 			{
-				GridActor* ActorData = GridActor::CreateGridActor(LoadData[y][x]);
+				PuzzleActor* ActorData = PuzzleActor::CreatePuzzlActor(LoadData[y][x]);
 
 				if (nullptr == ActorData)
 				{
@@ -190,29 +190,29 @@ void GridActorManager::LoadData(const std::string_view& _PuzzleName)
 		}
 	}
 
-	GridActor::AllActorRuleCheck();
+	PuzzleActor::AllActorRuleCheck();
 	MainPuzzleLevel->SetCameraPos(-DiffSize.half());
 }
 
-void GridActorManager::AddDefine(GridActor* _Actor, ACTOR_DEFINE _Define, bool _IsRemove)
+void PuzzleActorManager::AddDefine(PuzzleActor* _Actor, ACTOR_DEFINE _Define, bool _IsRemove)
 {
 	vecDefineActors.push_back({ _Actor, _Define, _IsRemove });
 }
 
-void GridActorManager::clear()
+void PuzzleActorManager::clear()
 {
-	GridActor::AnyMoveCheckReset();
+	PuzzleActor::AnyMoveCheckReset();
 }
 
-void GridActorManager::Reset()
+void PuzzleActorManager::Reset()
 {
-	GridActor::ResetGridActor();
+	PuzzleActor::ResetPuzzleActor();
 	listInputBuffer.clear();
 	vecDefineActors.clear();
 }
 
 
-bool GridActorManager::IsPuzzleEnd() const
+bool PuzzleActorManager::IsPuzzleEnd() const
 {
-	return GridActor::IsWin();
+	return PuzzleActor::IsWin();
 }

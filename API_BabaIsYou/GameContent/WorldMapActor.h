@@ -4,6 +4,7 @@
 #include "ContentMath.h"
 #include "WiggleActor.h"
 
+class StringUI;
 class WorldMapActor : public WiggleActor
 {
 public:
@@ -25,6 +26,11 @@ public:
 		return PuzzleName;
 	}
 
+	inline std::string_view GetPuzzleInfo() const
+	{
+		return PuzzleInfo;
+	}
+
 	inline bool IsWalkable() const
 	{
 		return IsWalkableValue;
@@ -35,6 +41,7 @@ public:
 		return IsLineValue;
 	}
 
+	void PuzzleClear();
 	void InitWorldMapActor(const std::string_view& _PuzzleName, const std::string_view& _PuzzleInfo, size_t PuzzleNumber);
 	void InitWorldMapActorLine();
 	void SetTileIndex(const int _Key);
@@ -46,6 +53,8 @@ private:
 
 	std::string PuzzleName = "";
 	std::string PuzzleInfo = "";
+	StringUI* NumberStringUI = nullptr;
+
 	size_t PuzzleNumber = 0;
 
 	bool IsWalkableValue = false;

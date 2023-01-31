@@ -14,7 +14,6 @@
 #include "PuzzleLevel.h"
 #include "WorldMapSelect.h"
 #include "StringUI.h"
-#include "WiggleStringUI.h"
 
 WorldMapLevel::WorldMapLevel()
 {
@@ -34,18 +33,26 @@ void WorldMapLevel::Loading()
 	Dir.Move("WorldMap");
 
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("WorldMap.BMP"))->Cut(1, 3);
-	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("WorldMapActorBack.BMP"))->Cut(1, 3);
+	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("WorldMapActorBack.BMP"))->Cut(2, 3);
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("WorldMapSelect.BMP"))->Cut(1, 3);
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("WorldMapLine.BMP"))->Cut(16, 3);
 
 	WorldMapFadeActor = CreateActor<FadeUI>();
 	CreateActor<MapBackgroundUI>();
 	CreateActor<GrayBackUI>();
-	WiggleStringUI* TextText = CreateActor<WiggleStringUI>();
-	TextText->SetPos({ 10, 20 });
-	TextText->SetFontSize({ 20, 20 });
-	TextText->SetFontInterval({10, 17});
-	TextText->WriteText("Hello World 3232\nHello Game 1234");
+	InfoStringUI = CreateActor<StringUI>();
+	InfoStringUI->SetPos({ 10, 16 });
+	InfoStringUI->SetFontSize({ 28, 28 });
+	InfoStringUI->SetFontInterval({13, 17});
+
+	{
+		//GridActor* BaBaText = CreateActor<GridActor>();
+		//GridActor* IsText1  = CreateActor<GridActor>();
+		//GridActor* YouText  = CreateActor<GridActor>();
+		//GridActor* FlagText = CreateActor<GridActor>();
+		//GridActor* IsText2  = CreateActor<GridActor>();
+		//GridActor* WinText  = CreateActor<GridActor>();
+	}
 
 	WorldMapSelectActor = CreateActor<WorldMapSelect>();
 
@@ -70,15 +77,14 @@ void WorldMapLevel::Loading()
 		}
 	}
 
-	vecWorldMapDatas[0][0]->InitWorldMapActor("Stage_0_0", "Test", 0);
-	vecWorldMapDatas[2][1]->InitWorldMapActor("Stage_0_1", "Test", 0);
-	vecWorldMapDatas[3][1]->InitWorldMapActor("Stage_0_2", "Test", 0);
-	vecWorldMapDatas[2][2]->InitWorldMapActor("Stage_0_3", "Test", 0);
-	vecWorldMapDatas[3][2]->InitWorldMapActor("Stage_0_4", "Test", 0);
-	vecWorldMapDatas[4][1]->InitWorldMapActor("Stage_0_5", "Test", 0);
-	vecWorldMapDatas[3][3]->InitWorldMapActor("Stage_0_6", "Test", 0);
-	vecWorldMapDatas[4][2]->InitWorldMapActor("Stage_0_7", "Test", 0);
-
+	vecWorldMapDatas[0][0]->InitWorldMapActor("Stage_0_0", "BABA IS YOU", 0);
+	vecWorldMapDatas[2][1]->InitWorldMapActor("Stage_0_1", "WHERE DO I GO?", 1);
+	vecWorldMapDatas[3][1]->InitWorldMapActor("Stage_0_2", "NOW WHAT IS THIS?", 2);
+	vecWorldMapDatas[2][2]->InitWorldMapActor("Stage_0_3", "OUT OF REACH", 3);
+	vecWorldMapDatas[3][2]->InitWorldMapActor("Stage_0_4", "STILL OUT OF REACH", 4);
+	vecWorldMapDatas[4][1]->InitWorldMapActor("Stage_0_5", "VOLCALO", 5);
+	vecWorldMapDatas[3][3]->InitWorldMapActor("Stage_0_6", "OFF LIMITS", 6);
+	vecWorldMapDatas[4][2]->InitWorldMapActor("Stage_0_7", "GRASS YARD", 7);
 
 	vecWorldMapDatas[0][1]->InitWorldMapActorLine();
 	vecWorldMapDatas[1][1]->InitWorldMapActorLine();
@@ -93,7 +99,7 @@ void WorldMapLevel::Loading()
 		}
 	}
 
-	WorldMapSelectActor->SetPos(vecWorldMapDatas[0][0]->GetPos());
+	MoveWorldMap(int2::Zero);
 }
 
 void WorldMapLevel::Update(float _DT)
@@ -171,6 +177,7 @@ void WorldMapLevel::MoveWorldMap(const int2& _Move)
 		return;
 	}
 
+	InfoStringUI->WriteText(vecWorldMapDatas[SelectPuzzlePos.y][SelectPuzzlePos.x]->GetPuzzleInfo());
 	WorldMapSelectActor->SetPos(vecWorldMapDatas[SelectPuzzlePos.y][SelectPuzzlePos.x]->GetPos());
 }
 

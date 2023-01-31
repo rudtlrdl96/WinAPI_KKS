@@ -8,17 +8,17 @@
 
 class GameEngineLevel;
 class Rule;
-class GridActor : public WiggleActor
+class PuzzleActor : public WiggleActor
 {
 	friend Rule;
 private:
 	class GridData
 	{
 	public:
-		std::map<int, GridActor*> mapDatas;
+		std::map<int, PuzzleActor*> mapDatas;
 
-		void push_back(GridActor* _Actor);
-		void erase(GridActor* _Actor);
+		void push_back(PuzzleActor* _Actor);
+		void erase(PuzzleActor* _Actor);
 		void clear();
 		void Push(const int2& _Pos, const int2& _Dir, bool _IsInputMove);
 		void DeathCheck();
@@ -42,23 +42,23 @@ private:
 public:
 	static void InitGridActor(GameEngineLevel* _PuzzleLevel);
 	static void SetGridLength(const int2& _Length);
-	static void ResetGridActor();
-	static void DeleteGridActor();
+	static void ResetPuzzleActor();
+	static void DeletePuzzleActor();
 
 	static float4 GetScreenPos(const int2& _GridPos);
 
 	static void AllActorUndo();
 	static void AllActorRuleCheck();
-	static void GridActorDeathCheck();
-	static void GridActorSaveBehavior();
+	static void PuzzleActorDeathCheck();
+	static void PuzzleActorSaveBehavior();
 	static void MoveAllYouBehavior(const int2& _Dir);
 	static void MoveAllMoveBehavior();
 
-	static GridActor* CreateGridActor(int _Type);
+	static PuzzleActor* CreatePuzzlActor(int _Type);
 
-	static GridActor* GetTextActor(const int2& _Pos);
-	static std::map<int, GridActor*>& GetActors(int _ActorIndex);
-	static std::map<int, GridActor*>& GetActors(ACTOR_DEFINE _Define);
+	static PuzzleActor* GetTextActor(const int2& _Pos);
+	static std::map<int, PuzzleActor*>& GetActors(int _ActorIndex);
+	static std::map<int, PuzzleActor*>& GetActors(ACTOR_DEFINE _Define);
 
 	static bool IsAnyMove();
 	static void AnyMoveCheckReset();
@@ -76,28 +76,28 @@ private:
 	static int2 GridLength;
 
 	static std::vector<std::vector<GridData>> vecGridDatas;
-	static std::vector<std::vector<GridActor*>> vecTextDatas;
+	static std::vector<std::vector<PuzzleActor*>> vecTextDatas;
 
 	// ObjectPooling 
-	static std::vector<GridActor*> vecObjectPool;	
+	static std::vector<PuzzleActor*> vecObjectPool;
 
 	// 액터 타입별 데이터 정렬
-	static std::map<int, std::map<int, GridActor*>> mapActorDatas;
+	static std::map<int, std::map<int, PuzzleActor*>> mapActorDatas;
 	// 액터 Deinfe 데이터 정렬
-	static std::map<ACTOR_DEFINE, std::map<int, GridActor*>> mapDefineActorDatas;
+	static std::map<ACTOR_DEFINE, std::map<int, PuzzleActor*>> mapDefineActorDatas;
 
 
 #pragma endregion
 
 
 public:
-	GridActor();
-	~GridActor();
+	PuzzleActor();
+	~PuzzleActor();
 
-	GridActor(const GridActor& _Other) = delete;
-	GridActor(GridActor&& _Other) noexcept = delete;
-	GridActor& operator=(const GridActor& _Other) = delete;
-	GridActor& operator=(GridActor&& _Other) noexcept = delete;
+	PuzzleActor(const PuzzleActor& _Other) = delete;
+	PuzzleActor(PuzzleActor&& _Other) noexcept = delete;
+	PuzzleActor& operator=(const PuzzleActor& _Other) = delete;
+	PuzzleActor& operator=(PuzzleActor&& _Other) noexcept = delete;
 
 	void LoadData(int _Actor, bool _IsInit);
 	void RuleCheck();
@@ -110,7 +110,7 @@ public:
 	int GetArrowEnum() const;
 	ACTOR_DEFINE GetArrowDefine() const;
 
-	ACTOR_TYPE GetActorType();
+	ACTOR_TYPE GetActorType() const;
 	int2 GetGridPos() const;
 
 protected:

@@ -6,9 +6,9 @@
 #include "ContentEnum.h"
 
 class PuzzleLevel;
-class GridActor;
+class PuzzleActor;
 class BlackBackUI;
-class GridActorManager sealed
+class PuzzleActorManager sealed
 {
 private:
 	enum class INPUTBEHAVIOR
@@ -24,15 +24,15 @@ private:
 	class DefineData
 	{
 	public:
-		GridActor* ActorData = nullptr;
+		PuzzleActor* ActorData = nullptr;
 		ACTOR_DEFINE RemoveDefine = ACTOR_DEFINE::NONE;
 
 		bool IsRemove = false;
 	};
 public:
-	static GridActorManager* GetInst()
+	static PuzzleActorManager* GetInst()
 	{
-		static GridActorManager Instance;
+		static PuzzleActorManager Instance;
 		return &Instance;
 	}
 
@@ -40,7 +40,7 @@ public:
 	void Reset();
 	void Input(float _DT);
 
-	void AddDefine(GridActor* _Actor, ACTOR_DEFINE _Define, bool _IsRemove);
+	void AddDefine(PuzzleActor* _Actor, ACTOR_DEFINE _Define, bool _IsRemove);
 	void clear();
 	void LoadData(const std::string_view& _PuzzleName);
 	bool IsPuzzleEnd() const;
@@ -49,13 +49,13 @@ protected:
 
 private:
 
-	GridActorManager();
-	~GridActorManager();
+	PuzzleActorManager();
+	~PuzzleActorManager();
 
-	GridActorManager(const GridActorManager& _Other) = delete;
-	GridActorManager(GridActorManager&& _Other) noexcept = delete;
-	GridActorManager& operator=(const GridActorManager& _Other) = delete;
-	GridActorManager& operator=(GridActorManager&& _Other) noexcept = delete;
+	PuzzleActorManager(const PuzzleActorManager& _Other) = delete;
+	PuzzleActorManager(PuzzleActorManager&& _Other) noexcept = delete;
+	PuzzleActorManager& operator=(const PuzzleActorManager& _Other) = delete;
+	PuzzleActorManager& operator=(PuzzleActorManager&& _Other) noexcept = delete;
 		
 	std::vector<DefineData> vecDefineActors;
 	std::list<INPUTBEHAVIOR> listInputBuffer;

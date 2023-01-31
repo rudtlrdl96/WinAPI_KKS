@@ -118,6 +118,11 @@ void MapToolLevel::Loading()
 
 void MapToolLevel::Update(float _DT)
 {
+	if (nullptr == GetFocus())
+	{
+		return;
+	}
+
 	if (true == PalletCloseButton->IsUp())
 	{
 		Pallet->DisablePallet();

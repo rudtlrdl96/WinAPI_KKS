@@ -1,8 +1,8 @@
 #include "Rule.h"
 #include <GameEngineBase/GameEngineDebug.h>
 
-#include "GridActor.h"
-#include "GridActorManager.h"
+#include "PuzzleActor.h"
+#include "PuzzleActorManager.h"
 #include "RuleManager.h"
 
 Rule::Rule(int _Key) :
@@ -14,7 +14,7 @@ Rule::~Rule()
 {
 }
 
-void Rule::CreateRule(GridActor* _Actor, bool _IsInit)
+void Rule::CreateRule(PuzzleActor* _Actor, bool _IsInit)
 {
 	if (nullptr == _Actor)
 	{
@@ -29,52 +29,52 @@ void Rule::CreateRule(GridActor* _Actor, bool _IsInit)
 	case ACTOR_TYPE::SUBJECT_TEXT: // 내가 처음이거나 끝이 되는 경우
 		CheckRule(
 			_Actor,
-			GridActor::GetTextActor(ActorPos + int2::Right), 
-			GridActor::GetTextActor(ActorPos + int2::Right + int2::Right),
+			PuzzleActor::GetTextActor(ActorPos + int2::Right),
+			PuzzleActor::GetTextActor(ActorPos + int2::Right + int2::Right),
 			_IsInit);
 
 		CheckRule(
 			_Actor,
-			GridActor::GetTextActor(ActorPos + int2::Down),
-			GridActor::GetTextActor(ActorPos + int2::Down + int2::Down),
+			PuzzleActor::GetTextActor(ActorPos + int2::Down),
+			PuzzleActor::GetTextActor(ActorPos + int2::Down + int2::Down),
 			_IsInit);
 
 		CheckRule(
-			GridActor::GetTextActor(ActorPos + int2::Left + int2::Left),
-			GridActor::GetTextActor(ActorPos + int2::Left),
+			PuzzleActor::GetTextActor(ActorPos + int2::Left + int2::Left),
+			PuzzleActor::GetTextActor(ActorPos + int2::Left),
 			_Actor,
 			_IsInit);
 
 		CheckRule(
-			GridActor::GetTextActor(ActorPos + int2::Up + int2::Up),
-			GridActor::GetTextActor(ActorPos + int2::Up),
+			PuzzleActor::GetTextActor(ActorPos + int2::Up + int2::Up),
+			PuzzleActor::GetTextActor(ActorPos + int2::Up),
 			_Actor,
 			_IsInit);
 		break;
 	case ACTOR_TYPE::VERB_TEXT: // 내가 중간인 경우
 		CheckRule(
-			GridActor::GetTextActor(ActorPos + int2::Left),
+			PuzzleActor::GetTextActor(ActorPos + int2::Left),
 			_Actor,
-			GridActor::GetTextActor(ActorPos + int2::Right),
+			PuzzleActor::GetTextActor(ActorPos + int2::Right),
 			_IsInit);
 
 		CheckRule(
-			GridActor::GetTextActor(ActorPos + int2::Up),
+			PuzzleActor::GetTextActor(ActorPos + int2::Up),
 			_Actor,
-			GridActor::GetTextActor(ActorPos + int2::Down),
+			PuzzleActor::GetTextActor(ActorPos + int2::Down),
 			_IsInit);
 		break;
 	case ACTOR_TYPE::DEFINE_TEXT:// 내가 끝인 경우
 
 		CheckRule(
-			GridActor::GetTextActor(ActorPos + int2::Left + int2::Left),
-			GridActor::GetTextActor(ActorPos + int2::Left),
+			PuzzleActor::GetTextActor(ActorPos + int2::Left + int2::Left),
+			PuzzleActor::GetTextActor(ActorPos + int2::Left),
 			_Actor,
 			_IsInit);
 
 		CheckRule(
-			GridActor::GetTextActor(ActorPos + int2::Up + int2::Up),
-			GridActor::GetTextActor(ActorPos + int2::Up),
+			PuzzleActor::GetTextActor(ActorPos + int2::Up + int2::Up),
+			PuzzleActor::GetTextActor(ActorPos + int2::Up),
 			_Actor,
 			_IsInit);
 		break;
@@ -86,7 +86,7 @@ void Rule::CreateRule(GridActor* _Actor, bool _IsInit)
 	return;
 }
 
-void Rule::RemoveRule(GridActor* _Actor)
+void Rule::RemoveRule(PuzzleActor* _Actor)
 {
 	while (0 < _Actor->mapRules.size())
 	{
@@ -98,17 +98,17 @@ void Rule::RemoveRule(GridActor* _Actor)
 			MsgAssert("nullptr Rule을 동적할당 해제하려 했습니다");
 		}
 
-		GridActor* SubjectActor = DeleteRule->SubjectActor;
-		GridActor* VerbActor = DeleteRule->VerbActor;
-		GridActor* DefineActor = DeleteRule->DefineActor;
+		PuzzleActor* SubjectActor = DeleteRule->SubjectActor;
+		PuzzleActor* VerbActor = DeleteRule->VerbActor;
+		PuzzleActor* DefineActor = DeleteRule->DefineActor;
 
 		if (ACTOR_TYPE::DEFINE_TEXT == DefineActor->ActorType)
 		{
-			const std::map<int, GridActor*>& mapSubjectActors = GridActor::GetActors(SubjectActor->ArrowEnum);
+			const std::map<int, PuzzleActor*>& mapSubjectActors = PuzzleActor::GetActors(SubjectActor->ArrowEnum);
 
-			for (const std::pair<int, GridActor*> Data : mapSubjectActors)
+			for (const std::pair<int, PuzzleActor*> Data : mapSubjectActors)
 			{
-				GridActorManager::GetInst()->AddDefine(Data.second, DefineActor->ArrowDefine, true);
+				PuzzleActorManager::GetInst()->AddDefine(Data.second, DefineActor->ArrowDefine, true);
 			}
 		}
 
@@ -140,7 +140,7 @@ void Rule::RemoveRule(GridActor* _Actor)
 	_Actor->mapRules.clear();
 }
 
-void Rule::CheckRule(GridActor* _SubjectActor, GridActor* _VerbActor, GridActor* _DefineActor, bool _IsInit)
+void Rule::CheckRule(PuzzleActor* _SubjectActor, PuzzleActor* _VerbActor, PuzzleActor* _DefineActor, bool _IsInit)
 {
 	static int RuleKey = 0;
 
@@ -158,11 +158,11 @@ void Rule::CheckRule(GridActor* _SubjectActor, GridActor* _VerbActor, GridActor*
 		CreateRulePtr->VerbActor = _VerbActor;
 		CreateRulePtr->DefineActor = _DefineActor;
 
-		const std::map<int, GridActor*> mapSubjectActors = GridActor::GetActors(_SubjectActor->ArrowEnum);
+		const std::map<int, PuzzleActor*> mapSubjectActors = PuzzleActor::GetActors(_SubjectActor->ArrowEnum);
 
 		if (ACTOR_TYPE::DEFINE_TEXT == _DefineActor->GetActorType())
 		{
-			for (const std::pair<int, GridActor*>& Data : mapSubjectActors)
+			for (const std::pair<int, PuzzleActor*>& Data : mapSubjectActors)
 			{
 				if (true == _IsInit)
 				{
@@ -170,14 +170,14 @@ void Rule::CheckRule(GridActor* _SubjectActor, GridActor* _VerbActor, GridActor*
 				}
 				else
 				{
-					GridActorManager::GetInst()->AddDefine(Data.second, _DefineActor->ArrowDefine, false);
+					PuzzleActorManager::GetInst()->AddDefine(Data.second, _DefineActor->ArrowDefine, false);
 				}
 			}
 		}
 
 		if (ACTOR_TYPE::SUBJECT_TEXT == _DefineActor->GetActorType())
 		{
-			for (const std::pair<int, GridActor*>& Data : mapSubjectActors)
+			for (const std::pair<int, PuzzleActor*>& Data : mapSubjectActors)
 			{
 				Data.second->LoadData(_DefineActor->ArrowEnum, false);
 			}

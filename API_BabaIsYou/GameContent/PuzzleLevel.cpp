@@ -4,7 +4,7 @@
 #include <GameEngineCore/GameEngineResources.h>
 
 #include "FadeUI.h"
-#include "GridActorManager.h"
+#include "PuzzleActorManager.h"
 #include "RuleManager.h"
 #include "GrayBackUI.h"
 #include "CongratulationsUI.h"
@@ -56,7 +56,7 @@ void PuzzleLevel::Loading()
 	PuzzleFadeActor = CreateActor<FadeUI>();
 	CongratulationActor = CreateActor<CongratulationsUI>();
 
-	GridActorManager::GetInst()->Init(this);
+	PuzzleActorManager::GetInst()->Init(this);
 
 	if (false == GameEngineInput::IsKey("Wait"))
 	{
@@ -84,14 +84,14 @@ void PuzzleLevel::Update(float _DT)
 		return;
 	}
 
-	if (true == GridActorManager::GetInst()->IsPuzzleEnd() && false == CongratulationActor->IsProgress())
+	if (true == PuzzleActorManager::GetInst()->IsPuzzleEnd() && false == CongratulationActor->IsProgress())
 	{
 		CongratulationActor->Congratulations(&PuzzleLevelExit);
 	}
 	else
 	{
-		GridActorManager::GetInst()->Input(_DT);
-		GridActorManager::GetInst()->clear();
+		PuzzleActorManager::GetInst()->Input(_DT);
+		PuzzleActorManager::GetInst()->clear();
 	}
 }
 
@@ -104,11 +104,11 @@ void PuzzleLevel::LevelChangeStart(GameEngineLevel* _NextLevel)
 
 void PuzzleLevel::LevelChangeEnd(GameEngineLevel* _NextLevel)
 {
-	GridActorManager::GetInst()->Reset();
+	PuzzleActorManager::GetInst()->Reset();
 	CongratulationActor->Off();
 }
 
 void PuzzleLevel::LoadPuzzleData()
 {
-	GridActorManager::GetInst()->LoadData(LoadPuzzleName);
+	PuzzleActorManager::GetInst()->LoadData(LoadPuzzleName);
 }

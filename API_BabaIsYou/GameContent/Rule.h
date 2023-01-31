@@ -1,6 +1,6 @@
 #pragma once
 
-class GridActor;
+class PuzzleActor;
 class RuleManager;
 class Rule
 {
@@ -14,16 +14,16 @@ public:
 	Rule& operator=(const Rule& _Other) = delete;
 	Rule& operator=(Rule&& _Other) noexcept = delete;
 
-	static void CreateRule(GridActor* _Actor, bool _IsInit = false);
-	static void RemoveRule(GridActor* _Actor);	
+	static void CreateRule(PuzzleActor* _Actor, bool _IsInit = false);
+	static void RemoveRule(PuzzleActor* _Actor);
 
 	const int RuleKey = -1;
 protected:
 
 private:
-	GridActor* SubjectActor = nullptr;
-	GridActor* VerbActor = nullptr;
-	GridActor* DefineActor = nullptr;
+	PuzzleActor* SubjectActor = nullptr;
+	PuzzleActor* VerbActor = nullptr;
+	PuzzleActor* DefineActor = nullptr;
 
-	static void CheckRule(GridActor* _SubjectActor, GridActor* _VerbActor, GridActor* _DefineActor, bool _IsInit);
+	static void CheckRule(PuzzleActor* _SubjectActor, PuzzleActor* _VerbActor, PuzzleActor* _DefineActor, bool _IsInit);
 };

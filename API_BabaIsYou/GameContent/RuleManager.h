@@ -3,7 +3,7 @@
 #include "ContentEnum.h"
 
 class Rule;
-class GridActor;
+class PuzzleActor;
 class RuleManager
 {
 	friend Rule;
@@ -16,7 +16,7 @@ public:
 
 	void AddRule(Rule* _Rule);
 	void RemoveRule(Rule* _Rule);
-	void AddActorRule(GridActor* _Actor, int _ActorIndex);
+	void AddActorRule(PuzzleActor* _Actor, int _ActorIndex);
 
 protected:
 
