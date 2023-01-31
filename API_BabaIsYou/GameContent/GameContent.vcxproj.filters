@@ -162,7 +162,7 @@
     <ClInclude Include="WiggleTextUI.h">
       <Filter>01.Actor\UIActor\Defalut</Filter>
     </ClInclude>
-    <ClInclude Include="WiggleGridActor.h">
+    <ClInclude Include="WiggleMapToolActor.h">
       <Filter>01.Actor\UIActor\MapTool</Filter>
     </ClInclude>
   </ItemGroup>
@@ -278,7 +278,7 @@
     <ClCompile Include="WiggleTextUI.cpp">
       <Filter>01.Actor\UIActor\Defalut</Filter>
     </ClCompile>
-    <ClCompile Include="WiggleGridActor.cpp">
+    <ClCompile Include="WiggleMapToolActor.cpp">
       <Filter>01.Actor\UIActor\MapTool</Filter>
     </ClCompile>
   </ItemGroup>

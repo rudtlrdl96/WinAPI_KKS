@@ -1,28 +1,38 @@
-#include "WiggleGridActor.h"
+#include "WiggleMapToolActor.h"
 #include <GameEngineBase/GameEngineDebug.h>
 #include "ContentConst.h"
 #include "WiggleRender.h"
 #include "ContentDataBase.h"
+#include "ActorData.h"
 
-WiggleGridActor::WiggleGridActor()
+WiggleMapToolActor::WiggleMapToolActor()
 {
 }
 
-WiggleGridActor::~WiggleGridActor()
+WiggleMapToolActor::~WiggleMapToolActor()
 {
 }
 
-void WiggleGridActor::SetRender(int _ActorEnum)
+void WiggleMapToolActor::SetRender(int _ActorEnum)
 {
-	ContentDataBase::GetInst()->GetData(_ActorEnum);
+	if (nullptr == WiggleRenderPtr)
+	{
+		MsgAssert("WiggleRender를 초기화 하지 않고 사용하려 했습니다.");
+		return;
+	}
+
+	const ActorData* LoadData = ContentDataBase::GetInst()->GetData(_ActorEnum);
+
+	WiggleRenderPtr->SetStartIndex(LoadData->RenderIndex);
+	
 }
 
-void WiggleGridActor::SetRender(const std::string_view& _Name)
+void WiggleMapToolActor::SetRender(const std::string_view& _Name)
 {
-	ContentDataBase::GetInst()->GetData(_Name);
+	SetRender(ContentDataBase::GetInst()->GetActorEnum(_Name));
 }
 
-void WiggleGridActor::SetDir(int2 _Dir)
+void WiggleMapToolActor::SetDir(int2 _Dir)
 {
 	if (nullptr == WiggleRenderPtr)
 	{
@@ -33,7 +43,7 @@ void WiggleGridActor::SetDir(int2 _Dir)
 	WiggleRenderPtr->SetAnimDir(_Dir);
 }
 
-void WiggleGridActor::SetTile(int _Key)
+void WiggleMapToolActor::SetTile(int _Key)
 {
 	if (nullptr == WiggleRenderPtr)
 	{
@@ -44,7 +54,7 @@ void WiggleGridActor::SetTile(int _Key)
 	WiggleRenderPtr->SetTileIndex(ContentConst::GetTile(_Key));
 }
 
-void WiggleGridActor::Start()
+void WiggleMapToolActor::Start()
 {
 	InitWiggleRender({
 	.FileName = "actor.BMP",

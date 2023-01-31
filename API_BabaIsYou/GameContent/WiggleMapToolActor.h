@@ -5,16 +5,16 @@
 #include "ContentEnum.h"
 
 class WiggleRender;
-class WiggleGridActor : WiggleActor
+class WiggleMapToolActor: WiggleActor
 {
 public:
-	WiggleGridActor();
-	~WiggleGridActor();
+	WiggleMapToolActor();
+	~WiggleMapToolActor();
 
-	WiggleGridActor(const WiggleGridActor& _Other) = delete;
-	WiggleGridActor(WiggleGridActor&& _Other) noexcept = delete;
-	WiggleGridActor& operator=(const WiggleGridActor& _Other) = delete;
-	WiggleGridActor& operator=(WiggleGridActor&& _Other) noexcept = delete;
+	WiggleMapToolActor(const WiggleMapToolActor& _Other) = delete;
+	WiggleMapToolActor(WiggleMapToolActor&& _Other) noexcept = delete;
+	WiggleMapToolActor& operator=(const WiggleMapToolActor& _Other) = delete;
+	WiggleMapToolActor& operator=(WiggleMapToolActor&& _Other) noexcept = delete;
 
 	void SetRender(int _ActorEnum);
 	void SetRender(const std::string_view& _Name);

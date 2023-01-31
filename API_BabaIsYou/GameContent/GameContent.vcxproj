@@ -284,7 +284,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="WiggleGridActor.h">
+    <ClInclude Include="WiggleMapToolActor.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -432,7 +432,7 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="WiggleGridActor.cpp">
+    <ClCompile Include="WiggleMapToolActor.cpp">
       <SubType>
       </SubType>
     </ClCompile>
