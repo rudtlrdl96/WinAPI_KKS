@@ -84,7 +84,7 @@ std::string ContentDataLoader::GetSaveFilePath()
     return "";
 }
 
-bool ContentDataLoader::LoadMapData(const std::string_view& _Path, std::vector<std::vector<int>>& _MapLoad)
+bool ContentDataLoader::LoadMapData(const std::string_view& _Path, std::vector<std::vector<int>>& _MapLoad, std::vector<std::vector<int>>& _MapDir)
 {
     if ("" == _Path)
     {
@@ -101,48 +101,90 @@ bool ContentDataLoader::LoadMapData(const std::string_view& _Path, std::vector<s
         _MapLoad.clear();
     }
 
-    std::ifstream OpenStream;
-    OpenStream.open(_Path.data(), std::ios_base::in);
+    if (0 < _MapDir.size())
+    {
+        for (size_t y = 0; y < _MapDir.size(); y++)
+        {
+            _MapDir[y].clear();
+        }
 
+        _MapDir.clear();
+    }
 
-    if (false == OpenStream.is_open())
+    std::ifstream OpenMapStream;
+    OpenMapStream.open(_Path.data(), std::ios_base::in);
+
+    if (false == OpenMapStream.is_open())
     {
         MsgAssert("맵 데이터를 불러오는데 실패했습니다.");
         return false;
     }
 
-    std::string LineString;
-    std::string PosString;
+    std::string DataLineString;
+    std::string DataPosString;
 
-    int IndexY = 0;
-    while (std::getline(OpenStream, LineString))
+    int DataIndexY = 0;
+    while (std::getline(OpenMapStream, DataLineString))
     {
-        std::stringstream LineStream(LineString);
+        std::stringstream LineStream(DataLineString);
         _MapLoad.push_back(std::vector<int>());
 
-        while (std::getline(LineStream, PosString, ','))
+        while (std::getline(LineStream, DataPosString, ','))
         {
-            _MapLoad[IndexY].push_back(std::stoi(PosString));
+            _MapLoad[DataIndexY].push_back(std::stoi(DataPosString));
         }
 
-        ++IndexY;
+        ++DataIndexY;
     }
 
-    OpenStream.close();
+    OpenMapStream.close();
+
+    std::ifstream OpenDirStream;
+
+    std::string DirPath = _Path.data();
+    DirPath += "_Dir";
+    OpenDirStream.open(DirPath, std::ios_base::in);
+
+    if (false == OpenDirStream.is_open())
+    {
+        MsgAssert("맵 데이터를 불러오는데 실패했습니다.");
+        return false;
+    }
+
+    std::string DirLineString;
+    std::string DirPosString;
+
+    int DirIndexY = 0;
+    while (std::getline(OpenDirStream, DirLineString))
+    {
+        std::stringstream LineStream(DirLineString);
+        _MapDir.push_back(std::vector<int>());
+
+        while (std::getline(LineStream, DirPosString, ','))
+        {
+            _MapDir[DirIndexY].push_back(std::stoi(DirPosString));
+        }
+
+        ++DirIndexY;
+    }
+
+    OpenDirStream.close();
+
+
     return true;
 }
 
-bool ContentDataLoader::SaveMapData(const std::string_view& _Path, const std::vector<std::vector<int>>& _MapData)
+bool ContentDataLoader::SaveMapData(const std::string_view& _Path, const std::vector<std::vector<int>>& _MapData, const std::vector<std::vector<int>>& _MapDir)
 {
     if ("" == _Path)
     {
         return false;
     }
 
-    std::ofstream SaveStream;
-    SaveStream.open(_Path.data());
+    std::ofstream MapSaveStream;
+    MapSaveStream.open(_Path.data());
 
-    if (false == SaveStream.is_open())
+    if (false == MapSaveStream.is_open())
     {
         MsgAssert("맵 데이터를 저장하는데 실패했습니다.");
         return false;
@@ -152,18 +194,49 @@ bool ContentDataLoader::SaveMapData(const std::string_view& _Path, const std::ve
     {
         for (size_t x = 0; x < _MapData[y].size(); x++)
         {
-            SaveStream << _MapData[y][x];
+            MapSaveStream << _MapData[y][x];
 
             if (_MapData[y].size() - 1 != x)
             {
-                SaveStream << ",";
+                MapSaveStream << ",";
             }
         }
 
-        SaveStream << "\n";
+        MapSaveStream << "\n";
     }
 
-    SaveStream.close();
+    MapSaveStream.close();
+
+    std::ofstream DirSaveStream;
+
+    std::string DirPath = _Path.data();
+    DirPath += "_Dir";
+
+    DirSaveStream.open(DirPath);
+
+    if (false == DirSaveStream.is_open())
+    {
+        MsgAssert("맵 데이터를 저장하는데 실패했습니다.");
+        return false;
+    }
+
+    for (size_t y = 0; y < _MapDir.size(); y++)
+    {
+        for (size_t x = 0; x < _MapDir[y].size(); x++)
+        {
+            DirSaveStream << _MapDir[y][x];
+
+            if (_MapDir[y].size() - 1 != x)
+            {
+                DirSaveStream << ",";
+            }
+        }
+
+        DirSaveStream << "\n";
+    }
+
+    DirSaveStream.close();
+
     return true;
 }
 
@@ -246,11 +319,11 @@ bool ContentDataLoader::LoadActorDataBase(const std::string_view& _Path, std::ma
         {
             LoadData.RenderType = ACTOR_RENDER_TYPE::TILE;
         }
-        else if ("STATIC")
+        else if ("STATIC" == ReadData)
         {
             LoadData.RenderType = ACTOR_RENDER_TYPE::STATIC;
         }
-        else if ("DYNAMIC")
+        else if ("DYNAMIC" == ReadData)
         {
             LoadData.RenderType = ACTOR_RENDER_TYPE::DYNAMIC;
         }

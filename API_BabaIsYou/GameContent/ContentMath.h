@@ -26,6 +26,12 @@ public:
 	{
 	}
 
+	int2(size_t _x, size_t _y) :
+		x(static_cast<int>(_x)),
+		y(static_cast<int>(_y))
+	{
+	}
+
 	int2 operator-() const
 	{
 		return int2{-x, -y};

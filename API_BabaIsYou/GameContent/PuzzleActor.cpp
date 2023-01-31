@@ -489,7 +489,7 @@ void PuzzleActor::Update(float _DT)
 	}
 }
 
-void PuzzleActor::LoadData(int _Actor, bool _IsInit)
+void PuzzleActor::LoadData(int _Actor, int2 _Dir, bool _IsInit)
 {
 	const ActorData* LoadDB = ContentDataBase::GetInst()->GetData(_Actor);
 
@@ -553,6 +553,7 @@ void PuzzleActor::LoadData(int _Actor, bool _IsInit)
 	ActorType = LoadDB->ActorType;
 	RenderType = LoadDB->RenderType;
 	ArrowDefine = LoadDB->ArrowDefine;
+	MoveDir = _Dir;
 
 	mapActorDatas[ActorEnum][ActorKey] = this;
 
@@ -610,9 +611,37 @@ void PuzzleActor::LoadData(int _Actor, bool _IsInit)
 	default:
 		break;
 	}
-
+	GetWiggleRender()->SetAnimDir(MoveDir);
 	GetWiggleRender()->ActiveWiggle();
-	GetWiggleRender()->SetAnimDir(int2::Right);
+}
+
+void PuzzleActor::LoadData(int _Actor, DIR_FLAG _Dir, bool _IsInit)
+{
+	int2 InitDir = int2::Zero;
+
+	if (DIR_FLAG::UP == _Dir)
+	{
+		InitDir = int2::Up;
+	}
+	else if (DIR_FLAG::DOWN == _Dir)
+	{
+		InitDir = int2::Down;
+	}
+	else if (DIR_FLAG::LEFT == _Dir)
+	{
+		InitDir = int2::Left;
+	}
+	else if (DIR_FLAG::RIGHT == _Dir)
+	{
+		InitDir = int2::Right;
+	}
+	else
+	{
+		MsgAssert("잘못된 방향으로 PuzzleActor를 초기화하려 했습니다");
+		return;
+	}
+
+	LoadData(_Actor, InitDir, _IsInit);
 }
 
 void PuzzleActor::RuleCheck()
@@ -738,6 +767,11 @@ int2 PuzzleActor::GetGridPos() const
 	return GridPos;
 }
 
+int2 PuzzleActor::GetMoveDir() const
+{
+	return MoveDir;
+}
+
 void PuzzleActor::Undo()
 {
 	if (0 >= vecBehaviorBuffer.size())
@@ -777,7 +811,7 @@ void PuzzleActor::Undo()
 			UndoRemoveDefine(static_cast<ACTOR_DEFINE>(vecUndos[i].Value));
 			break;
 		case BEHAVIOR::CHANGE_INFO:
-			LoadData(vecUndos[i].Value, true);
+			LoadData(vecUndos[i].Value, MoveDir, true);
 			break;
 		default:
 			MsgAssert("잘못된 Behavior Type 입니다.");

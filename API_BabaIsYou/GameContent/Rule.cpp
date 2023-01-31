@@ -179,7 +179,7 @@ void Rule::CheckRule(PuzzleActor* _SubjectActor, PuzzleActor* _VerbActor, Puzzle
 		{
 			for (const std::pair<int, PuzzleActor*>& Data : mapSubjectActors)
 			{
-				Data.second->LoadData(_DefineActor->ArrowEnum, false);
+				Data.second->LoadData(_DefineActor->ArrowEnum, Data.second->GetMoveDir(), false);
 			}
 		}
 

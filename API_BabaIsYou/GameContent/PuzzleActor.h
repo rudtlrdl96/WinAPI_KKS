@@ -99,7 +99,8 @@ public:
 	PuzzleActor& operator=(const PuzzleActor& _Other) = delete;
 	PuzzleActor& operator=(PuzzleActor&& _Other) noexcept = delete;
 
-	void LoadData(int _Actor, bool _IsInit);
+	void LoadData(int _Actor, int2 _Dir, bool _IsInit);
+	void LoadData(int _Actor, DIR_FLAG _Dir, bool _IsInit);
 	void RuleCheck();
 	void ResetValues();
 	void SetGrid(const int2& _Pos);
@@ -112,6 +113,7 @@ public:
 
 	ACTOR_TYPE GetActorType() const;
 	int2 GetGridPos() const;
+	int2 GetMoveDir() const;
 
 protected:
 	void Start() override;

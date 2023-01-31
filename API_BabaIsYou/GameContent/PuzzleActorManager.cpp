@@ -151,8 +151,9 @@ void PuzzleActorManager::LoadData(const std::string_view& _PuzzleName)
 	Dir.Move("Map");
 
 	std::vector<std::vector<int>> LoadData;
+	std::vector<std::vector<int>> LoadDir;
 	
-	if (false == ContentDataLoader::LoadMapData(Dir.GetPlusFileName(_PuzzleName).GetPathToString(), LoadData))
+	if (false == ContentDataLoader::LoadMapData(Dir.GetPlusFileName(_PuzzleName).GetPathToString(), LoadData, LoadDir))
 	{
 		MsgAssert("맵 데이터를 불러오는데 실패했습니다.");
 		return;
@@ -183,7 +184,7 @@ void PuzzleActorManager::LoadData(const std::string_view& _PuzzleName)
 				}
 
 				ActorData->ResetValues();
-				ActorData->LoadData(LoadData[y][x], true);
+				ActorData->LoadData(LoadData[y][x], static_cast<DIR_FLAG>(LoadDir[y][x]), true);
 				ActorData->On();
 				ActorData->SetGrid({static_cast<int>(x), static_cast<int>(y)});
 			}

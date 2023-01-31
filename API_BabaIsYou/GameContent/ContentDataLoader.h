@@ -10,8 +10,8 @@ class ContentDataLoader
 public:
 	static std::string GetOpenFilePath();
 	static std::string GetSaveFilePath();
-	static bool LoadMapData(const std::string_view& _Path, std::vector<std::vector<int>>& _MapLoad);
-	static bool SaveMapData(const std::string_view& _Path, const std::vector<std::vector<int>>& _MapData);
+	static bool LoadMapData(const std::string_view& _Path, std::vector<std::vector<int>>& _MapLoad, std::vector<std::vector<int>>& _MapDir);
+	static bool SaveMapData(const std::string_view& _Path, const std::vector<std::vector<int>>& _MapData, const std::vector<std::vector<int>>& _MapDir);
 	static bool LoadActorDataBase(const std::string_view& _Path, std::map<int, ActorData>& _mapActorDatas);
 protected:
 

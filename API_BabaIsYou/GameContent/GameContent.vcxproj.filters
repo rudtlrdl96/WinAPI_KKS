@@ -141,9 +141,6 @@
     <ClInclude Include="PalletActor.h">
       <Filter>01.Actor\UIActor\MapTool</Filter>
     </ClInclude>
-    <ClInclude Include="MapToolGridData.h">
-      <Filter>01.Actor\UIActor\MapTool</Filter>
-    </ClInclude>
     <ClInclude Include="WorldMapActor.h">
       <Filter>01.Actor\UIActor\WorldMapLevel</Filter>
     </ClInclude>
@@ -255,9 +252,6 @@
       <Filter>01.Actor\UIActor\MapTool</Filter>
     </ClCompile>
     <ClCompile Include="PalletActor.cpp">
-      <Filter>01.Actor\UIActor\MapTool</Filter>
-    </ClCompile>
-    <ClCompile Include="MapToolGridData.cpp">
       <Filter>01.Actor\UIActor\MapTool</Filter>
     </ClCompile>
     <ClCompile Include="WorldMapActor.cpp">

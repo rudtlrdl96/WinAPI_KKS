@@ -30,6 +30,14 @@ public:
 		return IsUpValue;
 	}
 
+	inline void ButtonOn()
+	{
+		IsUpValue = false;
+		IsClickValue = false;
+		IsOverlapValue = false;
+		On();
+	}
+
 	inline void ButtonOff()
 	{
 		Off();

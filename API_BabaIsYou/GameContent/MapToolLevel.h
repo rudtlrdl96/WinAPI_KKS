@@ -8,7 +8,7 @@ class ButtonUI;
 class BlackBackUI;
 class PalletActor;
 class GridActor;
-class MapToolGridData;
+class WiggleMapToolActor;
 class MapToolLevel : public GameEngineLevel
 {
 private:
@@ -52,9 +52,11 @@ private:
 
 	MAPTOOL_BRUSH BrushType = MAPTOOL_BRUSH::NONE;
 	int2 MapSize = int2::Zero;
-	std::vector<std::vector<MapToolGridData*>> vecMapDatas;
+	std::vector<std::vector<WiggleMapToolActor*>> vecMapDatas;
 
-	MapToolGridData* SelectGrid();
+	float SaveLoadWaitTime = 0.0f;
+
+	WiggleMapToolActor* SelectGrid();
 	void SelectBrush(MAPTOOL_BRUSH _Brush);
 	void DrawMap();
 	void EraseMap();
@@ -69,4 +71,9 @@ private:
 	void ActivePalletButton();
 	void DisableMainButton();
 	void DisablePalletButton();
+
+	void TileCheck(const int2& _Pos);
+	int GetNeighborFlagKey(const int2& _Pos);
+	bool IsMapOver(const int2& _Pos);
+	bool IsEqulsEnum(const int2& _Pos1, const int2& _Pos2);
 };
