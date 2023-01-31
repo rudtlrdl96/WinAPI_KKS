@@ -75,6 +75,7 @@ public:
 	void SetTileIndex(int _Index);
 	void SetDirInterval(size_t _DirInterval);
 	void SetAnimDir(const int2& _Dir);
+	void SetScale(const float4& _Scale);
 
 	void PrevAnim();
 	void NextAnim();

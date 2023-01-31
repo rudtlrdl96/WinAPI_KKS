@@ -4,6 +4,7 @@
 #include <string_view>
 #include <GameEngineCore/GameEngineActor.h>
 
+class TextUI;
 class StringUI : public GameEngineActor
 {
 public:
@@ -15,7 +16,7 @@ public:
 	StringUI& operator=(const StringUI& _Other) = delete;
 	StringUI& operator=(StringUI&& _Other) noexcept = delete;
 
-	void WriteText(const std::string_view& _Text);
+	virtual void WriteText(const std::string_view& _Text);
 	
 	inline void SetFontSize(const float4& _FontSize)
 	{
@@ -27,10 +28,27 @@ public:
 		return FontSizeValue;
 	}
 
-protected:
-	virtual GameEngineActor* CreateTextActor(char _Text);
+	inline void SetFontInterval(const float4& _FontInterval)
+	{
+		FontInterval = _FontInterval;
+	}
 
-	std::vector<GameEngineActor*> vecTextActors;
+	inline float4 GetFontInterval()
+	{
+		return FontInterval;
+	}
+
+	void StringOn();
+	void StringOff();
+
+protected:
+
 private:
+	std::vector<TextUI*> vecTextActors;
+	int ActiveActorCount = 0;
+
 	float4 FontSizeValue = float4::Zero;
+	float4 FontInterval = float4::Zero;
+
+	virtual TextUI* CreateTextActor(char _Text);
 };

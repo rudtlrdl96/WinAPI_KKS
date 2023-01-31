@@ -1,6 +1,10 @@
 #pragma once
+#include <vector>
+#include <string>
+#include <string_view>
 #include "StringUI.h"
 
+class WiggleTextUI;
 class WiggleStringUI : public StringUI
 {
 public:
@@ -12,9 +16,12 @@ public:
 	WiggleStringUI& operator=(const WiggleStringUI& _Other) = delete;
 	WiggleStringUI& operator=(WiggleStringUI&& _Other) noexcept = delete;
 
+	void WriteText(const std::string_view& _Text) override;
 protected:
-	GameEngineActor* CreateTextActor(char _Text) override;
 
 private:
+	std::vector<WiggleTextUI*> vecTextActors;
+	int ActiveActorCount = 0;
 
+	WiggleTextUI* CreateWiggleTextActor(char _Text);
 };

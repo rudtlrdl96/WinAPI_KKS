@@ -13,6 +13,8 @@
 #include "WorldMapActor.h"
 #include "PuzzleLevel.h"
 #include "WorldMapSelect.h"
+#include "StringUI.h"
+#include "WiggleStringUI.h"
 
 WorldMapLevel::WorldMapLevel()
 {
@@ -39,6 +41,11 @@ void WorldMapLevel::Loading()
 	WorldMapFadeActor = CreateActor<FadeUI>();
 	CreateActor<MapBackgroundUI>();
 	CreateActor<GrayBackUI>();
+	WiggleStringUI* TextText = CreateActor<WiggleStringUI>();
+	TextText->SetPos({ 10, 20 });
+	TextText->SetFontSize({ 20, 20 });
+	TextText->SetFontInterval({10, 17});
+	TextText->WriteText("Hello World 3232\nHello Game 1234");
 
 	WorldMapSelectActor = CreateActor<WorldMapSelect>();
 

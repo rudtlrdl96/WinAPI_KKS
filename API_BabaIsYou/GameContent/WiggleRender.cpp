@@ -144,6 +144,11 @@ void WiggleRender::SetAnimDir(const int2& _Dir)
 	SetRenderIndex();
 }
 
+void WiggleRender::SetScale(const float4& _Scale)
+{
+	Render->SetScale(_Scale);
+}
+
 void WiggleRender::PrevAnim()
 {
 	--CurAnimationIndex;

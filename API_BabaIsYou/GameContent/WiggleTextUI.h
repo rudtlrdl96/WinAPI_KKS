@@ -1,7 +1,7 @@
 #pragma once
+#include "WiggleActor.h"
 
-
-class WiggleTextUI
+class WiggleTextUI : public WiggleActor
 {
 public:
 	WiggleTextUI();
@@ -12,8 +12,10 @@ public:
 	WiggleTextUI& operator=(const WiggleTextUI& _Other) = delete;
 	WiggleTextUI& operator=(WiggleTextUI&& _Other) noexcept = delete;
 
+	void SetText(char _Text);
+	void SetScale(const float4& _Scale);
 protected:
+	void Start() override;
 
 private:
-
 };

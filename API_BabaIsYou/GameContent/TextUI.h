@@ -1,7 +1,8 @@
 #pragma once
+#include <GameEngineCore/GameEngineActor.h>
 
-
-class TextUI
+class GameEngineRender;
+class TextUI : public GameEngineActor
 {
 public:
 	TextUI();
@@ -12,8 +13,10 @@ public:
 	TextUI& operator=(const TextUI& _Other) = delete;
 	TextUI& operator=(TextUI&& _Other) noexcept = delete;
 
+	void SetText(char _Text);
+	void SetScale(const float4& _Scale);
 protected:
-
+	void Start() override;
 private:
-
+	GameEngineRender* TextRender = nullptr;
 };

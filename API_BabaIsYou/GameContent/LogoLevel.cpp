@@ -37,6 +37,8 @@ void LogoLevel::Loading()
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("Background_Black.BMP"));
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("FadeCircle.BMP"));
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("FadeAnim.BMP"))->Cut(1, 35);
+	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("Text.BMP"))->Cut(37, 1);
+	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("WiggleText.BMP"))->Cut(37, 3);
 
 	LogoFadeActor = CreateActor<FadeUI>(1);
 	CreateActor<LogoUI>(0);

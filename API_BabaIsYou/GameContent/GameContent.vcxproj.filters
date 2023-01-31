@@ -159,7 +159,9 @@
     <ClInclude Include="TextUI.h">
       <Filter>01.Actor\UIActor\Defalut</Filter>
     </ClInclude>
-    <ClInclude Include="WiggleTextUI.h" />
+    <ClInclude Include="WiggleTextUI.h">
+      <Filter>01.Actor\UIActor\Defalut</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GridActorManager.cpp">
@@ -270,6 +272,8 @@
     <ClCompile Include="TextUI.cpp">
       <Filter>01.Actor\UIActor\Defalut</Filter>
     </ClCompile>
-    <ClCompile Include="WiggleTextUI.cpp" />
+    <ClCompile Include="WiggleTextUI.cpp">
+      <Filter>01.Actor\UIActor\Defalut</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
