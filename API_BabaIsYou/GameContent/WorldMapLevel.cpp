@@ -14,6 +14,7 @@
 #include "PuzzleLevel.h"
 #include "WorldMapSelect.h"
 #include "StringUI.h"
+#include "WiggleMapToolActor.h"
 
 WorldMapLevel::WorldMapLevel()
 {
@@ -46,12 +47,24 @@ void WorldMapLevel::Loading()
 	InfoStringUI->SetFontInterval({13, 17});
 
 	{
-		//GridActor* BaBaText = CreateActor<GridActor>();
-		//GridActor* IsText1  = CreateActor<GridActor>();
-		//GridActor* YouText  = CreateActor<GridActor>();
-		//GridActor* FlagText = CreateActor<GridActor>();
-		//GridActor* IsText2  = CreateActor<GridActor>();
-		//GridActor* WinText  = CreateActor<GridActor>();
+		WiggleMapToolActor* BaBaText = CreateActor<WiggleMapToolActor>();
+		BaBaText->SetRender("BABA_TEXT", DIR_FLAG::RIGHT);
+		BaBaText->SetPos({ 1149, 605 });
+		WiggleMapToolActor* IsText1  = CreateActor<WiggleMapToolActor>();
+		IsText1->SetRender("IS", DIR_FLAG::RIGHT);
+		IsText1->SetPos({ 1182, 605 });
+		WiggleMapToolActor* YouText  = CreateActor<WiggleMapToolActor>();
+		YouText->SetRender("YOU", DIR_FLAG::RIGHT);
+		YouText->SetPos({ 1215, 605 });
+		WiggleMapToolActor* FlagText = CreateActor<WiggleMapToolActor>();
+		FlagText->SetRender("FLAG_TEXT", DIR_FLAG::RIGHT);
+		FlagText->SetPos({ 1149, 665 });
+		WiggleMapToolActor* IsText2  = CreateActor<WiggleMapToolActor>();
+		IsText2->SetRender("IS", DIR_FLAG::RIGHT);
+		IsText2->SetPos({ 1182, 665 });
+		WiggleMapToolActor* WinText  = CreateActor<WiggleMapToolActor>();
+		WinText->SetRender("WIN", DIR_FLAG::RIGHT);
+		WinText->SetPos({ 1215, 665 });
 	}
 
 	WorldMapSelectActor = CreateActor<WorldMapSelect>();

@@ -23,12 +23,12 @@ void ContentCore::Start()
 
 	CreateLevel<LogoLevel>("Logo");
 	CreateLevel<TitleLevel>("Title");
-	CreateLevel<WorldMapLevel>("Worldmap");
 	CreateLevel<PuzzleLevel>("Puzzle");
+	CreateLevel<WorldMapLevel>("Worldmap");
 	CreateLevel<EndingLevel>("Ending");
 	CreateLevel<MapToolLevel>("MapTool");
 
-	ChangeLevel("MapTool");
+	ChangeLevel("Worldmap");
 }
 
 void ContentCore::Update()
