@@ -1,10 +1,20 @@
 #pragma once
+#include <vector>
 #include <GameEngineCore/GameEngineLevel.h>
 
 class FadeUI;
 class ButtonUI;
+class WiggleMapToolActor;
 class TitleLevel : public GameEngineLevel
 {
+private:
+	enum TITLE_BTUTTON
+	{
+		TB_GAME,
+		TB_MAPTOOL,
+		TB_EXIT,
+		TB_COUNT
+	};
 public:
 	TitleLevel();
 	~TitleLevel();
@@ -21,9 +31,14 @@ protected:
 	void LevelChangeStart(GameEngineLevel* _PrevLevel) override;
 	void LevelChangeEnd(GameEngineLevel* _NextLevel) override {}
 private:
+	std::vector<ButtonUI*> vecTitleButtons;
+	
+	WiggleMapToolActor* ButtonBaba = nullptr;
 	FadeUI* TitleFadeActor = nullptr;
+	int SelectButton = 0;
 
-	ButtonUI* GameStartButton = nullptr;
-	ButtonUI* MapToolButton = nullptr;
-	ButtonUI* ExitButton = nullptr;
+	void ButtonUp();
+	void ButtonDown();
+	void ButtonUse();
+	void BaBaSetPos();
 };

@@ -11,10 +11,12 @@
 class GameEngineCore;
 class GameEngineActor;
 class GameEngineRender;
+class GameEngineCollision;
 class GameEngineLevel : public GameEngineObject
 {
 	friend GameEngineCore;
 	friend GameEngineRender;
+	friend GameEngineCollision;
 
 public:
 	// constrcuter destructer
@@ -32,6 +34,14 @@ public:
 	/// </summary>
 	/// <typeparam name="ActorType"> GameEngineActor를 상속받은 클래스 타입 </typeparam>
 	/// <param name="_Order"> Actor의 업데이트 순서 숫자가 작을수록 먼저 업데이트 됩니다. </param>
+	/// 
+
+	template<typename ActorType, typename EnumType>
+	ActorType* CreateActor(EnumType _Order)
+	{
+		return CreateActor<ActorType>(static_cast<int>(_Order));
+	}
+
 	template<typename ActorType>
 	ActorType* CreateActor(int _Order = 0)
 	{
@@ -89,6 +99,12 @@ public:
 		return Result;
 	}
 
+	template<typename EnumType>
+	std::vector<GameEngineActor*> GetActors(EnumType _GroupIndex)
+	{
+		return GetActors(static_cast<int>(_GroupIndex));
+	}
+
 	std::vector<GameEngineActor*> GetActors(int _GroupIndex)
 	{
 		std::vector<GameEngineActor*> Result;
@@ -108,6 +124,7 @@ public:
 protected:
 	virtual void Loading() = 0;
 	virtual void Update(float _DeltaTime) = 0;
+	
 	// 내가 이제 다른 레벨로 교체된다.
 	virtual void LevelChangeEnd(GameEngineLevel* _NextLevel) = 0;
 	// 내가 이제 새로운 눈에 보이는 레벨이 될거다.
@@ -132,9 +149,12 @@ private:
 	void ActorStart(GameEngineActor* _Actor, int _Order);
 
 	std::map<int, std::list<GameEngineRender*>> Renders;
-
 	void PushRender(GameEngineRender* _Render);
 
+	std::map<int, std::list<GameEngineCollision*>> Collisions;
+	void PushCollision(GameEngineCollision* _Collision);
 
+	// 엔진수준의 기능이기 때문에 private으로 둔다.
+	void Release();
 };
 

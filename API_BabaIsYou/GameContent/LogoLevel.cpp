@@ -8,8 +8,7 @@
 #include "FadeUI.h"
 #include "BlackBackUI.h"
 #include "ContentFunc.h"
-
-#include "ContentDataLoader.h"
+#include "ContentDataBase.h"
 
 LogoLevel::LogoLevel()
 {
@@ -33,12 +32,16 @@ void LogoLevel::Loading()
 	Dir.MoveParent();
 	Dir.Move("Defalut");
 
+	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("actor.BMP"))->Cut(24, 40);
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("Background_Gray.BMP"));
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("Background_Black.BMP"));
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("FadeCircle.BMP"));
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("FadeAnim.BMP"))->Cut(1, 35);
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("Text.BMP"))->Cut(38, 1);
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("WiggleText.BMP"))->Cut(37, 3);
+
+
+	ContentDataBase::GetInst()->InitDataBase();
 
 	LogoFadeActor = CreateActor<FadeUI>(1);
 	CreateActor<LogoUI>(0);

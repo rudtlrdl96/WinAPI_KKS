@@ -1,6 +1,7 @@
 #include "GameEngineLevel.h"
 #include "GameEngineActor.h"
 #include "GameEngineRender.h"
+#include "GameEngineCollision.h"
 #include <GameEngineBase/GameEngineDebug.h>
 
 GameEngineLevel::GameEngineLevel() 
@@ -87,6 +88,94 @@ void GameEngineLevel::ActorsUpdate(float _DeltaTime)
 	}
 }
 
+void GameEngineLevel::Release()
+{
+	{ // 콜리전 삭제
+		std::map<int, std::list<GameEngineCollision*>>::iterator GroupStartIter = Collisions.begin();
+		std::map<int, std::list<GameEngineCollision*>>::iterator GroupEndIter = Collisions.end();
+
+		for (; GroupStartIter != GroupEndIter; ++GroupStartIter)
+		{
+			std::list<GameEngineCollision*>& CollisionList = GroupStartIter->second;
+
+			std::list<GameEngineCollision*>::iterator CollisionIterStart = CollisionList.begin();
+			std::list<GameEngineCollision*>::iterator CollisionIterEnd = CollisionList.end();
+
+			for (; CollisionIterStart != CollisionIterEnd; )
+			{
+				GameEngineCollision* ReleaseCollision = *CollisionIterStart;
+
+				// Actors.erase()
+				if (nullptr != ReleaseCollision && false == ReleaseCollision->IsDeath())
+				{
+					++CollisionIterStart;
+					continue;
+				}
+
+				CollisionIterStart = CollisionList.erase(CollisionIterStart);
+			}
+		}
+	}
+
+	{ // 랜더러만 삭제
+		std::map<int, std::list<GameEngineRender*>>::iterator GroupStartIter = Renders.begin();
+		std::map<int, std::list<GameEngineRender*>>::iterator GroupEndIter = Renders.end();
+
+		for (; GroupStartIter != GroupEndIter; ++GroupStartIter)
+		{
+			std::list<GameEngineRender*>& RenderList = GroupStartIter->second;
+
+			std::list<GameEngineRender*>::iterator RenderIterStart = RenderList.begin();
+			std::list<GameEngineRender*>::iterator RenderIterEnd = RenderList.end();
+
+			for (; RenderIterStart != RenderIterEnd; )
+			{
+				GameEngineRender* ReleaseRender = *RenderIterStart;
+
+				// Actors.erase()
+				if (nullptr != ReleaseRender && false == ReleaseRender->IsDeath())
+				{
+					++RenderIterStart;
+					continue;
+				}
+
+				RenderIterStart = RenderList.erase(RenderIterStart);
+			}
+		}
+	}
+
+	{ // 액터만 삭제
+
+		std::map<int, std::list<GameEngineActor*>>::iterator GroupStartIter = Actors.begin();
+		std::map<int, std::list<GameEngineActor*>>::iterator GroupEndIter = Actors.end();
+
+		for (; GroupStartIter != GroupEndIter; ++GroupStartIter)
+		{
+			std::list<GameEngineActor*>& ActorList = GroupStartIter->second;
+
+			std::list<GameEngineActor*>::iterator ActorIterStart = ActorList.begin();
+			std::list<GameEngineActor*>::iterator ActorIterEnd = ActorList.end();
+
+			for (; ActorIterStart != ActorIterEnd; )
+			{
+				GameEngineActor* ReleaseActor = *ActorIterStart;
+
+				// Actors.erase()
+				if (nullptr != ReleaseActor && false == ReleaseActor->IsDeath())
+				{
+					++ActorIterStart;
+					continue;
+				}
+
+				ActorIterStart = ActorList.erase(ActorIterStart);
+
+				delete ReleaseActor;
+				ReleaseActor = nullptr;
+			}
+		}
+	}
+}
+
 void GameEngineLevel::ActorsRender(float _DeltaTime)
 {
 	{
@@ -142,4 +231,15 @@ void GameEngineLevel::PushRender(GameEngineRender* _Render)
 
 	// 먼저 이미 들어가있을수도 있다.
 	Renders[_Render->GetOrder()].push_back(_Render);
+}
+
+void GameEngineLevel::PushCollision(GameEngineCollision* _Collision)
+{
+	if (nullptr == _Collision)
+	{
+		MsgAssert("nullptr인 충돌체를 충돌 그룹속에 넣으려고 했습니다.");
+	}
+
+	// 먼저 이미 들어가있을수도 있다.
+	Collisions[_Collision->GetOrder()].push_back(_Collision);
 }

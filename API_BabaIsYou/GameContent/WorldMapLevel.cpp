@@ -73,6 +73,7 @@ void WorldMapLevel::Loading()
 	{
 		GameEngineInput::CreateKey("LevelChangeSpace", VK_SPACE);
 		GameEngineInput::CreateKey("LevelChangeEnter", VK_RETURN);
+		GameEngineInput::CreateKey("WorldMapEscape", VK_ESCAPE);
 	}
 
 	MapSize = { 4, 5 };
@@ -122,7 +123,11 @@ void WorldMapLevel::Update(float _DT)
 		return;
 	}
 
-	if (true == GameEngineInput::IsDown("ArrowUp"))
+	if (true == GameEngineInput::IsDown("WorldMapEscape"))
+	{
+		WorldMapFadeActor->Fade(FADE_STATE::FADEIN, ContentFunc::ChangeTitleLevel);
+	}
+	else if (true == GameEngineInput::IsDown("ArrowUp"))
 	{
 		MoveWorldMap(int2::Down);
 	}
