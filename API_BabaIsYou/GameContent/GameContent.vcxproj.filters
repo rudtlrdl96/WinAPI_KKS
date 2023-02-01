@@ -162,6 +162,9 @@
     <ClInclude Include="WiggleMapToolActor.h">
       <Filter>01.Actor\UIActor\MapTool</Filter>
     </ClInclude>
+    <ClInclude Include="WiggleGridActor.h">
+      <Filter>01.Actor\UIActor\MapTool</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PuzzleActorManager.cpp">
@@ -273,6 +276,9 @@
       <Filter>01.Actor\UIActor\Defalut</Filter>
     </ClCompile>
     <ClCompile Include="WiggleMapToolActor.cpp">
+      <Filter>01.Actor\UIActor\MapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="WiggleGridActor.cpp">
       <Filter>01.Actor\UIActor\MapTool</Filter>
     </ClCompile>
   </ItemGroup>

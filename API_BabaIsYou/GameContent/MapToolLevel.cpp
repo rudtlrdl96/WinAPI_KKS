@@ -10,7 +10,7 @@
 #include "BlackBackUI.h"
 #include "PalletActor.h"
 #include "ButtonUI.h"
-#include "WiggleMapToolActor.h"
+#include "WiggleGridActor.h"
 #include "ContentDataLoader.h"
 
 MapToolLevel::MapToolLevel() :
@@ -51,6 +51,10 @@ void MapToolLevel::Loading()
 	if (false == GameEngineInput::IsKey("MapEscape"))
 	{
 		GameEngineInput::CreateKey("MapEscape", VK_ESCAPE);
+		GameEngineInput::CreateKey("TempLeft", VK_LEFT);
+		GameEngineInput::CreateKey("TempRight", VK_RIGHT);
+		GameEngineInput::CreateKey("TempUp", VK_UP);
+		GameEngineInput::CreateKey("TempDown", VK_DOWN);
 	}
 
 	GridBackActor = CreateActor<BlackBackUI>();
@@ -99,24 +103,8 @@ void MapToolLevel::Loading()
 	MapLoadButton->SetImage("MapToolLoad.BMP", { 80, 40 });
 	MapLoadButton->SetPos({ 140, 690 });
 
-	vecMapDatas.reserve(ContentConst::GRID_SIZE_Y);
-
-	for (size_t y = 0; y < vecMapDatas.capacity(); y++)
-	{
-		vecMapDatas.push_back(std::vector<WiggleMapToolActor*>());
-		vecMapDatas[y].reserve(ContentConst::GRID_SIZE_X);
-
-		for (size_t x = 0; x < vecMapDatas[y].capacity(); x++)
-		{
-			vecMapDatas[y].push_back(CreateActor<WiggleMapToolActor>());
-			vecMapDatas[y][x]->SetPos(
-				{(ContentConst::ACTOR_SIZE.x * x) + ContentConst::ACTOR_SIZE.half().x,
-				(ContentConst::ACTOR_SIZE.y * y) + ContentConst::ACTOR_SIZE.half().y});
-			vecMapDatas[y][x]->SetRender(-1, Pallet->GetPalletDir());
-			vecMapDatas[y][x]->Off();
-			vecMapDatas[y][x]->SetGridPos({ x, y });
-		}
-	}
+	WiggleGridActors = CreateActor<WiggleGridActor>();
+	WiggleGridActors->InitGrid(ContentConst::GRID_SIZE);
 
 	ResizeMap({10, 10});
 	SelectBrush(MAPTOOL_BRUSH::PEN);
@@ -172,19 +160,19 @@ void MapToolLevel::Update(float _DT)
 	}
 	else if (true == MapSizeUpButtonX->IsUp())
 	{
-		ResizeMap(MapSize + int2{1, 0});
+		ResizeMap(WiggleGridActors->GetGridSize() + int2{1, 0});
 	}
 	else if (true == MapSizeDownButtonX->IsUp())
 	{
-		ResizeMap(MapSize + int2{ -1, 0 });
+		ResizeMap(WiggleGridActors->GetGridSize() + int2{ -1, 0 });
 	}
 	else if (true == MapSizeUpButtonY->IsUp())
 	{
-		ResizeMap(MapSize + int2{ 0, 1 });
+		ResizeMap(WiggleGridActors->GetGridSize() + int2{ 0, 1 });
 	}
 	else if (true == MapSizeDownButtonY->IsUp())
 	{
-		ResizeMap(MapSize + int2{ 0, -1 });
+		ResizeMap(WiggleGridActors->GetGridSize() + int2{ 0, -1 });
 	}
 	else if (true == MapSaveButton->IsUp())
 	{
@@ -223,7 +211,7 @@ void MapToolLevel::LevelChangeEnd(GameEngineLevel* _NextLevel)
 	
 }
 
-WiggleMapToolActor* MapToolLevel::SelectGrid()
+int2 MapToolLevel::SelectGrid()
 {
 	POINT MousePos = POINT{ 0, 0 };
 	GetCursorPos(&MousePos);
@@ -237,15 +225,7 @@ WiggleMapToolActor* MapToolLevel::SelectGrid()
 	SelectIndex.x = static_cast<int>(MousePos.x / ContentConst::ACTOR_SIZE.x);
 	SelectIndex.y = static_cast<int>(MousePos.y / ContentConst::ACTOR_SIZE.y);
 
-	if (0 > SelectIndex.x || MapSize.x <= SelectIndex.x ||
-		0 > SelectIndex.y || MapSize.y <= SelectIndex.y)
-	{
-		return nullptr;
-	}
-	else
-	{
-		return vecMapDatas[SelectIndex.y][SelectIndex.x];
-	}
+	return SelectIndex;
 }
 
 void MapToolLevel::SelectBrush(MAPTOOL_BRUSH _Brush)
@@ -268,53 +248,26 @@ void MapToolLevel::SelectBrush(MAPTOOL_BRUSH _Brush)
 
 void MapToolLevel::DrawMap()
 {
-	WiggleMapToolActor* SelectData =  SelectGrid();
+	int2 SelectIndex = SelectGrid();
 
-	if (nullptr == SelectData)
+	if (true == WiggleGridActors->IsOver(SelectIndex))
 	{
 		return;
 	}
 
-	SelectData->SetRender(Pallet->GetPenEnum(), Pallet->GetPalletDir());
-	TileCheck(SelectData->GetGridPos());
+	WiggleGridActors->SetRender(SelectIndex, Pallet->GetPenEnum(), Pallet->GetPalletDir());
 }
 
 void MapToolLevel::EraseMap()
 {
-	WiggleMapToolActor* SelectData = SelectGrid();
+	int2 SelectIndex = SelectGrid();
 
-	if (nullptr == SelectData)
+	if (true == WiggleGridActors->IsOver(SelectIndex))
 	{
 		return;
 	}
 
-	SelectData->SetRender(-1, Pallet->GetPalletDir());
-	TileCheck(SelectData->GetGridPos());
-}
-
-void MapToolLevel::DisableMap()
-{
-	for (size_t y = 0; y < vecMapDatas.size(); y++)
-	{
-		for (size_t x = 0; x < vecMapDatas[y].size(); x++)
-		{
-			vecMapDatas[y][x]->Off();
-		}
-	}
-}
-
-void MapToolLevel::ActiveMap()
-{
-	for (size_t y = 0; y < MapSize.y; y++)
-	{
-		for (size_t x = 0; x < MapSize.x; x++)
-		{
-			if (0 <= vecMapDatas[y][x]->GetIndex())
-			{
-				vecMapDatas[y][x]->On();
-			}
-		}
-	}
+	WiggleGridActors->SetRender(SelectIndex, -1, Pallet->GetPalletDir());
 }
 
 void MapToolLevel::ResizeMap(const int2& _MapSize)
@@ -329,22 +282,24 @@ void MapToolLevel::ResizeMap(const int2& _MapSize)
 		return;
 	}
 
-	DisableMap();
-	MapSize = _MapSize;
+	WiggleGridActors->DisableGridActors();
+	WiggleGridActors->SetGridSize(_MapSize);
 
-	float4 TotalGridSize = { ContentConst::ACTOR_SIZE.x * MapSize.x, ContentConst::ACTOR_SIZE.y * MapSize.y };	
+	float4 TotalGridSize = { ContentConst::ACTOR_SIZE.x * _MapSize.x, ContentConst::ACTOR_SIZE.y * _MapSize.y };
 	float4 WindowSize = GameEngineWindow::GetScreenSize();
 	float4 DiffSize = WindowSize - TotalGridSize;
 
 	GridBackActor->SetScale(TotalGridSize);
     SetCameraPos(-DiffSize.half());
 
-	ActiveMap();
+	WiggleGridActors->ActiveGridActors();
 }
 
 
 void MapToolLevel::SaveMap()
 {
+	int2 MapSize = WiggleGridActors->GetGridSize();
+
 	std::vector<std::vector<int>> SaveData;
 	std::vector<std::vector<int>> SaveDir;
 	SaveData.reserve(MapSize.y);
@@ -359,13 +314,13 @@ void MapToolLevel::SaveMap()
 
 		for (size_t x = 0; x < MapSize.x; x++)
 		{
-			SaveData[y].push_back(vecMapDatas[y][x]->GetIndex());
-			SaveDir[y].push_back(vecMapDatas[y][x]->GetDir());
+			SaveData[y].push_back(WiggleGridActors->GetActorEnum({x, y}));
+			SaveDir[y].push_back(WiggleGridActors->GetDir({x, y}));
 		}
 	}
 
 	ContentDataLoader::SaveMapData(ContentDataLoader::GetSaveFilePath(), SaveData, SaveDir);
-	SaveLoadWaitTime = 1.0f;
+	SaveLoadWaitTime = 0.5f;
 }
 
 void MapToolLevel::LoadMap()
@@ -375,24 +330,16 @@ void MapToolLevel::LoadMap()
 	
 	if (true == ContentDataLoader::LoadMapData(ContentDataLoader::GetOpenFilePath(), LoadData, LoadDir))
 	{
-		for (size_t y = 0; y < vecMapDatas.size(); y++)
-		{
-			for (size_t x = 0; x < vecMapDatas[y].size(); x++)
-			{
-				vecMapDatas[y][x]->SetRender(-1, DIR_FLAG::RIGHT);
-				vecMapDatas[y][x]->Off();
-			}
-		}
+		WiggleGridActors->ResetGridActors();
+		ResizeMap({ static_cast<int>(LoadData[0].size()), static_cast<int>(LoadData.size()) });
 
-		MapSize = { static_cast<int>(LoadData[0].size()), static_cast<int>(LoadData.size()) };
-		ResizeMap(MapSize);
+		int2 MapSize = WiggleGridActors->GetGridSize();
 
 		for (size_t y = 0; y < MapSize.y; y++)
 		{
 			for (size_t x = 0; x < MapSize.x; x++)
 			{
-				vecMapDatas[y][x]->On();
-				vecMapDatas[y][x]->SetRender(LoadData[y][x], static_cast<DIR_FLAG>(LoadDir[y][x]));
+				WiggleGridActors->SetRender({x, y}, LoadData[y][x], static_cast<DIR_FLAG>(LoadDir[y][x]));
 			}
 		}
 
@@ -400,7 +347,7 @@ void MapToolLevel::LoadMap()
 		{
 			for (size_t x = 0; x < MapSize.x; x++)
 			{
-				TileCheck({ x, y });
+				WiggleGridActors->TileCheck({ x, y });
 			}
 		}
 	}
@@ -442,93 +389,4 @@ void MapToolLevel::DisableMainButton()
 void MapToolLevel::DisablePalletButton()
 {
 	PalletCloseButton->ButtonOff();
-}
-
-void MapToolLevel::TileCheck(const int2& _Pos)
-{
-	if (true == IsMapOver(_Pos))
-	{
-		return;
-	}
-
-	if (true == vecMapDatas[_Pos.y][_Pos.x]->IsTile())
-	{
-		vecMapDatas[_Pos.y][_Pos.x]->SetTile(GetNeighborFlagKey(_Pos));
-	}
-
-	int2 UpPos = _Pos + int2::Up;
-	if (false == IsMapOver(UpPos) && true == IsEqulsEnum(_Pos, UpPos) && true == vecMapDatas[UpPos.y][UpPos.x]->IsTile())
-	{
-		vecMapDatas[UpPos.y][UpPos.x]->SetTile(GetNeighborFlagKey(UpPos));
-	}
-
-	int2 DownPos = _Pos + int2::Down;
-	if (false == IsMapOver(DownPos) && true == IsEqulsEnum(_Pos, DownPos) && true == vecMapDatas[DownPos.y][DownPos.x]->IsTile())
-	{
-		vecMapDatas[DownPos.y][DownPos.x]->SetTile(GetNeighborFlagKey(DownPos));
-	}
-
-	int2 LeftPos = _Pos + int2::Left;
-	if (false == IsMapOver(LeftPos) && true == IsEqulsEnum(_Pos, LeftPos) && true == vecMapDatas[LeftPos.y][LeftPos.x]->IsTile())
-	{
-		vecMapDatas[LeftPos.y][LeftPos.x]->SetTile(GetNeighborFlagKey(LeftPos));
-	}
-
-	int2 RightPos = _Pos + int2::Right;
-	if (false == IsMapOver(RightPos) && true == IsEqulsEnum(_Pos, RightPos) && true == vecMapDatas[RightPos.y][RightPos.x]->IsTile())
-	{
-		vecMapDatas[RightPos.y][RightPos.x]->SetTile(GetNeighborFlagKey(RightPos));
-	}
-}
-
-int MapToolLevel::GetNeighborFlagKey(const int2& _Pos)
-{
-	int ResultKey = 0;
-
-	int2 UpPos = _Pos + int2::Up;
-	if (false == IsMapOver(UpPos) && true == IsEqulsEnum(_Pos, UpPos))
-	{
-		ResultKey |= DIR_FLAG::UP;
-	}
-
-	int2 DownPos = _Pos + int2::Down;
-	if (false == IsMapOver(DownPos) && true == IsEqulsEnum(_Pos, DownPos))
-	{
-		ResultKey |= DIR_FLAG::DOWN;
-	}
-
-	int2 LeftPos = _Pos + int2::Left;
-	if (false == IsMapOver(LeftPos) && true == IsEqulsEnum(_Pos, LeftPos))
-	{
-		ResultKey |= DIR_FLAG::LEFT;
-	}
-
-	int2 RightPos = _Pos + int2::Right;
-	if (false == IsMapOver(RightPos) && true == IsEqulsEnum(_Pos, RightPos))
-	{
-		ResultKey |= DIR_FLAG::RIGHT;
-	}
-
-	return ResultKey;
-}
-
-bool MapToolLevel::IsMapOver(const int2& _Pos)
-{
-	if (0 > _Pos.x || MapSize.x <= _Pos.x ||
-		0 > _Pos.y || MapSize.y <= _Pos.y)
-	{
-		return true;
-	}
-
-	return false;
-}
-
-bool MapToolLevel::IsEqulsEnum(const int2& _Pos1, const int2& _Pos2)
-{
-	if (true == IsMapOver(_Pos1) || true == IsMapOver(_Pos2))
-	{
-		return false;
-	}
-
-	return vecMapDatas[_Pos1.y][_Pos1.x]->GetIndex() == vecMapDatas[_Pos2.y][_Pos2.x]->GetIndex();
 }
