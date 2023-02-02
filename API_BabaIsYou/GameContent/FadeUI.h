@@ -2,6 +2,7 @@
 #include <GameEngineCore/GameEngineActor.h>
 #include <vector>
 #include <map>
+#include "ContentEnum.h"
 
 enum class FADE_STATE
 {
@@ -23,14 +24,18 @@ public:
 		void (*Func)(void) = nullptr; 
 		float WaitTime = 0.0f;
 		float DelayTime = 0.0f;
+		float ShakeDistance = 0.0f;
+		float ShakeTime = 0.0f;
 
 		std::string WriteTopText = "";
 		float4 TopTextInterval = float4::Zero;
 		float4 TopTextSize = float4::Zero;
+		TEXT_COLOR TopTextColor = TEXT_COLOR::WHITE;
 		
 		std::string WriteMiddleText = "";
 		float4 MiddleTextInterval = float4::Zero;
 		float4 MiddleTextSize = float4::Zero;
+		TEXT_COLOR MiddleTextColor = TEXT_COLOR::WHITE;
 	};
 
 public:

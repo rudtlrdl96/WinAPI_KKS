@@ -47,7 +47,7 @@ public:
 	}
 
 	void PuzzleClear();
-	void InitWorldMapActor(const std::string_view& _PuzzleName, const std::string_view& _PuzzleInfo, size_t PuzzleNumber);
+	void InitWorldMapActor(const std::string_view& _PuzzleName, const std::string_view& _PuzzleInfo, size_t _PuzzleNumber);
 	void InitWorldMapActorLine();
 	void SetTileIndex(const int _Key);
 

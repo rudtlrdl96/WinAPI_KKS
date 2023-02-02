@@ -14,6 +14,7 @@
 #include "PuzzleLevel.h"
 #include "WorldMapSelect.h"
 #include "StringUI.h"
+#include "WiggleStringUI.h"
 #include "WiggleMapToolActor.h"
 
 WorldMapLevel::WorldMapLevel()
@@ -42,10 +43,10 @@ void WorldMapLevel::Loading()
 	CreateActor<MapBackgroundUI>();
 	CreateActor<GrayBackUI>();
 	InfoStringUI = CreateActor<StringUI>();
-	InfoStringUI->SetPos({ 200, 16 });
+	InfoStringUI->SetPos({ 10, 16 });
 	InfoStringUI->SetFontSize({ 28, 28 });
 	InfoStringUI->SetFontInterval({13, 22});
-	InfoStringUI->SetTextOrder(StringUI::TEXT_ORDER::RIGHT);
+	InfoStringUI->SetTextOrder(StringUI::TEXT_ORDER::LEFT);
 
 	{
 		WiggleMapToolActor* BaBaText = CreateActor<WiggleMapToolActor>();

@@ -48,6 +48,12 @@ enum class ACTOR_RENDER_TYPE
 	BELT,
 };
 
+enum class TEXT_COLOR
+{
+	WHITE = 0,
+	PINK = 1
+};
+
 enum class ACTOR_TYPE
 {
 	ACTOR,

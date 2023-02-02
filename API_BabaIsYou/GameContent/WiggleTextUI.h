@@ -1,7 +1,8 @@
 #pragma once
-#include "WiggleActor.h"
+#include "TextUI.h"
 
-class WiggleTextUI : public WiggleActor
+class WiggleRender;
+class WiggleTextUI : public TextUI
 {
 public:
 	WiggleTextUI();
@@ -12,11 +13,13 @@ public:
 	WiggleTextUI& operator=(const WiggleTextUI& _Other) = delete;
 	WiggleTextUI& operator=(WiggleTextUI&& _Other) noexcept = delete;
 
-	void SetText(char _Text);
-	void SetScale(const float4& _Scale);
-	void Init(int _Order);
-protected:
+	void Init(int _Order) override;
+	void SetText(char _Text) override;
+	void SetScale(const float4& _Scale) override;
 
+protected:
+	void Update(float _DT) override;
 private:
-	int Order = 0;
+	WiggleRender* Render = nullptr;
+	float ProgressTime = 0.0f;
 };

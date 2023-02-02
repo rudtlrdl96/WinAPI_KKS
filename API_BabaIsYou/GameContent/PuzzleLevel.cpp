@@ -109,13 +109,16 @@ void PuzzleLevel::LevelChangeStart(GameEngineLevel* _NextLevel)
 {
 	IsExitValue = false;
 	LoadPuzzleData();
-	PuzzleFadeActor->Fade({ .State = FADE_STATE::FADEOUT, .WaitTime = 3.0f,
+	PuzzleFadeActor->Fade({ .State = FADE_STATE::FADEOUT, .WaitTime = 4.0f,
+		.ShakeDistance = 7.0f,
+		.ShakeTime = 0.95f,
 		.WriteTopText = "LEVEL " + std::to_string(LevelNumber),
 		.TopTextInterval = {40, 0},
-		.TopTextSize = {40, 40},
+		.TopTextSize = {35, 35},
+		.TopTextColor = TEXT_COLOR::PINK,
 		.WriteMiddleText = LoadPuzzleInfo,
 		.MiddleTextInterval = {40, 0},
-		.MiddleTextSize = {70, 70},
+		.MiddleTextSize = {80, 80},
 		});
 }
 

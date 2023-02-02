@@ -21,11 +21,11 @@ void WorldMapActor::PuzzleClear()
 	GetWiggleRender()->SetStartIndex(0);
 }
 
-void WorldMapActor::InitWorldMapActor(const std::string_view& _PuzzleName, const std::string_view& _PuzzleInfo, size_t PuzzleNumber)
+void WorldMapActor::InitWorldMapActor(const std::string_view& _PuzzleName, const std::string_view& _PuzzleInfo, size_t _PuzzleNumber)
 {
 	PuzzleName = _PuzzleName;
 	PuzzleInfo = _PuzzleInfo;
-	PuzzleNumber = PuzzleNumber;
+	PuzzleNumber = _PuzzleNumber;
 
 	InitWiggleRender({
 	.FileName = "WorldMapActorBack.BMP",

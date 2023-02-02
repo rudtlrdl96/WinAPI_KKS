@@ -3,6 +3,7 @@
 #include <string>
 #include <string_view>
 #include <GameEngineCore/GameEngineActor.h>
+#include "ContentEnum.h"
 
 class TextUI;
 class StringUI : public GameEngineActor
@@ -23,7 +24,7 @@ public:
 	StringUI& operator=(const StringUI& _Other) = delete;
 	StringUI& operator=(StringUI&& _Other) noexcept = delete;
 
-	virtual void WriteText(const std::string_view& _Text);
+	void WriteText(const std::string_view& _Text);
 	
 	inline void SetFontSize(const float4& _FontSize)
 	{
@@ -58,19 +59,24 @@ public:
 	void StringOn();
 	void StringOff();
 	
-protected:
+	void SetStringColor(TEXT_COLOR _Color);
+	void LerpScaleString(float4 _StartSize, float4 _EndSize, float _Time, bool IsEndOff);
+	void RandShakeString(float _Distance, float _Time);
 
-private:
+protected:
 	std::vector<TextUI*> vecTextActors;
-	int ActiveActorCount = 0;
 	int TextRenderOrder = 0;
 
-	TEXT_ORDER TextOrder = TEXT_ORDER::LEFT;
+	virtual void CreateTextActor(char _Text);
+private:
+	int ActiveActorCount = 0;
 
+
+	TEXT_ORDER TextOrder = TEXT_ORDER::LEFT;
 	float4 FontSizeValue = float4::Zero;
 	float4 FontInterval = float4::Zero;
 
-	TextUI* CreateTextActor(char _Text);
-	void LineOrderX(int _Start, int _End, float _Distance);
+	bool IsLerpEndOff = false;
 
+	void LineOrderX(int _Start, int _End, float _Distance);
 };
