@@ -188,3 +188,8 @@ void WiggleRender::RenderOff()
 {
 	Render->Off();
 }
+
+void WiggleRender::CameraEffectOff()
+{
+	Render->EffectCameraOff();
+}

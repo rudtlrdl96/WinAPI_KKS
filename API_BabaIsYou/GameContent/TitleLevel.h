@@ -4,6 +4,7 @@
 
 class FadeUI;
 class ButtonUI;
+class WiggleGridActor;
 class WiggleMapToolActor;
 class TitleLevel : public GameEngineLevel
 {
@@ -32,7 +33,12 @@ protected:
 	void LevelChangeEnd(GameEngineLevel* _NextLevel) override {}
 private:
 	std::vector<ButtonUI*> vecTitleButtons;
-	
+	WiggleGridActor* BackGroundActors = nullptr;
+
+	std::vector<float4> vecCameraMovePoint;
+	size_t CameraPointindex = 0;
+	float CameraMoveRatio = 0.0f;
+
 	WiggleMapToolActor* ButtonBaba = nullptr;
 	FadeUI* TitleFadeActor = nullptr;
 	int SelectButton = 0;
@@ -41,4 +47,7 @@ private:
 	void ButtonDown();
 	void ButtonUse();
 	void BaBaSetPos();
+
+	void TitleCameraMove(float _DT);
+	float GetCameraPointDistance(size_t _Index);
 };

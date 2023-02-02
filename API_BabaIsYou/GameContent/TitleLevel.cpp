@@ -10,7 +10,11 @@
 #include "BlackBackUI.h"
 #include "ContentFunc.h"
 #include "ButtonUI.h"
+#include "WiggleGridActor.h"
 #include "WiggleMapToolActor.h"
+#include "ContentDataLoader.h"
+#include "ContentConst.h"
+#include "WiggleRender.h"
 
 TitleLevel::TitleLevel()
 {
@@ -38,6 +42,47 @@ void TitleLevel::Loading()
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("StartButton.BMP"))->Cut(1, 2);
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("MapToolButton.BMP"))->Cut(1, 2);
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("ExitButton.BMP"))->Cut(1, 2);
+
+	GameEngineDirectory DataPath;
+
+	DataPath.MoveParentToDirectory("Data");
+	DataPath.Move("Data");
+	DataPath.Move("Map");
+
+	std::vector<std::vector<int>> LoadMapData;
+	std::vector<std::vector<int>> LoadDirData;
+
+	ContentDataLoader::LoadMapData(DataPath.GetPlusFileName("TitleBack").GetPathToString(), LoadMapData, LoadDirData);
+
+	int2 LoadSize = { LoadMapData[0].size(), LoadMapData.size() };
+
+	BackGroundActors = CreateActor<WiggleGridActor>();
+	BackGroundActors->InitGrid(LoadSize);
+
+	for (size_t y = 0; y < LoadMapData.size(); y++)
+	{
+		for (size_t x = 0; x < LoadMapData[y].size(); x++)
+		{
+			BackGroundActors->SetRender({x, y}, LoadMapData[y][x], static_cast<DIR_FLAG>(LoadDirData[y][x]));
+		}
+	}
+
+	vecCameraMovePoint.resize(4);
+
+	vecCameraMovePoint[0] = float4::Zero;
+
+	float4 FirstPoint = float4::Zero;
+	FirstPoint.x += LoadSize.x * ContentConst::ACTOR_SIZE.x - GameEngineWindow::GetScreenSize().x;
+	FirstPoint.y += LoadSize.y * ContentConst::ACTOR_SIZE.y - GameEngineWindow::GetScreenSize().y;
+	vecCameraMovePoint[1] = FirstPoint;
+
+	float4 SecondPoint = float4::Zero;
+	SecondPoint.x += LoadSize.x * ContentConst::ACTOR_SIZE.x - GameEngineWindow::GetScreenSize().x;
+	vecCameraMovePoint[2] = SecondPoint;
+
+	float4 ThirdPoint = float4::Zero;
+	ThirdPoint.y += LoadSize.y * ContentConst::ACTOR_SIZE.y - GameEngineWindow::GetScreenSize().y;
+	vecCameraMovePoint[3] = ThirdPoint;
 
 	TitleFadeActor = CreateActor<FadeUI>();
 	CreateActor<TitleLogoUI>();
@@ -68,6 +113,7 @@ void TitleLevel::Loading()
 
 	ButtonBaba = CreateActor<WiggleMapToolActor>();
 	ButtonBaba->SetRender("BABA", DIR_FLAG::RIGHT);
+	ButtonBaba->GetRender()->CameraEffectOff();
 
 	if (false == GameEngineInput::IsKey("MouseLeft"))
 	{
@@ -82,6 +128,8 @@ void TitleLevel::Loading()
 
 void TitleLevel::Update(float _DT)
 {
+	TitleCameraMove(_DT);
+
 	if (nullptr == GetFocus())
 	{
 		return;
@@ -165,4 +213,37 @@ void TitleLevel::ButtonUse()
 void TitleLevel::BaBaSetPos()
 {
 	ButtonBaba->SetPos(vecTitleButtons[SelectButton]->GetPos() - float4{230.0f, 0.0f});
+}
+
+void TitleLevel::TitleCameraMove(float _DT)
+{
+	size_t NextCameraIndex = CameraPointindex + 1;
+
+	if (vecCameraMovePoint.size() <= NextCameraIndex)
+	{
+		NextCameraIndex = 0;
+	}
+
+	CameraMoveRatio += _DT * ContentConst::TITLE_CAMERA_SPEED / GetCameraPointDistance(CameraPointindex);
+
+	SetCameraPos(float4::LerpClamp(vecCameraMovePoint[CameraPointindex], vecCameraMovePoint[NextCameraIndex], CameraMoveRatio));
+
+	if (1.0f <= CameraMoveRatio)
+	{
+		CameraMoveRatio = 0.0f;
+		++CameraPointindex;
+		CameraPointindex = NextCameraIndex;
+	}
+}
+
+float TitleLevel::GetCameraPointDistance(size_t _Index)
+{
+	size_t NextCameraIndex = CameraPointindex + 1;
+
+	if (vecCameraMovePoint.size() <= NextCameraIndex)
+	{
+		NextCameraIndex = 0;
+	}
+
+	return (vecCameraMovePoint[CameraPointindex] - vecCameraMovePoint[NextCameraIndex]).Size();
 }

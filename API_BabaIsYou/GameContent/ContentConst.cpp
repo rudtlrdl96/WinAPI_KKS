@@ -16,6 +16,7 @@ const float ContentConst::FADE_TIME = 0.5f;
 const float ContentConst::FADE_DELAY = 0.5f;
 const float ContentConst::CONGRATULATION_TIME = 1.2f;
 const float ContentConst::CONGRATULATION_DELAY = 3.0f;
+const float ContentConst::TITLE_CAMERA_SPEED = 40.0f;
 
 const int ContentConst::GRID_SIZE_X = 33;
 const int ContentConst::GRID_SIZE_Y = 18;

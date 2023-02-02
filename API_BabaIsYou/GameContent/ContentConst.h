@@ -14,6 +14,7 @@ public:
 	static const float FADE_DELAY;
 	static const float CONGRATULATION_TIME;
 	static const float CONGRATULATION_DELAY;
+	static const float TITLE_CAMERA_SPEED;
 
 	static const int GRID_SIZE_X;
 	static const int GRID_SIZE_Y;

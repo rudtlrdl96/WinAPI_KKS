@@ -83,6 +83,7 @@ public:
 
 	void RenderOn();
 	void RenderOff();
+	void CameraEffectOff();
 
 protected:
 

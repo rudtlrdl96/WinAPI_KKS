@@ -48,6 +48,11 @@ public:
 		return DirNumber;
 	}
 
+	inline WiggleRender* GetRender() const
+	{
+		return WiggleRenderPtr;
+	}
+
 protected:
 	void Start() override;
 
