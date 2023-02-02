@@ -3,10 +3,12 @@
 #include <GameEnginePlatform/GameEngineWindow.h>
 #include <GameEngineCore/GameEngineResources.h>
 #include <GameEngineCore/GameEngineRender.h>
+#include <GameEngineCore/GameEngineLevel.h>
 
 #include "ContentMath.h"
 #include "ContentEnum.h"
 #include "ContentConst.h"
+#include "StringUI.h"
 
 FadeUI::FadeUI()
 {
@@ -54,70 +56,132 @@ void FadeUI::Start()
 	
 	BoxRender->SetPosition(GameEngineWindow::GetScreenSize().half());
 	BoxRender->SetScale(GameEngineWindow::GetScreenSize());
+	BoxRender->EffectCameraOff();
 	
 	BoxRender->Off();
+
+	TopStringUIRender = GetLevel()->CreateActor<StringUI>();
+	TopStringUIRender->SetTextRenderOrder(static_cast<int>(RENDER_ORDER::FADE_TEXT));
+	TopStringUIRender->SetTextOrder(StringUI::TEXT_ORDER::MIDDLE);
+	TopStringUIRender->SetPos(GameEngineWindow::GetScreenSize().half() - float4{0.0f, 70.0f});
+
+	MiddleStringUIRender = GetLevel()->CreateActor<StringUI>();
+	MiddleStringUIRender->SetTextRenderOrder(static_cast<int>(RENDER_ORDER::FADE_TEXT));
+	MiddleStringUIRender->SetTextOrder(StringUI::TEXT_ORDER::MIDDLE);
+	MiddleStringUIRender->SetPos(GameEngineWindow::GetScreenSize().half());
 }
 
 void FadeUI::Update(float _Time)
 {
-	ProgressTime += _Time;
+	if (true == IsDelay)
+	{
+		ProgressDelayTime += _Time;
 
-	if (ContentConst::FADE_TIME <= ProgressTime)
+		if (ProgressDelayTime >= DelayTime)
+		{
+			IsProgressValue = false;
+			IsDelay = false;
+			FadeRender->Off();
+			BoxRender->Off();
+			Off();
+		}
+
+		return;
+	}
+
+	if (true == IsWait)
+	{
+		ProgressWaitTime += _Time;
+
+		if (ProgressWaitTime >= WaitTime)
+		{
+			IsWait = false;
+			FadeRender->On();
+			BoxRender->Off();
+
+			TopStringUIRender->StringOff();
+			MiddleStringUIRender->StringOff();
+		}
+
+		return;
+	}
+
+	FadeRatio += _Time;
+
+	if (ContentConst::FADE_TIME <= FadeRatio)
 	{
 		switch (State)
 		{
 		case FADE_STATE::FADEIN:
-		{
 			BoxRender->On();
-			DelayTime += _Time;
-
-			if (ContentConst::FADE_DELAY <= DelayTime)
-			{
-				if (nullptr != EndFunction)
-				{
-					EndFunction();
-					EndFunction = nullptr;
-				}
-				IsProgressValue = false;
-			}
-		}
 			break;
-		case FADE_STATE::FADEOUT:
+		}
+
+		if (nullptr != EndFunction)
 		{
-			if (nullptr != EndFunction)
-			{
-				EndFunction();
-				EndFunction = nullptr;
-			}
-			IsProgressValue = false;
-			Off();
+			EndFunction();
+			EndFunction = nullptr;
 		}
-		return;
-		}
+
+		IsDelay = true;
 	}
 
 }
 
-
-void FadeUI::Fade(FADE_STATE _State, void (*_Func)(void))
+void FadeUI::Fade(const FadeParameter& _FadeParameter)
 {
-	State = _State;
+	State = _FadeParameter.State;
 
 	if (FADE_STATE::FADEIN == State)
 	{
 		FadeRender->ChangeAnimation("FadeIn");
+		BoxRender->Off();
 	}
 	else if (FADE_STATE::FADEOUT == State)
 	{
 		FadeRender->ChangeAnimation("FadeOut");
+		BoxRender->On();
 	}
 
 	IsProgressValue = true;
-	EndFunction = _Func;
+	EndFunction = _FadeParameter.Func;
 
-	ProgressTime = 0.0f;
+	WaitTime = _FadeParameter.WaitTime;
+	DelayTime = _FadeParameter.DelayTime;
+
+
+	if ("" == _FadeParameter.WriteTopText)
+	{
+		TopStringUIRender->StringOff();
+	}
+	else
+	{
+		TopStringUIRender->SetFontInterval(_FadeParameter.TopTextInterval);
+		TopStringUIRender->SetFontSize(_FadeParameter.TopTextSize);
+		TopStringUIRender->WriteText(_FadeParameter.WriteTopText);
+		TopStringUIRender->StringOn();
+	}
+
+	if ("" == _FadeParameter.WriteTopText)
+	{
+		MiddleStringUIRender->StringOff();
+	}
+	else 
+	{	
+		MiddleStringUIRender->SetFontInterval(_FadeParameter.MiddleTextInterval);
+		MiddleStringUIRender->SetFontSize(_FadeParameter.MiddleTextSize);
+		MiddleStringUIRender->WriteText(_FadeParameter.WriteMiddleText);
+		MiddleStringUIRender->StringOn();
+	}
+
+	ProgressDelayTime = 0.0f;
+	ProgressWaitTime = 0.0f;
+
+	FadeRatio = 0.0f;
 	DelayTime = 0.0f;
-	BoxRender->Off();
-	FadeRender->On();
+	IsWait = true;
+	IsDelay = false;
+	FadeRender->Off();
+
 	On();
 }

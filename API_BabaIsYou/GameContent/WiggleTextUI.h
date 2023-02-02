@@ -14,8 +14,9 @@ public:
 
 	void SetText(char _Text);
 	void SetScale(const float4& _Scale);
+	void Init(int _Order);
 protected:
-	void Start() override;
 
 private:
+	int Order = 0;
 };

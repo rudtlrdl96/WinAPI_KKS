@@ -52,11 +52,11 @@ void LogoLevel::Update(float _DT)
 {
 	if (false == LogoFadeActor->IsProgress() && true == GameEngineInput::IsAnyKey())
 	{
-		LogoFadeActor->Fade(FADE_STATE::FADEIN, ContentFunc::ChangeTitleLevel);
+		LogoFadeActor->Fade({ .State = FADE_STATE::FADEIN, .Func = ContentFunc::ChangeTitleLevel});
 	}
 }
 
 void LogoLevel::LevelChangeStart(GameEngineLevel* _NextLevel)
 {
-	LogoFadeActor->Fade(FADE_STATE::FADEOUT);
+	LogoFadeActor->Fade({ .State = FADE_STATE::FADEOUT});
 }

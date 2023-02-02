@@ -21,6 +21,7 @@ enum class RENDER_ORDER
 	UIIMAGE,
 	BUTTON,
 	FADE,
+	FADE_TEXT
 };
 
 enum class BEHAVIOR

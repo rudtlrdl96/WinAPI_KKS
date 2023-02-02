@@ -11,9 +11,9 @@ TextUI::~TextUI()
 {
 }
 
-void TextUI::Start()
+void TextUI::Init(int _Order)
 {
-	TextRender = CreateRender("Text.BMP", RENDER_ORDER::TEXTUI);
+	TextRender = CreateRender("Text.BMP", _Order);
 	TextRender->EffectCameraOff();
 	TextRender->SetFrame(0);
 }

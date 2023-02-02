@@ -42,9 +42,10 @@ void WorldMapLevel::Loading()
 	CreateActor<MapBackgroundUI>();
 	CreateActor<GrayBackUI>();
 	InfoStringUI = CreateActor<StringUI>();
-	InfoStringUI->SetPos({ 10, 16 });
+	InfoStringUI->SetPos({ 200, 16 });
 	InfoStringUI->SetFontSize({ 28, 28 });
-	InfoStringUI->SetFontInterval({13, 17});
+	InfoStringUI->SetFontInterval({13, 22});
+	InfoStringUI->SetTextOrder(StringUI::TEXT_ORDER::RIGHT);
 
 	{
 		WiggleMapToolActor* BaBaText = CreateActor<WiggleMapToolActor>();
@@ -125,7 +126,7 @@ void WorldMapLevel::Update(float _DT)
 
 	if (true == GameEngineInput::IsDown("WorldMapEscape"))
 	{
-		WorldMapFadeActor->Fade(FADE_STATE::FADEIN, ContentFunc::ChangeTitleLevel);
+		WorldMapFadeActor->Fade({ .State = FADE_STATE::FADEIN, .Func = ContentFunc::ChangeTitleLevel });
 	}
 	else if (true == GameEngineInput::IsDown("ArrowUp"))
 	{
@@ -146,26 +147,32 @@ void WorldMapLevel::Update(float _DT)
 
 	if (true == GameEngineInput::IsDown("LevelChangeSpace") || true == GameEngineInput::IsDown("LevelChangeEnter"))
 	{
-		if (nullptr == vecWorldMapDatas[SelectPuzzlePos.y][SelectPuzzlePos.x])
+		WorldMapActor* MapActor = vecWorldMapDatas[SelectPuzzlePos.y][SelectPuzzlePos.x];
+
+		if (nullptr == MapActor)
 		{
 			MsgAssert("Nullptr 맵 데이터를 참조하려 했습니다");
 			return;
 		}
 
-		if ("" == vecWorldMapDatas[SelectPuzzlePos.y][SelectPuzzlePos.x]->GetPuzzleName())
+		std::string_view PuzzleName = MapActor->GetPuzzleName();
+
+		if ("" == PuzzleName)
 		{
 			return;
 		}
 
-		PuzzleLevel::SetPuzzleMapName(vecWorldMapDatas[SelectPuzzlePos.y][SelectPuzzlePos.x]->GetPuzzleName());
-		WorldMapFadeActor->Fade(FADE_STATE::FADEIN, ContentFunc::ChangePuzzleLevel);
+		PuzzleLevel::SetPuzzleMapName(PuzzleName);
+		PuzzleLevel::SetPuzzleMapInfo(MapActor->GetPuzzleInfo());
+		PuzzleLevel::SetPuzzleMapLevel(MapActor->GetPuzzleNumber());
+		WorldMapFadeActor->Fade({ .State = FADE_STATE::FADEIN, .Func = ContentFunc::ChangePuzzleLevel });
 	}
 }
 
 
 void WorldMapLevel::LevelChangeStart(GameEngineLevel* _PrevLevel)
 {
-	WorldMapFadeActor->Fade(FADE_STATE::FADEOUT);
+	WorldMapFadeActor->Fade({ .State = FADE_STATE::FADEOUT, .WaitTime = 0.5f });
 }
 
 void WorldMapLevel::MoveWorldMap(const int2& _Move)

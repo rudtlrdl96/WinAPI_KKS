@@ -12,6 +12,7 @@ public:
 	static const float MOVE_SPEED;
 	static const float FADE_TIME;
 	static const float FADE_DELAY;
+	static const float FADE_WRITE_DELAY;
 	static const float CONGRATULATION_TIME;
 	static const float CONGRATULATION_DELAY;
 	static const float TITLE_CAMERA_SPEED;

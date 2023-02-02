@@ -186,7 +186,7 @@ void MapToolLevel::Update(float _DT)
 	}
 	else if (GameEngineInput::IsDown("MapEscape"))
 	{
-		MapToolFadeActor->Fade(FADE_STATE::FADEIN, ContentFunc::ChangeTitleLevel);
+		MapToolFadeActor->Fade({ .State = FADE_STATE::FADEIN, .Func = ContentFunc::ChangeTitleLevel });
 	}
 	else if (GameEngineInput::IsPress("MouseLeft"))
 	{
@@ -203,7 +203,7 @@ void MapToolLevel::Update(float _DT)
 
 void MapToolLevel::LevelChangeStart(GameEngineLevel* _PrevLevel)
 {
-	MapToolFadeActor->Fade(FADE_STATE::FADEOUT);
+	MapToolFadeActor->Fade({ .State = FADE_STATE::FADEOUT, .WaitTime = 0.5f});
 }
 
 void MapToolLevel::LevelChangeEnd(GameEngineLevel* _NextLevel)

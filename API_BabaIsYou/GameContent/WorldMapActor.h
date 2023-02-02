@@ -41,11 +41,17 @@ public:
 		return IsLineValue;
 	}
 
+	inline size_t GetPuzzleNumber() const
+	{
+		return PuzzleNumber;
+	}
+
 	void PuzzleClear();
 	void InitWorldMapActor(const std::string_view& _PuzzleName, const std::string_view& _PuzzleInfo, size_t PuzzleNumber);
 	void InitWorldMapActorLine();
 	void SetTileIndex(const int _Key);
 
+	std::string GetLevelText() const;
 protected:
 
 private:

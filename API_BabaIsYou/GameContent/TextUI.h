@@ -15,8 +15,10 @@ public:
 
 	void SetText(char _Text);
 	void SetScale(const float4& _Scale);
+	void Init(int _Order);
+
 protected:
-	void Start() override;
 private:
 	GameEngineRender* TextRender = nullptr;
+	int Order = 0;
 };

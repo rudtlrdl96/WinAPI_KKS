@@ -19,6 +19,8 @@ public:
 
 	static void PuzzleLevelExit();
 	static void SetPuzzleMapName(const std::string_view& _MapName);
+	static void SetPuzzleMapInfo(const std::string_view& _MapInfo);
+	static void SetPuzzleMapLevel(size_t _Level);
 	void Restart();
 	void LoadPuzzleData();
 
@@ -30,6 +32,8 @@ protected:
 	void LevelChangeEnd(GameEngineLevel* _NextLevel) override;
 private:
 	static std::string LoadPuzzleName;
+	static std::string LoadPuzzleInfo;
+	static size_t LevelNumber;
 
 	FadeUI* PuzzleFadeActor = nullptr;
 	CongratulationsUI* CongratulationActor = nullptr;

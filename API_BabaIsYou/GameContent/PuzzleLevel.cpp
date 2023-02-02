@@ -11,7 +11,10 @@
 #include "ContentFunc.h"
 #include "ContentConst.h"
 
-std::string PuzzleLevel::LoadPuzzleName = "Stage_0_5";
+std::string PuzzleLevel::LoadPuzzleName = "";
+std::string PuzzleLevel::LoadPuzzleInfo = "";
+size_t PuzzleLevel::LevelNumber = 0;
+
 bool PuzzleLevel::IsExitValue = false;
 
 PuzzleLevel::PuzzleLevel()
@@ -32,9 +35,19 @@ void PuzzleLevel::SetPuzzleMapName(const std::string_view& _MapName)
 	LoadPuzzleName = _MapName;
 }
 
+void PuzzleLevel::SetPuzzleMapInfo(const std::string_view& _MapInfo)
+{
+	LoadPuzzleInfo = _MapInfo;
+}
+
+void PuzzleLevel::SetPuzzleMapLevel(size_t _Level)
+{
+	LevelNumber = _Level;
+}
+
 void PuzzleLevel::Restart()
 {
-	PuzzleFadeActor->Fade(FADE_STATE::FADEIN, ContentFunc::ChangePuzzleLevel);
+	PuzzleFadeActor->Fade({ .State = FADE_STATE::FADEIN, .Func = ContentFunc::ChangePuzzleLevel });
 }
 
 void PuzzleLevel::Loading()
@@ -73,7 +86,7 @@ void PuzzleLevel::Update(float _DT)
 {
 	if (false == PuzzleFadeActor->IsProgress() && true == IsExitValue)
 	{
-		PuzzleFadeActor->Fade(FADE_STATE::FADEIN, ContentFunc::ChangeWorldmapLevel);
+		PuzzleFadeActor->Fade({ .State = FADE_STATE::FADEIN, .Func = ContentFunc::ChangeWorldmapLevel });
 	}
 
 	if (true == IsExitValue)
@@ -96,7 +109,14 @@ void PuzzleLevel::LevelChangeStart(GameEngineLevel* _NextLevel)
 {
 	IsExitValue = false;
 	LoadPuzzleData();
-	PuzzleFadeActor->Fade(FADE_STATE::FADEOUT);
+	PuzzleFadeActor->Fade({ .State = FADE_STATE::FADEOUT, .WaitTime = 3.0f,
+		.WriteTopText = "LEVEL " + std::to_string(LevelNumber),
+		.TopTextInterval = {40, 0},
+		.TopTextSize = {40, 40},
+		.WriteMiddleText = LoadPuzzleInfo,
+		.MiddleTextInterval = {40, 0},
+		.MiddleTextSize = {70, 70},
+		});
 }
 
 void PuzzleLevel::LevelChangeEnd(GameEngineLevel* _NextLevel)

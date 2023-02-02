@@ -91,3 +91,9 @@ void WorldMapActor::SetTileIndex(const int _Key)
 
 	MyWiggleRenderPtr->SetTileIndex(ContentConst::GetTile(_Key));
 }
+
+std::string WorldMapActor::GetLevelText() const
+{
+	return "LEVEL  " + std::to_string(PuzzleNumber);
+}
+

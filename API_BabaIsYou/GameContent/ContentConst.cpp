@@ -14,6 +14,7 @@ const float ContentConst::WIGGLE_TIME = 0.33f;
 const float ContentConst::MOVE_SPEED = 9.0f;
 const float ContentConst::FADE_TIME = 0.5f;
 const float ContentConst::FADE_DELAY = 0.5f;
+const float ContentConst::FADE_WRITE_DELAY = 4.0f;
 const float ContentConst::CONGRATULATION_TIME = 1.2f;
 const float ContentConst::CONGRATULATION_DELAY = 3.0f;
 const float ContentConst::TITLE_CAMERA_SPEED = 40.0f;

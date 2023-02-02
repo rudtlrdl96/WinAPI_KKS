@@ -11,7 +11,7 @@ WiggleTextUI::~WiggleTextUI()
 {
 }
 
-void WiggleTextUI::Start()
+void WiggleTextUI::Init(int _Order)
 {
 	InitWiggleRender({
 	.FileName = "WiggleText.BMP",
@@ -19,7 +19,7 @@ void WiggleTextUI::Start()
 	.Scale = {10, 10},
 	.StartIndex = 0,
 	.AnimLength = 1,
-	.Order = static_cast<int>(RENDER_ORDER::TEXTUI),
+	.Order = _Order,
 	.BitmapInterval = 37,
 	.IsUI = true });
 }

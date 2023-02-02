@@ -155,11 +155,11 @@ void TitleLevel::Update(float _DT)
 
 	if (true == vecTitleButtons[TB_GAME]->IsUp())
 	{
-		TitleFadeActor->Fade(FADE_STATE::FADEIN, ContentFunc::ChangeWorldmapLevel);
+		TitleFadeActor->Fade({ .State = FADE_STATE::FADEIN, .Func = ContentFunc::ChangeWorldmapLevel });
 	}
 	else if (true == vecTitleButtons[TB_MAPTOOL]->IsUp())
 	{
-		TitleFadeActor->Fade(FADE_STATE::FADEIN, ContentFunc::ChangeMapToolLevel);
+		TitleFadeActor->Fade({ .State = FADE_STATE::FADEIN, .Func = ContentFunc::ChangeMapToolLevel });
 	}
 	else if (true == vecTitleButtons[TB_EXIT]->IsUp())
 	{
@@ -169,7 +169,7 @@ void TitleLevel::Update(float _DT)
 
 void TitleLevel::LevelChangeStart(GameEngineLevel* _NextLevel)
 {
-	TitleFadeActor->Fade(FADE_STATE::FADEOUT);
+	TitleFadeActor->Fade({ .State = FADE_STATE::FADEOUT, .WaitTime = 0.5f });
 }
 
 void TitleLevel::ButtonUp()
@@ -198,11 +198,11 @@ void TitleLevel::ButtonUse()
 {
 	if (TB_GAME == SelectButton)
 	{
-		TitleFadeActor->Fade(FADE_STATE::FADEIN, ContentFunc::ChangeWorldmapLevel);
+		TitleFadeActor->Fade({ .State = FADE_STATE::FADEIN, .Func = ContentFunc::ChangeWorldmapLevel });
 	}
 	else if (TB_MAPTOOL == SelectButton)
 	{
-		TitleFadeActor->Fade(FADE_STATE::FADEIN, ContentFunc::ChangeMapToolLevel);
+		TitleFadeActor->Fade({ .State = FADE_STATE::FADEIN, .Func = ContentFunc::ChangeMapToolLevel });
 	}
 	else if (TB_EXIT == SelectButton)
 	{
