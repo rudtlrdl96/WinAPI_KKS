@@ -2,6 +2,7 @@
 
 #include <math.h>
 #include <cmath>
+#include <string>
 
 
 // final 더이상 상속내릴지 못한다.
@@ -227,6 +228,15 @@ public:
 		y /= _Other.y;
 		z /= _Other.z;
 		return *this;
+	}
+
+	std::string ToString() 
+	{
+		char ArrReturn[256];
+
+		sprintf_s(ArrReturn, "x: %f, y: %f, z: %f, w: %f", x, y, z, w);
+
+		return std::string(ArrReturn);
 	}
 
 };

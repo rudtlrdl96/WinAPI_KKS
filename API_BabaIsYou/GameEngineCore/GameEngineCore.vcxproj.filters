@@ -23,6 +23,9 @@
     <ClInclude Include="GameEngineComponent.h">
       <Filter>Object</Filter>
     </ClInclude>
+    <ClInclude Include="Button.h">
+      <Filter>Object\BasicContents</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameEngineCore.cpp" />
@@ -47,6 +50,9 @@
     <ClCompile Include="GameEngineComponent.cpp">
       <Filter>Object</Filter>
     </ClCompile>
+    <ClCompile Include="Button.cpp">
+      <Filter>Object\BasicContents</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Object">
@@ -60,6 +66,9 @@
     </Filter>
     <Filter Include="Object\Collision">
       <UniqueIdentifier>{e42c7004-1254-46e3-a8b8-e00e515e7d88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Object\BasicContents">
+      <UniqueIdentifier>{4c917027-b982-4fdb-af2c-df854bd34bce}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -203,15 +203,19 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="EffectActor.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="EndingLevel.h">
       <SubType>
       </SubType>
     </ClInclude>
     <ClInclude Include="FadeUI.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="ParticleActor.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
       <SubType>
       </SubType>
     </ClInclude>
@@ -351,15 +355,19 @@
       <SubType>
       </SubType>
     </ClCompile>
-    <ClCompile Include="EffectActor.cpp">
-      <SubType>
-      </SubType>
-    </ClCompile>
     <ClCompile Include="EndingLevel.cpp">
       <SubType>
       </SubType>
     </ClCompile>
     <ClCompile Include="FadeUI.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="ParticleActor.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp">
       <SubType>
       </SubType>
     </ClCompile>

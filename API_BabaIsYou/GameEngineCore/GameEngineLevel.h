@@ -29,13 +29,19 @@ public:
 	GameEngineLevel& operator=(const GameEngineLevel& _Other) = delete;
 	GameEngineLevel& operator=(GameEngineLevel&& _Other) noexcept = delete;
 
+	static void DebugRenderSwitch() 
+	{
+		IsDebugRender = !IsDebugRender;
+	}
+
+	float4 GetMousePos();
+	float4 GetMousePosToCamera();
+
 	/// <summary>
 	/// 액터를 만드는 함수
 	/// </summary>
 	/// <typeparam name="ActorType"> GameEngineActor를 상속받은 클래스 타입 </typeparam>
 	/// <param name="_Order"> Actor의 업데이트 순서 숫자가 작을수록 먼저 업데이트 됩니다. </param>
-	/// 
-
 	template<typename ActorType, typename EnumType>
 	ActorType* CreateActor(EnumType _Order)
 	{
@@ -121,6 +127,11 @@ public:
 		return Result;
 	}
 
+	static void DebugTextPush(const std::string& _DebugText) 
+	{
+		DebugTexts.push_back(_DebugText);
+	}
+
 protected:
 	virtual void Loading() = 0;
 	virtual void Update(float _DeltaTime) = 0;
@@ -131,7 +142,12 @@ protected:
 	virtual void LevelChangeStart(GameEngineLevel* _PrevLevel) = 0;
 
 private:
+	static bool IsDebugRender;
+
 	float4 CameraPos = float4::Zero;
+
+	static float4 TextOutStart;
+	static std::vector<std::string> DebugTexts;
 
 	// 컨텐츠를 알아서도 안되지만
 	//std::list<Player*> Actors;
@@ -144,6 +160,8 @@ private:
 
 	void ActorsUpdate(float _DeltaTime);
 	void ActorsRender(float _DeltaTime);
+	void ActorLevelChangeEnd(GameEngineLevel* _NextLevel);
+	void ActorLevelChangeStart(GameEngineLevel* _PrevLevel);
 
 
 	void ActorStart(GameEngineActor* _Actor, int _Order);

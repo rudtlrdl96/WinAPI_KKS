@@ -33,6 +33,7 @@ void LogoLevel::Loading()
 	Dir.Move("Defalut");
 
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("actor.BMP"))->Cut(24, 40);
+	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("Particle.BMP"))->Cut(7, 44);
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("Background_Gray.BMP"));
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("Background_Black.BMP"));
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("FadeCircle.BMP"));

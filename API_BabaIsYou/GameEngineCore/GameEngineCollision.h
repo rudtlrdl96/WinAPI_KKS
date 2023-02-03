@@ -25,6 +25,23 @@ class CollisionData
 public:
 	float4 Position;
 	float4 Scale; // x만 원의 반지름으로 보겠습니다.
+
+	float Left() const
+	{
+		return Position.x - Scale.hx();
+	}
+	float Right() const
+	{
+		return Position.x + Scale.hx();
+	}
+	float Top() const
+	{
+		return Position.y - Scale.hy();
+	}
+	float Bot() const
+	{
+		return Position.y + Scale.hy();
+	}
 };
 
 // 설명 :
@@ -37,8 +54,11 @@ private:
 
 public:
 	static bool CollisionCirCleToCirCle(const CollisionData& _Left, const CollisionData& _Right);
-	//static bool CollisionCirCleToPoint(const CollisionData& _Left, const CollisionData& _Right);
-	//static bool CollisionCirCleToRect(const CollisionData& _Left, const CollisionData& _Right);
+	static bool CollisionCirCleToPoint(const CollisionData& _Left, const CollisionData& _Right);
+
+	static bool CollisionRectToRect(const CollisionData& _Left, const CollisionData& _Right);
+	static bool CollisionRectToPoint(const CollisionData& _Left, const CollisionData& _Right);
+
 
 	// constrcuter destructer
 	GameEngineCollision();
@@ -60,9 +80,17 @@ public:
 
 	CollisionData GetCollisionData();
 
+	void SetDebugRenderType(CollisionType _DebugRenderType)
+	{
+		DebugRenderType = _DebugRenderType;
+	}
+
+	void DebugRender();
+
 protected:
 
 private:
+	CollisionType DebugRenderType = CollisionType::CT_CirCle;
 
 };
 

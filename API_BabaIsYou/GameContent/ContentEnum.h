@@ -17,6 +17,7 @@ enum class RENDER_ORDER
 	WORLDMAPGRID,
 	WORLDMAPSELECT,
 	ACTORSTART,
+	PARTICLE = 5000,
 	TEXTUI = 10000,
 	UIIMAGE,
 	BUTTON,
@@ -52,6 +53,22 @@ enum class TEXT_COLOR
 {
 	WHITE = 0,
 	PINK = 1
+};
+
+enum class PARTICLE_COLOR
+{
+	WHITE	  = 0,
+	BURGUNDY  = 1,
+	GRAY	  = 2,
+	JAVA	  = 3,
+	ANZAC	  = 4,
+	SUSHI	  = 5,
+	CLAY	  = 6,
+	MOCHA	  = 7,
+	FLAX	  = 8,
+	ROYALBLUE = 9,
+	BLACK	  = 10,
+	COUNT
 };
 
 enum class ACTOR_TYPE

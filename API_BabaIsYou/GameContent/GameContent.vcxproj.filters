@@ -34,14 +34,14 @@
     <Filter Include="01.Actor\UIActor\PuzzleLevel">
       <UniqueIdentifier>{4300bea6-c886-450e-8858-9897d439b858}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01.Actor\EffectActor">
-      <UniqueIdentifier>{4f322c4a-c4e1-4b0c-9a91-3889bf2259d6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Actor\UIActor\MapTool">
       <UniqueIdentifier>{5390147c-82a5-4cc5-8785-439ff55aa9f1}</UniqueIdentifier>
     </Filter>
     <Filter Include="01.Actor\PuzzleActor">
       <UniqueIdentifier>{c123d8a8-4494-4688-bc57-3e594eab8fc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Actor\ParticleActor">
+      <UniqueIdentifier>{4f322c4a-c4e1-4b0c-9a91-3889bf2259d6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -62,9 +62,6 @@
     </ClInclude>
     <ClInclude Include="EndingLevel.h">
       <Filter>03.Level</Filter>
-    </ClInclude>
-    <ClInclude Include="EffectActor.h">
-      <Filter>01.Actor\EffectActor</Filter>
     </ClInclude>
     <ClInclude Include="LogoLevel.h">
       <Filter>03.Level</Filter>
@@ -165,6 +162,12 @@
     <ClInclude Include="WiggleGridActor.h">
       <Filter>01.Actor\UIActor\MapTool</Filter>
     </ClInclude>
+    <ClInclude Include="ParticleActor.h">
+      <Filter>01.Actor\ParticleActor</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
+      <Filter>02.Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PuzzleActorManager.cpp">
@@ -184,9 +187,6 @@
     </ClCompile>
     <ClCompile Include="EndingLevel.cpp">
       <Filter>03.Level</Filter>
-    </ClCompile>
-    <ClCompile Include="EffectActor.cpp">
-      <Filter>01.Actor\EffectActor</Filter>
     </ClCompile>
     <ClCompile Include="LogoLevel.cpp">
       <Filter>03.Level</Filter>
@@ -280,6 +280,12 @@
     </ClCompile>
     <ClCompile Include="WiggleGridActor.cpp">
       <Filter>01.Actor\UIActor\MapTool</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleActor.cpp">
+      <Filter>01.Actor\ParticleActor</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp">
+      <Filter>02.Manager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
