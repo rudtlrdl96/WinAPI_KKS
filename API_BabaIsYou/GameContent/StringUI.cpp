@@ -123,6 +123,7 @@ void StringUI::RandShakeString(float _Distance, float _Time)
 
 	for (size_t i = 0; i < ActiveActorCount; i++)
 	{
+		vecTextActors[i]->ResetShake();
 		float4 RandDir;
 		float RandRot = 360.0f / (std::rand() % 360);
 

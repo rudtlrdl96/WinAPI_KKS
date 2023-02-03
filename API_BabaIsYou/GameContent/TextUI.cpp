@@ -112,6 +112,7 @@ void TextUI::ShakeText(float4 _Dir, float _Time)
 	ShakeStartPos = CurPos;
 	ShakeEndPos = ShakeStartPos + _Dir;
 	ShakeTime = _Time;
+	LerpShakeRatio = 0.0f;
 }
 
 void TextUI::ResetShake()

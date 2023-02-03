@@ -161,7 +161,6 @@ void FadeUI::Fade(const FadeParameter& _FadeParameter)
 		TopStringUIRender->SetFontInterval(_FadeParameter.TopTextInterval);
 		TopStringUIRender->SetFontSize(_FadeParameter.TopTextSize);
 		TopStringUIRender->WriteText(_FadeParameter.WriteTopText);
-		TopStringUIRender->StringOn();
 		TopStringUIRender->LerpScaleString(float4::Zero, TopStringUIRender->GetFontSize(), 0.25f, false);
 		TopStringUIRender->SetStringColor(_FadeParameter.TopTextColor);
 
@@ -169,6 +168,8 @@ void FadeUI::Fade(const FadeParameter& _FadeParameter)
 		{
 			TopStringUIRender->RandShakeString(_FadeParameter.ShakeDistance, _FadeParameter.ShakeTime);
 		}
+
+		TopStringUIRender->StringOn();
 	}
 
 	if ("" == _FadeParameter.WriteTopText)
@@ -180,7 +181,6 @@ void FadeUI::Fade(const FadeParameter& _FadeParameter)
 		MiddleStringUIRender->SetFontInterval(_FadeParameter.MiddleTextInterval);
 		MiddleStringUIRender->SetFontSize(_FadeParameter.MiddleTextSize);
 		MiddleStringUIRender->WriteText(_FadeParameter.WriteMiddleText);
-		MiddleStringUIRender->StringOn();
 		MiddleStringUIRender->LerpScaleString(float4::Zero, MiddleStringUIRender->GetFontSize(), 0.25f, false);
 		MiddleStringUIRender->SetStringColor(_FadeParameter.MiddleTextColor);
 
@@ -188,6 +188,8 @@ void FadeUI::Fade(const FadeParameter& _FadeParameter)
 		{
 			MiddleStringUIRender->RandShakeString(_FadeParameter.ShakeDistance, _FadeParameter.ShakeTime);
 		}
+
+		MiddleStringUIRender->StringOn();
 	}
 
 	ProgressDelayTime = 0.0f;
