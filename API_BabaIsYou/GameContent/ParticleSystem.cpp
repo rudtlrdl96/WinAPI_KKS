@@ -13,7 +13,7 @@ ParticleSystem::~ParticleSystem()
 {
 }
 
-ParticleActor* ParticleSystem::UseParticle(std::string _AnimName, PARTICLE_COLOR _Color, float4 _Size)
+ParticleActor* ParticleSystem::UseParticle(std::string _AnimName, PARTICLE_COLOR _Color, float4 _Pos, float4 _Size)
 {
 	if (0 == vecParticlePool.size())
 	{
@@ -21,8 +21,9 @@ ParticleActor* ParticleSystem::UseParticle(std::string _AnimName, PARTICLE_COLOR
 	}
 
 	ParticleActor* ReturnPtr = vecParticlePool.back();
-	ReturnPtr->On();
 	ReturnPtr->StartParticle(_AnimName, _Color, _Size);
+	ReturnPtr->SetPos(_Pos);
+	ReturnPtr->On();
 
 	vecParticlePool.pop_back();
 	return ReturnPtr;

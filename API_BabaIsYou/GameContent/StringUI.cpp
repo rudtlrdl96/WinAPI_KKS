@@ -6,7 +6,7 @@
 #include <GameEngineCore/GameEngineActor.h>
 #include "TextUI.h"
 #include "ContentEnum.h"
-
+#include "ContentRand.h"
 
 
 StringUI::StringUI() :
@@ -119,13 +119,11 @@ void StringUI::LerpScaleString(float4 _StartSize, float4 _EndSize, float _Time, 
 
 void StringUI::RandShakeString(float _Distance, float _Time)
 {
-	std::srand(static_cast<int>(time(nullptr)));
-
 	for (size_t i = 0; i < ActiveActorCount; i++)
 	{
 		vecTextActors[i]->ResetShake();
 		float4 RandDir;
-		float RandRot = 360.0f / (std::rand() % 360);
+		float RandRot = ContentRand::RandFloat(0.0f, GameEngineMath::PIE2);
 
 		RandDir.x = std::cos(RandRot);
 		RandDir.y = std::sin(RandRot);

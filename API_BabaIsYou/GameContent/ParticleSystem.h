@@ -15,7 +15,7 @@ public:
 	ParticleSystem& operator=(const ParticleSystem& _Other) = delete;
 	ParticleSystem& operator=(ParticleSystem&& _Other) noexcept = delete;
 
-	ParticleActor* UseParticle(std::string _AnimName, PARTICLE_COLOR _Color, float4 _Size);
+	ParticleActor* UseParticle(std::string _AnimName, PARTICLE_COLOR _Color, float4 _Pos, float4 _Size);
 	void ReturnItem(ParticleActor* _Particle);
 
 	static ParticleSystem* GetLevelParticleSystem();

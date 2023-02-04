@@ -8,6 +8,7 @@
 #include "RuleManager.h"
 #include "PuzzleActorManager.h"
 #include "ContentDataBase.h"
+#include "ParticleSystem.h"
 
 /// GridData
 
@@ -863,6 +864,15 @@ bool PuzzleActor::Move(bool _IsInputMove)
 
 	CurFramesBehaviorBuffer.push_back({ BEHAVIOR::MOVE, -1});
 	GetWiggleRender()->NextAnim();
+
+	float4 MoveParticlePos = GetPos();
+
+	if (int2::Left == MoveDir || int2::Right == MoveDir)
+	{
+		MoveParticlePos += {0, 5};
+	}
+
+	ParticleSystem::GetLevelParticleSystem()->UseParticle("Move", PARTICLE_COLOR::WHITE, MoveParticlePos, {25, 25});
 
 	return true;
 }

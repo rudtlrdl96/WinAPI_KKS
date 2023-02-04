@@ -10,6 +10,7 @@
 #include "CongratulationsUI.h"
 #include "ContentFunc.h"
 #include "ContentConst.h"
+#include "ParticleSystem.h"
 
 std::string PuzzleLevel::LoadPuzzleName = "";
 std::string PuzzleLevel::LoadPuzzleInfo = "";
@@ -80,6 +81,7 @@ void PuzzleLevel::Loading()
 		GameEngineInput::CreateKey("Wait", VK_SPACE);
 	}
 
+	CreateActor<ParticleSystem>();
 }
 
 void PuzzleLevel::Update(float _DT)
