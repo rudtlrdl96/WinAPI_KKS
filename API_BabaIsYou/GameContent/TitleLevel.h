@@ -37,7 +37,6 @@ private:
 
 	std::vector<float4> vecCameraMovePoint;
 	size_t CameraPointindex = 0;
-	float CameraMoveRatio = 0.0f;
 
 	WiggleMapToolActor* ButtonBaba = nullptr;
 	FadeUI* TitleFadeActor = nullptr;

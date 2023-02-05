@@ -1,6 +1,7 @@
 #include "FadeUI.h"
 #include <GameEngineBase/GameEngineDebug.h>
 #include <GameEnginePlatform/GameEngineWindow.h>
+#include <GameEnginePlatform/GameEngineInput.h>
 #include <GameEngineCore/GameEngineResources.h>
 #include <GameEngineCore/GameEngineRender.h>
 #include <GameEngineCore/GameEngineLevel.h>
@@ -94,6 +95,11 @@ void FadeUI::Update(float _Time)
 	if (true == IsWait)
 	{
 		ProgressWaitTime += _Time;
+
+		if (true == GameEngineInput::IsAnyKey())
+		{
+			ProgressWaitTime += 1.0f;
+		}
 
 		if (ProgressWaitTime >= WaitTime)
 		{

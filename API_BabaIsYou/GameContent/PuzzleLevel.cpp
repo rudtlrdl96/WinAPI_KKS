@@ -11,6 +11,7 @@
 #include "ContentFunc.h"
 #include "ContentConst.h"
 #include "ParticleSystem.h"
+#include "CameraSystem.h"
 
 std::string PuzzleLevel::LoadPuzzleName = "";
 std::string PuzzleLevel::LoadPuzzleInfo = "";
@@ -82,6 +83,7 @@ void PuzzleLevel::Loading()
 	}
 
 	CreateActor<ParticleSystem>();
+	CameraSystemPtr = CreateActor<CameraSystem>();
 }
 
 void PuzzleLevel::Update(float _DT)

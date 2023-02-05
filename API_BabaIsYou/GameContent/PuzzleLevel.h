@@ -6,6 +6,7 @@
 class FadeUI;
 class CongratulationsUI;
 class GridActorManager;
+class CameraSystem;
 class PuzzleLevel : public GameEngineLevel
 {
 public:
@@ -24,6 +25,11 @@ public:
 	void Restart();
 	void LoadPuzzleData();
 
+	inline CameraSystem* GetCameraSystem() const
+	{
+		return CameraSystemPtr;
+	}
+
 protected:
 	void Loading() override;
 	void Update(float _DT) override;
@@ -37,6 +43,7 @@ private:
 
 	FadeUI* PuzzleFadeActor = nullptr;
 	CongratulationsUI* CongratulationActor = nullptr;
+	CameraSystem* CameraSystemPtr = nullptr;
 
 	static bool IsExitValue;
 };

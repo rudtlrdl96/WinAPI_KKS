@@ -11,6 +11,7 @@
 #include "ParticleSystem.h"
 #include "ContentRand.h"
 #include "ParticleActor.h"
+#include "CameraSystem.h"
 
 /// GridData
 
@@ -1157,6 +1158,7 @@ void PuzzleActor::ActorDeath(ACTOR_DEFINE _DeathCause)
 		ParticlePtr->MoveParticle((RandPos - DeathGridPos), ContentRand::RandFloat(40.0f, 60.0f));
 	}
 
+	CameraSystem::GetLevelCameraSystem()->CameraShake(7.0f, 40.0f , 4);
 	GetWiggleRender()->RenderOff();
 }
 
@@ -1333,7 +1335,7 @@ void PuzzleActor::ActorParticleCreate(float _DT)
 
 		if (IsDefine(ACTOR_DEFINE::WIN))
 		{
-			ParticleActor* ParticlePtr = ParticleSystem::GetLevelParticleSystem()->UseParticle("Glittering", ActorColor, RandPos, {30.0f, 30.0f});
+			ParticleActor* ParticlePtr = ParticleSystem::GetLevelParticleSystem()->UseParticle("Glittering", PARTICLE_COLOR::FLAX, RandPos, {30.0f, 30.0f});
 			ParticlePtr->MoveParticle(RandPos - GetPos(), ContentRand::RandFloat(10.0f, 30.0f));
 			NextParticleTime = ContentRand::RandFloat(0.25f, 0.8f);
 		}

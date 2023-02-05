@@ -15,6 +15,7 @@
 #include "ContentDataLoader.h"
 #include "ContentConst.h"
 #include "WiggleRender.h"
+#include "CameraSystem.h"
 
 TitleLevel::TitleLevel()
 {
@@ -87,6 +88,7 @@ void TitleLevel::Loading()
 	TitleFadeActor = CreateActor<FadeUI>();
 	CreateActor<TitleLogoUI>();
 	CreateActor<BlackBackUI>();
+	CreateActor<CameraSystem>();
 
 	vecTitleButtons.reserve(TB_COUNT);
 
@@ -217,21 +219,20 @@ void TitleLevel::BaBaSetPos()
 
 void TitleLevel::TitleCameraMove(float _DT)
 {
-	size_t NextCameraIndex = CameraPointindex + 1;
+	CameraSystem* LevelCameraSystem = CameraSystem::GetLevelCameraSystem();
 
-	if (vecCameraMovePoint.size() <= NextCameraIndex)
+	if (false == LevelCameraSystem->IsCameraLerp())
 	{
-		NextCameraIndex = 0;
-	}
+		size_t NextCameraIndex = CameraPointindex + 1;
 
-	CameraMoveRatio += _DT * ContentConst::TITLE_CAMERA_SPEED / GetCameraPointDistance(CameraPointindex);
+		if (vecCameraMovePoint.size() <= NextCameraIndex)
+		{
+			NextCameraIndex = 0;
+		}
 
-	SetCameraPos(float4::LerpClamp(vecCameraMovePoint[CameraPointindex], vecCameraMovePoint[NextCameraIndex], CameraMoveRatio));
+		LevelCameraSystem->CameraLerp(vecCameraMovePoint[CameraPointindex], vecCameraMovePoint[NextCameraIndex],
+			ContentConst::TITLE_CAMERA_SPEED / GetCameraPointDistance(CameraPointindex));
 
-	if (1.0f <= CameraMoveRatio)
-	{
-		CameraMoveRatio = 0.0f;
-		++CameraPointindex;
 		CameraPointindex = NextCameraIndex;
 	}
 }

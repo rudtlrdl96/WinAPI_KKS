@@ -10,9 +10,6 @@
     <Filter Include="03.Level">
       <UniqueIdentifier>{d7686fd6-ca73-40bf-a2c6-f61ea7339eb8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02.Manager">
-      <UniqueIdentifier>{c44f3d68-d4c1-4ee0-b329-818cd7781b72}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Actor">
       <UniqueIdentifier>{009b04dc-4e47-4a66-81bd-1c8e41f91d7c}</UniqueIdentifier>
     </Filter>
@@ -43,10 +40,13 @@
     <Filter Include="01.Actor\ParticleActor">
       <UniqueIdentifier>{4f322c4a-c4e1-4b0c-9a91-3889bf2259d6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="02.Manager,System">
+      <UniqueIdentifier>{c44f3d68-d4c1-4ee0-b329-818cd7781b72}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="PuzzleActorManager.h">
-      <Filter>02.Manager</Filter>
+      <Filter>02.Manager,System</Filter>
     </ClInclude>
     <ClInclude Include="ContentCore.h">
       <Filter>04.Core</Filter>
@@ -112,7 +112,7 @@
       <Filter>01.Actor\PuzzleActor</Filter>
     </ClInclude>
     <ClInclude Include="RuleManager.h">
-      <Filter>02.Manager</Filter>
+      <Filter>02.Manager,System</Filter>
     </ClInclude>
     <ClInclude Include="ContentDataLoader.h">
       <Filter>00.Base</Filter>
@@ -166,15 +166,18 @@
       <Filter>01.Actor\ParticleActor</Filter>
     </ClInclude>
     <ClInclude Include="ParticleSystem.h">
-      <Filter>02.Manager</Filter>
+      <Filter>02.Manager,System</Filter>
     </ClInclude>
     <ClInclude Include="ContentRand.h">
       <Filter>00.Base</Filter>
     </ClInclude>
+    <ClInclude Include="CameraSystem.h">
+      <Filter>02.Manager,System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PuzzleActorManager.cpp">
-      <Filter>02.Manager</Filter>
+      <Filter>02.Manager,System</Filter>
     </ClCompile>
     <ClCompile Include="ContentCore.cpp">
       <Filter>04.Core</Filter>
@@ -234,7 +237,7 @@
       <Filter>01.Actor\PuzzleActor</Filter>
     </ClCompile>
     <ClCompile Include="RuleManager.cpp">
-      <Filter>02.Manager</Filter>
+      <Filter>02.Manager,System</Filter>
     </ClCompile>
     <ClCompile Include="ContentDataLoader.cpp">
       <Filter>00.Base</Filter>
@@ -288,10 +291,13 @@
       <Filter>01.Actor\ParticleActor</Filter>
     </ClCompile>
     <ClCompile Include="ParticleSystem.cpp">
-      <Filter>02.Manager</Filter>
+      <Filter>02.Manager,System</Filter>
     </ClCompile>
     <ClCompile Include="ContentRand.cpp">
       <Filter>00.Base</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraSystem.cpp">
+      <Filter>02.Manager,System</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

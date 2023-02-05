@@ -12,6 +12,7 @@
 #include "BlackBackUI.h"
 #include "PuzzleLevel.h"
 #include "ContentDataLoader.h"
+#include "CameraSystem.h"
 
 PuzzleActorManager::PuzzleActorManager()
 {
@@ -192,7 +193,7 @@ void PuzzleActorManager::LoadData(const std::string_view& _PuzzleName)
 	}
 
 	PuzzleActor::AllActorRuleCheck();
-	MainPuzzleLevel->SetCameraPos(-DiffSize.half());
+	MainPuzzleLevel->GetCameraSystem()->SetCameraPos(-DiffSize.half());
 }
 
 void PuzzleActorManager::AddDefine(PuzzleActor* _Actor, ACTOR_DEFINE _Define, bool _IsRemove)

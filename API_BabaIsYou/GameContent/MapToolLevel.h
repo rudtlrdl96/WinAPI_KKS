@@ -9,6 +9,7 @@ class BlackBackUI;
 class PalletActor;
 class GridActor;
 class WiggleGridActor;
+class CameraSystem;
 class MapToolLevel : public GameEngineLevel
 {
 private:
@@ -51,7 +52,8 @@ private:
 	ButtonUI* MapLoadButton = nullptr;
 
 	MAPTOOL_BRUSH BrushType = MAPTOOL_BRUSH::NONE;
-	WiggleGridActor* WiggleGridActors;
+	WiggleGridActor* WiggleGridActors = nullptr;
+	CameraSystem* CameraSystemPtr = nullptr;
 
 	float SaveLoadWaitTime = 0.0f;
 

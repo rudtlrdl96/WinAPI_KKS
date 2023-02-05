@@ -12,6 +12,7 @@
 #include "ButtonUI.h"
 #include "WiggleGridActor.h"
 #include "ContentDataLoader.h"
+#include "CameraSystem.h"
 
 MapToolLevel::MapToolLevel() :
 	MapToolFadeActor(nullptr)
@@ -105,6 +106,8 @@ void MapToolLevel::Loading()
 
 	WiggleGridActors = CreateActor<WiggleGridActor>();
 	WiggleGridActors->InitGrid(ContentConst::GRID_SIZE);
+
+	CameraSystemPtr = CreateActor<CameraSystem>();
 
 	ResizeMap({10, 10});
 	SelectBrush(MAPTOOL_BRUSH::PEN);
@@ -290,7 +293,7 @@ void MapToolLevel::ResizeMap(const int2& _MapSize)
 	float4 DiffSize = WindowSize - TotalGridSize;
 
 	GridBackActor->SetScale(TotalGridSize);
-    SetCameraPos(-DiffSize.half());
+	CameraSystemPtr->SetCameraPos(-DiffSize.half());
 
 	WiggleGridActors->ActiveGridActors();
 }
