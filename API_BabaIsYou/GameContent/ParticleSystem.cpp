@@ -15,24 +15,24 @@ ParticleSystem::~ParticleSystem()
 
 ParticleActor* ParticleSystem::UseParticle(std::string _AnimName, PARTICLE_COLOR _Color, float4 _Pos, float4 _Size)
 {
-	if (0 == vecParticlePool.size())
+	if (0 == vecWaitParticles.size())
 	{
 		CreateParticle();
 	}
 
-	ParticleActor* ReturnPtr = vecParticlePool.back();
+	ParticleActor* ReturnPtr = vecWaitParticles.back();
 	ReturnPtr->StartParticle(_AnimName, _Color, _Size);
 	ReturnPtr->SetPos(_Pos);
 	ReturnPtr->On();
 
-	vecParticlePool.pop_back();
+	vecWaitParticles.pop_back();
 	return ReturnPtr;
 }
 
 void ParticleSystem::ReturnItem(ParticleActor* _Particle)
 {
 	_Particle->Off();
-	vecParticlePool.push_back(_Particle);
+	vecWaitParticles.push_back(_Particle);
 }
 
 ParticleSystem* ParticleSystem::GetLevelParticleSystem()
@@ -47,7 +47,8 @@ ParticleSystem* ParticleSystem::GetLevelParticleSystem()
 
 void ParticleSystem::Start()
 {
-	vecParticlePool.reserve(512);
+	vecWaitParticles.reserve(512);
+	vecAllParticles.reserve(512);
 	CreateParticle();
 }
 
@@ -70,6 +71,11 @@ void ParticleSystem::LevelChangeEnd(GameEngineLevel* _PrevLevel)
 		return;
 	}
 
+	for (size_t i = 0; i < vecAllParticles.size(); i++)
+	{
+		vecAllParticles[i]->ParticleReturn();
+	}
+
 	CurLevelParticleSystem = nullptr;
 }
 
@@ -79,6 +85,7 @@ void ParticleSystem::CreateParticle()
 	{
 		ParticleActor* CreateParticlePtr = GetLevel()->CreateActor<ParticleActor>();
 		CreateParticlePtr->Off();
-		vecParticlePool.push_back(CreateParticlePtr);
+		vecWaitParticles.push_back(CreateParticlePtr);
+		vecAllParticles.push_back(CreateParticlePtr);
 	}
 }

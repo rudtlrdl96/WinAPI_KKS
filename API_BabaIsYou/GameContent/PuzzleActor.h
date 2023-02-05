@@ -135,11 +135,16 @@ private:
 
 	const int ActorKey = 0;
 
+	float ParticleTime = 0.0f;
+	float NextParticleTime = 0.0f;
+
 	int2 MoveDir = int2::Right;
 	int2 PrevPos = {-1, -1};
 	int2 GridPos = int2::Zero;
 
 	size_t DefineData = static_cast<size_t>(ACTOR_DEFINE::NONE);
+
+	PARTICLE_COLOR ActorColor = PARTICLE_COLOR::WHITE;
 
 	bool IsDeath = false;
 	bool IsMove = false;
@@ -169,7 +174,7 @@ private:
 
 	void SetDir(const int2& _Dir);
 	
-	void ActorDeath();
+	void ActorDeath(ACTOR_DEFINE _DeathCause);
 	void UndoActorDeath();
 
 	void AllPushDir(const int2& _Dir, bool _IsInputMove);
@@ -179,4 +184,5 @@ private:
 	void RemoveRule();
 
 	void SetTileRender();
+	void ActorParticleCreate(float _DT);
 };

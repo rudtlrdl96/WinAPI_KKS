@@ -29,7 +29,8 @@ protected:
 private:
 	static ParticleSystem* CurLevelParticleSystem;
 
-	std::vector<ParticleActor*> vecParticlePool;
+	std::vector<ParticleActor*> vecAllParticles;
+	std::vector<ParticleActor*> vecWaitParticles;
 
 	void CreateParticle();
 

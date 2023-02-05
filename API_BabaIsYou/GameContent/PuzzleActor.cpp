@@ -9,6 +9,8 @@
 #include "PuzzleActorManager.h"
 #include "ContentDataBase.h"
 #include "ParticleSystem.h"
+#include "ContentRand.h"
+#include "ParticleActor.h"
 
 /// GridData
 
@@ -81,20 +83,20 @@ void PuzzleActor::GridData::DeathCheck()
 	{ 
 		if (LoopIter->second->IsDefine(ACTOR_DEFINE::YOU) && static_cast<size_t>(ACTOR_DEFINE::DEFEAT) & GridDefine)
 		{
-			LoopIter->second->ActorDeath();
+			LoopIter->second->ActorDeath(ACTOR_DEFINE::DEFEAT);
 			LoopIter = mapDatas.erase(LoopIter);
 			continue;
 		}
 		else if (LoopIter->second->IsDefine(ACTOR_DEFINE::MELT) && static_cast<size_t>(ACTOR_DEFINE::HOT) & GridDefine)
 		{
-			LoopIter->second->ActorDeath();
+			LoopIter->second->ActorDeath(ACTOR_DEFINE::HOT);
 			LoopIter = mapDatas.erase(LoopIter);
 			continue;
 		}
 		else if ((true == SinkCheck || IsSinkValue) && static_cast<size_t>(ACTOR_DEFINE::SINK) & GridDefine)
 		{
 			Sink();
-			LoopIter->second->ActorDeath();
+			LoopIter->second->ActorDeath(ACTOR_DEFINE::SINK);
 			LoopIter = mapDatas.erase(LoopIter);
 			continue;
 		}
@@ -453,12 +455,17 @@ void PuzzleActor::Update(float _DT)
 		return;
 	}
 
+	if (false == IsDeath)
+	{
+		ActorParticleCreate(_DT);
+	}
+
 	if (ACTOR_RENDER_TYPE::TILE == RenderType)
 	{
 		SetTileRender();
 	}
 
-	if (false == IsDeath && IsDefine(ACTOR_DEFINE::YOU))
+	if (false == WinCheckValue && false == IsDeath && IsDefine(ACTOR_DEFINE::YOU))
 	{
 		WinCheck();
 	}
@@ -554,6 +561,7 @@ void PuzzleActor::LoadData(int _Actor, int2 _Dir, bool _IsInit)
 	ActorType = LoadDB->ActorType;
 	RenderType = LoadDB->RenderType;
 	ArrowDefine = LoadDB->ArrowDefine;
+	ActorColor = LoadDB->Color;
 	MoveDir = _Dir;
 
 	mapActorDatas[ActorEnum][ActorKey] = this;
@@ -872,7 +880,8 @@ bool PuzzleActor::Move(bool _IsInputMove)
 		MoveParticlePos += {0, 5};
 	}
 
-	ParticleSystem::GetLevelParticleSystem()->UseParticle("Move", PARTICLE_COLOR::WHITE, MoveParticlePos, {25, 25});
+	ParticleActor* ParticlePtr = ParticleSystem::GetLevelParticleSystem()->UseParticle("Move", ActorColor, MoveParticlePos, {25, 25});
+	ParticlePtr->MoveParticle(-MoveDir.ToFloat4(), 50.0f);
 
 	return true;
 }
@@ -932,6 +941,16 @@ void PuzzleActor::Push()
 		vecTextDatas[GridPos.y][GridPos.x] = this;
 		AddRule();
 	}
+
+	float4 MoveParticlePos = GetPos();
+
+	if (int2::Left == MoveDir || int2::Right == MoveDir)
+	{
+		MoveParticlePos += {0, 5};
+	}
+
+	ParticleActor* ParticlePtr = ParticleSystem::GetLevelParticleSystem()->UseParticle("Move", ActorColor, MoveParticlePos, { 25, 25 });
+	ParticlePtr->MoveParticle(-MoveDir.ToFloat4(), 50.0f);
 
 	vecGridDatas[GridPos.y][GridPos.x].push_back(this);
 	vecGridDatas[PrevPos.y][PrevPos.x].erase(this);
@@ -1083,7 +1102,7 @@ void PuzzleActor::SetDir(const int2& _Dir)
 	} 
 }
 
-void PuzzleActor::ActorDeath()
+void PuzzleActor::ActorDeath(ACTOR_DEFINE _DeathCause)
 {
 	if (true == IsDeath)
 	{
@@ -1093,6 +1112,50 @@ void PuzzleActor::ActorDeath()
 
 	IsDeath = true;
 	CurFramesBehaviorBuffer.push_back({BEHAVIOR::DEATH, -1});
+
+	int ParticleCount = 0;
+	std::string DeathParticleName = "";
+	PARTICLE_COLOR ParticleColor = PARTICLE_COLOR::WHITE;
+
+	switch (_DeathCause)
+	{
+	case ACTOR_DEFINE::HOT:
+	{
+		ParticleCount = 5;
+		DeathParticleName = "Smoke";
+		ParticleColor = PARTICLE_COLOR::GRAY;
+	}
+		break;
+	case ACTOR_DEFINE::SINK:
+	{
+		ParticleCount = 8;
+		DeathParticleName = "Explosion";
+		ParticleColor = PARTICLE_COLOR::JAVA;
+	}
+		break;
+	case ACTOR_DEFINE::DEFEAT:
+	{
+		ParticleCount = 5;
+		DeathParticleName = "Explosion";
+	}
+		break;
+	}
+
+	float4 DeathGridPos = GetScreenPos(GetGridPos());
+
+	for (size_t i = 0; i < ParticleCount; i++)
+	{
+		float4 RandPos = float4::Zero;
+		float RandRot = ContentRand::RandFloat(0.0f, GameEngineMath::PIE2);
+		RandPos.x = std::cos(RandRot);
+		RandPos.y = std::sin(RandRot);
+		RandPos *= ContentRand::RandFloat(15.0f, 30.0f);
+
+		RandPos += DeathGridPos;
+
+		ParticleActor* ParticlePtr = ParticleSystem::GetLevelParticleSystem()->UseParticle(DeathParticleName, ParticleColor, RandPos, { 30.0f, 30.0f });
+		ParticlePtr->MoveParticle((RandPos - DeathGridPos), ContentRand::RandFloat(40.0f, 60.0f));
+	}
 
 	GetWiggleRender()->RenderOff();
 }
@@ -1181,6 +1244,22 @@ void PuzzleActor::WinCheck()
 
 	if (DefineInfo & static_cast<size_t>(ACTOR_DEFINE::WIN))
 	{
+		float4 DeathGridPos = GetScreenPos(GetGridPos());
+
+		for (size_t i = 0; i < 10; i++)
+		{
+			float4 RandPos = float4::Zero;
+			float RandRot = ContentRand::RandFloat(0.0f, GameEngineMath::PIE2);
+			RandPos.x = std::cos(RandRot);
+			RandPos.y = std::sin(RandRot);
+			RandPos *= ContentRand::RandFloat(5.0f, 25.0f);
+
+			RandPos += DeathGridPos;
+
+			ParticleActor* ParticlePtr = ParticleSystem::GetLevelParticleSystem()->UseParticle("Win", PARTICLE_COLOR::FLAX, RandPos, { 30.0f, 30.0f });
+			ParticlePtr->MoveParticle((RandPos - DeathGridPos), ContentRand::RandFloat(50.0f, 110.0f));
+		}
+
 		WinCheckValue = true;
 	}
 }
@@ -1226,6 +1305,45 @@ void PuzzleActor::SetTileRender()
 	}
 
 	GetWiggleRender()->SetTileIndex(ContentConst::GetTile(RenderKey));
+}
+
+void PuzzleActor::ActorParticleCreate(float _DT)
+{
+	if (false == (IsDefine(ACTOR_DEFINE::WIN) || IsDefine(ACTOR_DEFINE::HOT)))
+	{
+		return;
+	}
+
+	ParticleTime += _DT;
+
+	if (ParticleTime >= NextParticleTime)
+	{
+
+		ParticleTime = 0.0f;
+
+		float4 RandPos = float4::Zero;
+		float RandRot = ContentRand::RandFloat(0.0f, GameEngineMath::PIE2);
+		float RandMoveDis = ContentRand::RandFloat(0.0f, GameEngineMath::PIE2);
+
+		RandPos.x = std::cos(RandRot);
+		RandPos.y = std::sin(RandRot);
+		RandPos *= ContentRand::RandFloat(10.0f, 35.0f);
+
+		RandPos += GetPos();
+
+		if (IsDefine(ACTOR_DEFINE::WIN))
+		{
+			ParticleActor* ParticlePtr = ParticleSystem::GetLevelParticleSystem()->UseParticle("Glittering", ActorColor, RandPos, {30.0f, 30.0f});
+			ParticlePtr->MoveParticle(RandPos - GetPos(), ContentRand::RandFloat(10.0f, 30.0f));
+			NextParticleTime = ContentRand::RandFloat(0.25f, 0.8f);
+		}
+		else if (IsDefine(ACTOR_DEFINE::HOT))
+		{
+			ParticleActor* ParticlePtr = ParticleSystem::GetLevelParticleSystem()->UseParticle("Smoke", PARTICLE_COLOR::GRAY, RandPos, { 30.0f, 30.0f });
+			ParticlePtr->MoveParticle(RandPos - GetPos(), ContentRand::RandFloat(5.0f, 15.0f));
+			NextParticleTime = ContentRand::RandFloat(5.0f, 50.0f);
+		}
+	}
 }
 
 void PuzzleActor::ResetValues()

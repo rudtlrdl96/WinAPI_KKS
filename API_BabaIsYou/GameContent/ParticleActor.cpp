@@ -14,17 +14,28 @@ ParticleActor::~ParticleActor()
 
 void ParticleActor::StartParticle(const std::string_view& _ParticleName, PARTICLE_COLOR _Color, float4 _Size)
 {
+	IsMoveParticle = false;
 	ParticleRender->ChangeAnimation(_ParticleName.data() + ConvertParticleColorName(_Color), true);
 	ParticleRender->SetScale(_Size);
+	IsUseParticle = true;
 	On();
+}
+
+void ParticleActor::MoveParticle(float4 _Dir, float _Speed)
+{
+	IsMoveParticle = true;
+	ParticleMoveDir = _Dir;
+	ParticleMoveDir.Normalize();
+	ParticelMoveSpeed = _Speed;
 }
 
 void ParticleActor::ParticleReturn()
 {
-	if (true == IsUpdate())
+	if (true == IsUseParticle)
 	{
 		Off();
 		ParticleSystem::GetLevelParticleSystem()->ReturnItem(this);
+		IsUseParticle = false;
 	}
 }
 
@@ -66,6 +77,7 @@ void ParticleActor::Start()
 	std::string MoveAnimName = "Move";
 	std::string GlitteringAnimName = "Glittering";
 	std::string ExplosionAnimName = "Explosion";
+	std::string WinAnimName = "Win";
 	std::string SmokeAnimName = "Smoke";
 
 	for (int i = 0; i < static_cast<int>(PARTICLE_COLOR::COUNT); i++)
@@ -95,10 +107,19 @@ void ParticleActor::Start()
 		ParticleRender->CreateAnimation({ 
 			.AnimationName = ExplosionAnimName,
 			.ImageName = "Particle.BMP",
-			.Start = ColorBitmapIndex + 14,
+			.Start = ColorBitmapIndex + 15,
 			.End = ColorBitmapIndex + 18,
 			.InterTime = 0.1f,
 			.Loop = false });
+
+		WinAnimName = "Win" + ColorName;
+		ParticleRender->CreateAnimation({
+			.AnimationName = WinAnimName,
+			.ImageName = "Particle.BMP",
+			.Start = ColorBitmapIndex + 14,
+			.End = ColorBitmapIndex + 18,
+			.Loop = false,
+			.FrameTime = {0.9f, 0.08f, 0.08f, 0.08f, 0.08f}});
 
 		SmokeAnimName = "Smoke" + ColorName;
 		ParticleRender->CreateAnimation({ 
@@ -106,7 +127,7 @@ void ParticleActor::Start()
 			.ImageName = "Particle.BMP",
 			.Start = ColorBitmapIndex + 21,
 			.End = ColorBitmapIndex + 27,
-			.InterTime = 0.1f,
+			.InterTime = 0.05f,
 			.Loop = false });
 	}
 }
@@ -119,10 +140,16 @@ void ParticleActor::Update(float _DT)
 		return;
 	}
 
+	if (true == IsMoveParticle)
+	{
+		SetMove(ParticleMoveDir * ParticelMoveSpeed * _DT);
+	}
+
 	IsParticleEndValue = ParticleRender->IsAnimationEnd();
 
 	if (true == IsParticleEndValue)
 	{
 		ParticleReturn();
+		IsMoveParticle = false;
 	}
 }

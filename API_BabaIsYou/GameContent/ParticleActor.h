@@ -5,8 +5,10 @@
 #include "ContentEnum.h"
 
 class GameEngineRender;
+class ParticleSystem;
 class ParticleActor : public GameEngineActor
 {
+	friend ParticleSystem;
 public:
 	ParticleActor();
 	~ParticleActor();
@@ -16,7 +18,7 @@ public:
 	ParticleActor& operator=(const ParticleActor& _Other) = delete;
 	ParticleActor& operator=(ParticleActor&& _Other) noexcept = delete;
 
-	void StartParticle(const std::string_view& _ParticleName, PARTICLE_COLOR _Color, float4 _Size);
+	void MoveParticle(float4 _Dir, float _Speed);
 	void ParticleReturn();
 
 	std::string ConvertParticleColorName(PARTICLE_COLOR _Color);
@@ -30,14 +32,16 @@ public:
 protected:
 	void Start() override;
 	void Update(float _DT) override;
-	
-	void LevelChangeEnd(GameEngineLevel* _PrevLevel) override
-	{
-		ParticleReturn();
-	}
 
 private:
 	bool IsParticleEndValue = true;
+	bool IsUseParticle = false;
+
 	GameEngineRender* ParticleRender = nullptr;
 
+	bool IsMoveParticle = false;
+	float4 ParticleMoveDir = float4::Zero;
+	float ParticelMoveSpeed = 0.0f;
+
+	void StartParticle(const std::string_view& _ParticleName, PARTICLE_COLOR _Color, float4 _Size);
 };

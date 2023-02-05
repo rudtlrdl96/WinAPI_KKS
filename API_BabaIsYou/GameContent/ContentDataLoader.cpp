@@ -271,7 +271,52 @@ bool ContentDataLoader::LoadActorDataBase(const std::string_view& _Path, std::ma
         LoadData.RenderIndex = std::stoi(ReadData);
 
         std::getline(LineStream, ReadData, ','); // Color
-        LoadData.Color = GameEngineString::ToUpper(ReadData);
+        std::string ColorName = GameEngineString::ToUpper(ReadData);
+
+        if ("WHITE" == ColorName)
+        {
+            LoadData.Color = PARTICLE_COLOR::WHITE;
+        }
+        else if ("BURGUNDY" == ColorName)
+        {
+            LoadData.Color = PARTICLE_COLOR::BURGUNDY;
+        }
+        else if ("GRAY" == ColorName)
+        {
+            LoadData.Color = PARTICLE_COLOR::GRAY;
+        }
+        else if ("JAVA" == ColorName)
+        {
+            LoadData.Color = PARTICLE_COLOR::JAVA;
+        }
+        else if ("ANZAC" == ColorName)
+        {
+            LoadData.Color = PARTICLE_COLOR::ANZAC;
+        }
+        else if ("SUSHI" == ColorName)
+        {
+            LoadData.Color = PARTICLE_COLOR::SUSHI;
+        }
+        else if ("CLAY" == ColorName)
+        {
+            LoadData.Color = PARTICLE_COLOR::CLAY;
+        }
+        else if ("MOCHA" == ColorName)
+        {
+            LoadData.Color = PARTICLE_COLOR::MOCHA;
+        }
+        else if ("FLAX" == ColorName)
+        {
+            LoadData.Color = PARTICLE_COLOR::FLAX;
+        }
+        else if ("ROYALBLUE" == ColorName)
+        {
+            LoadData.Color = PARTICLE_COLOR::ROYALBLUE;
+        }
+        else if ("BLACK" == ColorName)
+        {
+            LoadData.Color = PARTICLE_COLOR::BLACK;
+        }
 
         std::getline(LineStream, ReadData, ','); // ActorType
         ReadData = GameEngineString::ToUpper(ReadData);

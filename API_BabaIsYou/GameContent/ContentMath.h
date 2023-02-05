@@ -92,6 +92,11 @@ public:
 		return ReturnValue;
 	}
 
+	float4 ToFloat4() const
+	{
+		return float4{ static_cast<float>(x), static_cast<float>(y), 0, 0 };
+	}
+
 	void normalize()
 	{		
 		if (x > 0)
