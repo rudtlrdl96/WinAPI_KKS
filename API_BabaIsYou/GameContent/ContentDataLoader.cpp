@@ -328,6 +328,7 @@ bool ContentDataLoader::LoadActorDataBase(const std::string_view& _Path, std::ma
             ActorData ActorText(LoadData.ActorEnum + 10000);
             ActorText.ActorName = LoadData.ActorName + "_TEXT";
             ActorText.RenderIndex = LoadData.RenderIndex - 2;
+            ActorText.RenderOrder = 1000;
             ActorText.Color = LoadData.Color;
             ActorText.ActorType = ACTOR_TYPE::SUBJECT_TEXT;
             ActorText.RenderType = ACTOR_RENDER_TYPE::STATIC;
@@ -349,7 +350,7 @@ bool ContentDataLoader::LoadActorDataBase(const std::string_view& _Path, std::ma
             MsgAssert("액터 데이터 로드 실패 잘못된 액터 타입입니다");
         }
 
-        std::getline(LineStream, ReadData, ','); // ActorType
+        std::getline(LineStream, ReadData, ','); // RenderType
         ReadData = GameEngineString::ToUpper(ReadData);
 
         if ("CHARACTER" == ReadData)
@@ -376,6 +377,11 @@ bool ContentDataLoader::LoadActorDataBase(const std::string_view& _Path, std::ma
         {
             MsgAssert("액터 데이터 로드 실패 잘못된 랜더 타입입니다");
         }
+
+        std::getline(LineStream, ReadData, ','); // RenderOrder
+        ReadData = GameEngineString::ToUpper(ReadData);
+
+        LoadData.RenderOrder = std::stoi(ReadData);
 
         if ("YOU" == LoadData.ActorName)
         {

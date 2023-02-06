@@ -11,6 +11,7 @@ public:
 	const int ActorEnum = -1;
 	std::string ActorName = "";
 	int RenderIndex = -1;
+	int RenderOrder = 0;
 	PARTICLE_COLOR Color = PARTICLE_COLOR::WHITE;
 	
 	ACTOR_TYPE ActorType = ACTOR_TYPE::ACTOR;

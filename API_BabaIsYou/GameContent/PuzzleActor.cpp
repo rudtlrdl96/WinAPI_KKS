@@ -547,7 +547,6 @@ void PuzzleActor::LoadData(int _Actor, int2 _Dir, bool _IsInit)
 	// 속성 값 초기화
 	WiggleRender* WiggleRenderPtr = GetWiggleRender();
 
-
 	if (nullptr == WiggleRenderPtr)
 	{
 		MsgAssert("WiggleRender가 초기화되지 않았습니다.");
@@ -567,7 +566,6 @@ void PuzzleActor::LoadData(int _Actor, int2 _Dir, bool _IsInit)
 
 	mapActorDatas[ActorEnum][ActorKey] = this;
 
-	WiggleRenderPtr->SetStartIndex(LoadDB->RenderIndex);
 
 	if (ACTOR_TYPE::ACTOR != ActorType)
 	{
@@ -580,6 +578,14 @@ void PuzzleActor::LoadData(int _Actor, int2 _Dir, bool _IsInit)
 	}
 
 	RuleManager::GetInst()->AddActorRule(this, _Actor);
+
+	WiggleRenderPtr->SetRender(CreateRender("Actor.BMP", static_cast<int>(RENDER_ORDER::ACTORSTART) + LoadDB->RenderOrder));
+	WiggleRenderPtr->SetStartIndex(LoadDB->RenderIndex);
+
+	if (true == IsDeath)
+	{
+		WiggleRenderPtr->RenderOff();
+	}
 
 	switch (RenderType)
 	{

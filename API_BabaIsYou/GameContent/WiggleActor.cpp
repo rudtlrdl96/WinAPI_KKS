@@ -63,7 +63,8 @@ void WiggleActor::InitWiggleRender(const WiggleAnimationParameter& _Parameter)
 	TempRender->SetPosition(_Parameter.Pos);
 	TempRender->SetScale(_Parameter.Scale);
 
-	Render = new WiggleRender(TempRender, _Parameter.StartIndex, _Parameter.AnimLength, _Parameter.BitmapInterval);
+	Render = new WiggleRender(_Parameter.StartIndex, _Parameter.AnimLength, _Parameter.BitmapInterval);
+	Render->SetRender(TempRender);
 
 	if (0 >= _Parameter.BitmapInterval)
 	{

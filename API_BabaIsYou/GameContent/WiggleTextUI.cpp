@@ -38,7 +38,8 @@ void WiggleTextUI::Init(int _Order)
 	TempRender->EffectCameraOff();
 	TempRender->SetScale({10, 10});
 
-	Render = new WiggleRender(TempRender, 0, 1, 37);
+	Render = new WiggleRender(0, 1, 37);
+	Render->SetRender(TempRender);
 	Render->ActiveWiggle();
 }
 

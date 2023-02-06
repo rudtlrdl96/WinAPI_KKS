@@ -2,8 +2,7 @@
 #include <GameEngineCore/GameEngineRender.h>
 #include <GameEngineBase/GameEngineDebug.h>
 
-WiggleRender::WiggleRender(GameEngineRender* _WiggleRender, int _StartIndex, int _AnimLength, int _BitmapInterval) :
-	Render(_WiggleRender),
+WiggleRender::WiggleRender(int _StartIndex, int _AnimLength, int _BitmapInterval) :
 	CurAnimationIndex(0),
 	CurWiggleIndex(0),
 	AnimLength(_AnimLength),
@@ -12,11 +11,6 @@ WiggleRender::WiggleRender(GameEngineRender* _WiggleRender, int _StartIndex, int
 	CurIndex(_StartIndex),
 	IsWiggle(false)
 {
-	if (nullptr == _WiggleRender)
-	{
-		MsgAssert("Nullptr Render를 추가하려 했습니다");
-		return;
-	}
 }
 
 WiggleRender::~WiggleRender()
@@ -58,6 +52,25 @@ void WiggleRender::Reset()
 }
 
 
+void WiggleRender::SetRender(GameEngineRender* _WiggleRender)
+{
+	if (nullptr == _WiggleRender)
+	{
+		MsgAssert("nullptr render를 인자값으로 입력했습니다");
+		return;
+	}
+
+	if (nullptr != Render)
+	{
+		_WiggleRender->SetScale(Render->GetScale());
+
+		Render->Death();
+		Render = nullptr;
+	}
+
+	Render = _WiggleRender;
+}
+
 void WiggleRender::SetRenderIndex()
 {
 	CurIndex = StartIndex;
@@ -85,6 +98,12 @@ void WiggleRender::SetRenderIndex()
 	if (true == IsTile)
 	{
 		CurIndex += CurTileIndex;
+	}
+
+	if (nullptr == Render)
+	{
+		MsgAssert("WiggleRender를 설정하지 않고 사용하려 했습니다. ");
+		return;
 	}
 
 	Render->SetFrame(CurIndex);
@@ -146,6 +165,12 @@ void WiggleRender::SetAnimDir(const int2& _Dir)
 
 void WiggleRender::SetScale(const float4& _Scale)
 {
+	if (nullptr == Render)
+	{
+		MsgAssert("WiggleRender를 설정하지 않고 사용하려 했습니다. ");
+		return;
+	}
+
 	Render->SetScale(_Scale);
 }
 
@@ -181,15 +206,33 @@ void WiggleRender::ResetAnim()
 
 void WiggleRender::RenderOn()
 {
+	if (nullptr == Render)
+	{
+		MsgAssert("WiggleRender를 설정하지 않고 사용하려 했습니다. ");
+		return;
+	}
+
 	Render->On();
 }
 
 void WiggleRender::RenderOff()
 {
+	if (nullptr == Render)
+	{
+		MsgAssert("WiggleRender를 설정하지 않고 사용하려 했습니다. ");
+		return;
+	}
+
 	Render->Off();
 }
 
 void WiggleRender::CameraEffectOff()
 {
+	if (nullptr == Render)
+	{
+		MsgAssert("WiggleRender를 설정하지 않고 사용하려 했습니다. ");
+		return;
+	}
+
 	Render->EffectCameraOff();
 }
