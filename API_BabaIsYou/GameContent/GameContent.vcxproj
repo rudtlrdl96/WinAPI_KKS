@@ -416,6 +416,11 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="PuzzleActor_GridData.cpp" />
+    <ClCompile Include="PuzzleActor_Static.cpp">
+      <SubType>
+      </SubType>
+    </ClCompile>
     <ClCompile Include="PuzzleLevel.cpp">
       <SubType>
       </SubType>

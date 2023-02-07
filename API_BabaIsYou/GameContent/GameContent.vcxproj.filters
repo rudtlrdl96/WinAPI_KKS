@@ -299,5 +299,11 @@
     <ClCompile Include="CameraSystem.cpp">
       <Filter>02.Manager,System</Filter>
     </ClCompile>
+    <ClCompile Include="PuzzleActor_Static.cpp">
+      <Filter>01.Actor\PuzzleActor</Filter>
+    </ClCompile>
+    <ClCompile Include="PuzzleActor_GridData.cpp">
+      <Filter>01.Actor\PuzzleActor</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
