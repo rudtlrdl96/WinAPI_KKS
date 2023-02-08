@@ -13,6 +13,9 @@
 #include "PuzzleLevel.h"
 #include "ContentDataLoader.h"
 #include "CameraSystem.h"
+#include "DeathUndoUI.h"
+#include "DeathRestartUI.h"
+#include "AppearParticle.h"
 
 PuzzleActorManager::PuzzleActorManager()
 {
@@ -28,6 +31,34 @@ void PuzzleActorManager::Init(PuzzleLevel* _PuzzleLevel)
 	MainPuzzleLevel = _PuzzleLevel;
 	PuzzleActor::InitGridActor(_PuzzleLevel);
 	GridBackActor = MainPuzzleLevel->CreateActor<BlackBackUI>();
+
+	DeathUndoUIPtr = MainPuzzleLevel->CreateActor<DeathUndoUI>();
+	DeathUndoUIPtr->SetPos({480.0f, 30.0f});
+	DeathUndoUIPtr->Off();
+
+	DeathRestartUIPtr = MainPuzzleLevel->CreateActor<DeathRestartUI>();
+	DeathRestartUIPtr->SetPos({ 830.0f, 30.0f });
+	DeathRestartUIPtr->Off();
+
+	DeathUIParticle.reserve(2);
+
+	for (size_t i = 0; i < DeathUIParticle.capacity(); i++)
+	{
+		DeathUIParticle.push_back(std::vector<AppearParticle*>());
+		DeathUIParticle[i].reserve(4);
+
+		for (size_t j = 0; j < DeathUIParticle[i].capacity(); j++)
+		{
+			DeathUIParticle[i].push_back(MainPuzzleLevel->CreateActor<AppearParticle>());
+		}
+
+		DeathUIParticle[i][0]->SetPos(DeathUndoUIPtr->GetPos() + float4{ -35.0f, 10.0f });
+		DeathUIParticle[i][1]->SetPos(DeathUndoUIPtr->GetPos() + float4{ 35.0f, 10.0f });
+		DeathUIParticle[i][2]->SetPos(DeathRestartUIPtr->GetPos() + float4{ -35.0f, 10.0f });
+		DeathUIParticle[i][3]->SetPos(DeathRestartUIPtr->GetPos() + float4{ 35.0f, 10.0f });
+	}
+
+
 }
 
 void PuzzleActorManager::Input(float _DT)
@@ -38,6 +69,31 @@ void PuzzleActorManager::Input(float _DT)
 	}
 	PuzzleActor::GetActors(ACTOR_DEFINE::YOU);
 	int2 MoveDir = int2::Zero;
+
+	if (0 < PuzzleActor::GetYouPuzzleActorCount())
+	{
+		DeathTime = 0.0f;
+
+		if (true == DeathUndoUIPtr->IsUpdate() || true == DeathRestartUIPtr->IsUpdate())
+		{
+			DeathUndoUIPtr->Off();
+			DeathRestartUIPtr->Off();
+			DeathParticleOn(0);
+		}
+	}
+	else
+	{
+		DeathTime += _DT;
+
+		if (false == DeathUndoUIPtr->IsUpdate() && false == DeathRestartUIPtr->IsUpdate() && 3.0f <= DeathTime)
+		{
+			DeathUndoUIPtr->On();
+			DeathRestartUIPtr->On();
+			DeathParticleOn(1);
+		}
+	}
+
+	PuzzleActor::ResetYouActorCount();
 
 	if (GameEngineInput::IsDown("ReStart"))
 	{
@@ -217,4 +273,19 @@ void PuzzleActorManager::Reset()
 bool PuzzleActorManager::IsPuzzleEnd() const
 {
 	return PuzzleActor::IsWin();
+}
+
+
+void PuzzleActorManager::DeathParticleOn(int _Index)
+{
+	if (0 > _Index || DeathUIParticle.size() <= _Index)
+	{
+		MsgAssert("잘못된 배열 인덱스에 접근했습니다");
+		return;
+	}
+
+	for (size_t i = 0; i < DeathUIParticle[_Index].size(); i++)
+	{
+		DeathUIParticle[_Index][i]->StartParticle(10, 0.0f, 10.0f, 70.0f, 0.2f, 0.55f);
+	}
 }

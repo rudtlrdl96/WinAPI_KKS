@@ -174,6 +174,19 @@
     <ClInclude Include="CameraSystem.h">
       <Filter>02.Manager,System</Filter>
     </ClInclude>
+    <ClInclude Include="TutorialUI.h" />
+    <ClInclude Include="FlashedParticle.h">
+      <Filter>01.Actor\UIActor\PuzzleLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="AppearParticle.h">
+      <Filter>01.Actor\UIActor\PuzzleLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="DeathUndoUI.h">
+      <Filter>01.Actor\UIActor\PuzzleLevel</Filter>
+    </ClInclude>
+    <ClInclude Include="DeathRestartUI.h">
+      <Filter>01.Actor\UIActor\PuzzleLevel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PuzzleActorManager.cpp">
@@ -304,6 +317,19 @@
     </ClCompile>
     <ClCompile Include="PuzzleActor_GridData.cpp">
       <Filter>01.Actor\PuzzleActor</Filter>
+    </ClCompile>
+    <ClCompile Include="TutorialUI.cpp" />
+    <ClCompile Include="FlashedParticle.cpp">
+      <Filter>01.Actor\UIActor\PuzzleLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="AppearParticle.cpp">
+      <Filter>01.Actor\UIActor\PuzzleLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="DeathUndoUI.cpp">
+      <Filter>01.Actor\UIActor\PuzzleLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="DeathRestartUI.cpp">
+      <Filter>01.Actor\UIActor\PuzzleLevel</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

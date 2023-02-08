@@ -39,12 +39,12 @@ void WiggleActor::Update(float _DT)
 	}
 }
 
-void WiggleActor::InitWiggleRender(const WiggleAnimationParameter& _Parameter)
+WiggleRender* WiggleActor::InitWiggleRender(const WiggleAnimationParameter& _Parameter)
 {
 	if (nullptr != Render)
 	{
 		MsgAssert("Render를 중복 초기화하려 했습니다");
-		return;
+		return nullptr;
 	}
 
 	GameEngineRender* TempRender = CreateRender(_Parameter.FileName, _Parameter.Order);
@@ -57,7 +57,7 @@ void WiggleActor::InitWiggleRender(const WiggleAnimationParameter& _Parameter)
 	if (nullptr == TempRender)
 	{
 		MsgAssert("GameEngineRender의 생성에 실패했습니다");
-		return;
+		return nullptr;
 	}
 
 	TempRender->SetPosition(_Parameter.Pos);
@@ -74,6 +74,8 @@ void WiggleActor::InitWiggleRender(const WiggleAnimationParameter& _Parameter)
 	{
 		Render->ActiveWiggle();
 	}
+
+	return Render;
 }
 
 WiggleRender* WiggleActor::GetWiggleRender() const

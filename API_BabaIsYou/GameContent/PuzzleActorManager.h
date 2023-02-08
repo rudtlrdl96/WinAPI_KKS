@@ -8,6 +8,9 @@
 class PuzzleLevel;
 class PuzzleActor;
 class BlackBackUI;
+class DeathUndoUI;
+class DeathRestartUI;
+class AppearParticle;
 class PuzzleActorManager sealed
 {
 private:
@@ -63,4 +66,12 @@ private:
 	PuzzleLevel* MainPuzzleLevel = nullptr;
 	BlackBackUI* GridBackActor = nullptr;
 
+	DeathUndoUI* DeathUndoUIPtr = nullptr;
+	DeathRestartUI* DeathRestartUIPtr = nullptr;
+
+	std::vector<std::vector<AppearParticle*>> DeathUIParticle;
+
+	float DeathTime = 0.0f;
+
+	void DeathParticleOn(int _Index);
 };

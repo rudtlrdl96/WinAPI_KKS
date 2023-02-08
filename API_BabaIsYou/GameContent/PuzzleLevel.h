@@ -6,6 +6,7 @@
 class FadeUI;
 class CongratulationsUI;
 class GridActorManager;
+class TutorialUI;
 class CameraSystem;
 class PuzzleLevel : public GameEngineLevel
 {
@@ -44,6 +45,7 @@ private:
 	FadeUI* PuzzleFadeActor = nullptr;
 	CongratulationsUI* CongratulationActor = nullptr;
 	CameraSystem* CameraSystemPtr = nullptr;
+	TutorialUI* TutorialRender = nullptr;
 
 	static bool IsExitValue;
 };

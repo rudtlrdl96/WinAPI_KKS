@@ -1,6 +1,7 @@
 #include "PuzzleLevel.h"
 #include <GameEngineBase/GameEngineDirectory.h>
 #include <GameEnginePlatform/GameEngineInput.h>
+#include <GameEnginePlatform/GameEngineWindow.h>
 #include <GameEngineCore/GameEngineResources.h>
 
 #include "FadeUI.h"
@@ -12,6 +13,9 @@
 #include "ContentConst.h"
 #include "ParticleSystem.h"
 #include "CameraSystem.h"
+#include "TutorialUI.h"
+#include "ContentRand.h"
+#include "AppearParticle.h"
 
 std::string PuzzleLevel::LoadPuzzleName = "";
 std::string PuzzleLevel::LoadPuzzleInfo = "";
@@ -63,11 +67,18 @@ void PuzzleLevel::Loading()
 
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("CongratulationsAnim.BMP"))->Cut(1, 37);
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("CongratulationsWiggle.BMP"))->Cut(1, 9);
-	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("Effect.BMP"))->Cut(1, 1);
+	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("MoveTutorialUI.BMP"));
+	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("PauseTutorialUI.BMP"));
+	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("UndoTutorialUI.BMP"));
+	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("DeathUndoUI.BMP"));
+	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("DeathRestartUI.BMP"));
+	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("FlashedParticle.BMP"))->Cut(2, 1);
+	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("WiggleDot.BMP"))->Cut(3, 1);
 		
 	CreateActor<GrayBackUI>();
 	PuzzleFadeActor = CreateActor<FadeUI>();
 	CongratulationActor = CreateActor<CongratulationsUI>();
+	TutorialRender = CreateActor<TutorialUI>();
 
 	PuzzleActorManager::GetInst()->Init(this);
 
@@ -134,5 +145,25 @@ void PuzzleLevel::LevelChangeEnd(GameEngineLevel* _NextLevel)
 
 void PuzzleLevel::LoadPuzzleData()
 {
+	if ("Stage_0_0" == LoadPuzzleName)
+	{
+		TutorialRender->SetTutorialImage("MoveTutorialUI.BMP", {90, 90 });
+		TutorialRender->SetPos(GameEngineWindow::GetScreenSize().half() + float4{-22, -230});
+	}
+	else if ("Stage_0_1" == LoadPuzzleName)
+	{
+		TutorialRender->SetTutorialImage("PauseTutorialUI.BMP", { 90, 90 });
+		TutorialRender->SetPos({200, 120});
+	}
+	else if ("Stage_0_3" == LoadPuzzleName)
+	{
+		TutorialRender->SetTutorialImage("UndoTutorialUI.BMP", { 70, 70 });
+		TutorialRender->SetPos(GameEngineWindow::GetScreenSize().half() + float4{50, -270});
+	}
+	else
+	{
+		TutorialRender->Off();
+	}
+
 	PuzzleActorManager::GetInst()->LoadData(LoadPuzzleName);
 }

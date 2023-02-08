@@ -11,6 +11,7 @@ GameEngineLevel* PuzzleActor::PuzzleLevel = nullptr;
 size_t PuzzleActor::ObjectPoolCount = 0;
 bool PuzzleActor::AnyActorMoveCheck = false;
 bool PuzzleActor::WinCheckValue = false;
+int PuzzleActor::YouActorCount = 0;
 int PuzzleActor::NextActorKey = 0;
 int2 PuzzleActor::GridLength = int2::Zero;
 
@@ -260,6 +261,16 @@ bool PuzzleActor::IsAnyMove()
 void PuzzleActor::AnyMoveCheckReset()
 {
 	AnyActorMoveCheck = false;
+}
+
+int PuzzleActor::GetYouPuzzleActorCount()
+{
+	return YouActorCount;
+}
+
+void PuzzleActor::ResetYouActorCount()
+{
+	YouActorCount = 0;
 }
 
 #pragma endregion

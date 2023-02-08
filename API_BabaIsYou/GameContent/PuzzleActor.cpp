@@ -61,9 +61,17 @@ void PuzzleActor::Update(float _DT)
 		SetTileRender();
 	}
 
-	if (false == WinCheckValue && false == IsDeath && IsDefine(ACTOR_DEFINE::YOU))
+	if (true == IsDefine(ACTOR_DEFINE::YOU))
 	{
-		WinCheck();
+		if (false == IsDeath)
+		{
+			++YouActorCount;
+		}
+
+		if (false == IsDeath && false == WinCheckValue)
+		{
+			WinCheck();
+		}
 	}
 
 	if (ACTOR_TYPE::ACTOR != ActorType)

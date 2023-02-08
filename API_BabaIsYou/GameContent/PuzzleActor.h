@@ -62,6 +62,8 @@ public:
 
 	static bool IsAnyMove();
 	static void AnyMoveCheckReset();
+	static int GetYouPuzzleActorCount();
+	static void ResetYouActorCount();
 	static bool IsOver(const int2& _GridPos);
 	static bool IsWin();
 
@@ -70,6 +72,7 @@ private:
 	static size_t ObjectPoolCount;
 	static bool AnyActorMoveCheck;
 	static bool WinCheckValue;
+	static int YouActorCount;
 
 	// 액터마다 고유 키를 주기위한 변수 절대 임의로 값 수정 x
 	static int NextActorKey;
