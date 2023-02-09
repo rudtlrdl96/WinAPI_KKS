@@ -16,6 +16,7 @@
 #include "ContentConst.h"
 #include "WiggleRender.h"
 #include "CameraSystem.h"
+#include "SoundSystem.h"
 
 TitleLevel::TitleLevel()
 {
@@ -89,6 +90,7 @@ void TitleLevel::Loading()
 	CreateActor<TitleLogoUI>();
 	CreateActor<BlackBackUI>();
 	CreateActor<CameraSystem>();
+	SoundSystemPtr = CreateActor<SoundSystem>();
 
 	vecTitleButtons.reserve(TB_COUNT);
 
@@ -158,10 +160,12 @@ void TitleLevel::Update(float _DT)
 	if (true == vecTitleButtons[TB_GAME]->IsUp())
 	{
 		TitleFadeActor->Fade({ .State = FADE_STATE::FADEIN, .Func = ContentFunc::ChangeWorldmapLevel });
+		SoundSystemPtr->BgmStop();
 	}
 	else if (true == vecTitleButtons[TB_MAPTOOL]->IsUp())
 	{
 		TitleFadeActor->Fade({ .State = FADE_STATE::FADEIN, .Func = ContentFunc::ChangeMapToolLevel });
+		SoundSystemPtr->BgmStop();
 	}
 	else if (true == vecTitleButtons[TB_EXIT]->IsUp())
 	{
@@ -172,6 +176,7 @@ void TitleLevel::Update(float _DT)
 void TitleLevel::LevelChangeStart(GameEngineLevel* _NextLevel)
 {
 	TitleFadeActor->Fade({ .State = FADE_STATE::FADEOUT, .WaitTime = 0.5f });
+	SoundSystemPtr->BgmPlay("Menu.ogg");
 }
 
 void TitleLevel::ButtonUp()
@@ -201,10 +206,12 @@ void TitleLevel::ButtonUse()
 	if (TB_GAME == SelectButton)
 	{
 		TitleFadeActor->Fade({ .State = FADE_STATE::FADEIN, .Func = ContentFunc::ChangeWorldmapLevel });
+		SoundSystemPtr->BgmStop();
 	}
 	else if (TB_MAPTOOL == SelectButton)
 	{
 		TitleFadeActor->Fade({ .State = FADE_STATE::FADEIN, .Func = ContentFunc::ChangeMapToolLevel });
+		SoundSystemPtr->BgmStop();
 	}
 	else if (TB_EXIT == SelectButton)
 	{

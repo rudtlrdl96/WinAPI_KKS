@@ -1,4 +1,6 @@
 #pragma once
+#include <string>
+#include <string_view>
 
 // 설명 : 오브젝트 구조의 가장 기본이 되어주는 클래스.
 class GameEngineObject
@@ -62,7 +64,7 @@ public:
 		return Order;
 	}
 
-	void SetOwner(GameEngineObject* _Parent)
+	virtual void SetOwner(GameEngineObject* _Parent)
 	{
 		Parent = _Parent;
 	}
@@ -78,6 +80,21 @@ public:
 		return Parent;
 	}
 
+	void SetName(const std::string_view& _View) 
+	{
+		Name = _View;
+	}
+
+	const std::string& GetName()
+	{
+		return Name;
+	}
+
+	std::string GetNameCopy()
+	{
+		return Name;
+	}
+
 protected:
 
 private:
@@ -88,6 +105,8 @@ private:
 
 	bool ObjectDeath = false;
 	bool ObjectUpdate = true;
+
+	std::string Name;
 
 };
 

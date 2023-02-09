@@ -92,7 +92,7 @@ void FadeUI::Update(float _Time)
 		return;
 	}
 
-	if (true == IsWait)
+	if (true == IsWaitValue)
 	{
 		ProgressWaitTime += _Time;
 
@@ -103,7 +103,7 @@ void FadeUI::Update(float _Time)
 
 		if (ProgressWaitTime >= WaitTime)
 		{
-			IsWait = false;
+			IsWaitValue = false;
 			FadeRender->On();
 			BoxRender->Off();
 
@@ -203,7 +203,7 @@ void FadeUI::Fade(const FadeParameter& _FadeParameter)
 
 	FadeRatio = 0.0f;
 	DelayTime = 0.0f;
-	IsWait = true;
+	IsWaitValue = true;
 	IsDelay = false;
 	FadeRender->Off();
 

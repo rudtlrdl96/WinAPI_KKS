@@ -6,7 +6,6 @@
 #include "MapToolLevel.h"
 #include "WorldMapLevel.h"
 #include "PuzzleLevel.h"
-#include "EndingLevel.h"
 #include "LogoLevel.h"
 
 ContentCore::ContentCore()
@@ -25,10 +24,9 @@ void ContentCore::Start()
 	CreateLevel<TitleLevel>("Title");
 	CreateLevel<PuzzleLevel>("Puzzle");
 	CreateLevel<WorldMapLevel>("Worldmap");
-	CreateLevel<EndingLevel>("Ending");
 	CreateLevel<MapToolLevel>("MapTool");
 
-	ChangeLevel("Worldmap");
+	ChangeLevel("Logo");
 }
 
 void ContentCore::Update()

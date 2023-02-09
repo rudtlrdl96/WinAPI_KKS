@@ -9,6 +9,8 @@
 #include "BlackBackUI.h"
 #include "ContentFunc.h"
 #include "ContentDataBase.h"
+#include "SoundSystem.h"
+#include "ContentEnum.h"
 
 LogoLevel::LogoLevel()
 {
@@ -42,6 +44,16 @@ void LogoLevel::Loading()
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("WiggleText.BMP"))->Cut(37, 6);
 
 
+	GameEngineDirectory SoundDir;
+
+	SoundDir.MoveParentToDirectory("ContentsResources");
+	SoundDir.Move("ContentsResources");
+	SoundDir.Move("Sound");
+	SoundDir.Move("BGM");
+
+	SoundSystemPtr = CreateActor<SoundSystem>();
+	SoundSystemPtr->SoundLoad(SoundDir.GetPlusFileName("menu.ogg"), SOUND_GROUP::BGM);
+
 	ContentDataBase::GetInst()->InitDataBase();
 
 	LogoFadeActor = CreateActor<FadeUI>(1);
@@ -60,4 +72,5 @@ void LogoLevel::Update(float _DT)
 void LogoLevel::LevelChangeStart(GameEngineLevel* _NextLevel)
 {
 	LogoFadeActor->Fade({ .State = FADE_STATE::FADEOUT});
+	SoundSystemPtr->BgmPlay("Menu.ogg");
 }

@@ -2,6 +2,7 @@
 #include <GameEngineCore/GameEngineLevel.h>
 
 class FadeUI;
+class SoundSystem;
 class LogoLevel : public GameEngineLevel
 {
 public:
@@ -20,4 +21,5 @@ protected:
 	void LevelChangeEnd(GameEngineLevel* _NextLevel) override {}
 private:
 	FadeUI* LogoFadeActor = nullptr;
+	SoundSystem* SoundSystemPtr = nullptr;
 };

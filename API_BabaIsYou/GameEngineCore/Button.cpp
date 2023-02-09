@@ -3,16 +3,13 @@
 
 Button::Button() 
 {
+	State = ButtonState::Release;
 }
 
 Button::~Button() 
 {
 }
 
-void Button::SetImage() 
-{
-
-}
 
 void Button::SetTargetCollisionGroup(int _PointTargetGroup)
 {
@@ -26,21 +23,60 @@ void Button::SetTargetCollisionGroup(int _PointTargetGroup)
 
 void Button::Start()
 {
-	
-	Render = CreateRender();
+	ButtonRender = CreateRender();
+	ButtonCollision = CreateCollision();
 }
 
-void Button::SetScale() 
+void Button::SetRenderOrder(int _Value)
 {
-	//int TargetGroup = -342367842;
-	//CollisionType TargetColType = CollisionType::CT_CirCle;
-	//CollisionType ThisColType = CollisionType::CT_CirCle;
+	ButtonRender->SetOrder(_Value);
+}
+
+void Button::SetScale(float4 _Scale)
+{
+	Scale = _Scale;
+	ButtonCollision->SetScale(Scale);
+	// Render->SetScale(_Scale);
+}
+
+void Button::Update(float _DeltaTime)
+{
+	State = ButtonState::Release;
 
 	if (true == ButtonCollision->Collision({ .TargetGroup = PointTargetGroup, .TargetColType = CollisionType::CT_Point, .ThisColType = ButtonCollisionType }))
 	{
-		if (true == GameEngineInput::IsDown("EngineMouseLeft") && nullptr != ClickPtr)
+		if (true == GameEngineInput::IsUp("EngineMouseLeft") && nullptr != ClickPtr)
 		{
 			ClickPtr();
 		}
+		else if (true == GameEngineInput::IsFree("EngineMouseLeft"))
+		{
+			State = ButtonState::Hover;
+		}
+		else if (true == GameEngineInput::IsPress("EngineMouseLeft"))
+		{
+			State = ButtonState::Press;
+		}
+	}
+
+	switch (State)
+	{
+	case ButtonState::Release:
+		CurImageName = ReleaseImageName;
+		ButtonRender->SetImage(ReleaseImageName);
+		ButtonRender->SetScale(Scale);
+		break;
+	case ButtonState::Press:
+		CurImageName = PressImageName;
+		ButtonRender->SetImage(PressImageName);
+		ButtonRender->SetScale(Scale);
+		break;
+	case ButtonState::Hover:
+		CurImageName = HoverImageName;
+		ButtonRender->SetImage(HoverImageName);
+		ButtonRender->SetScale(Scale);
+		break;
+	default:
+		break;
 	}
 }

@@ -7,6 +7,7 @@ class FadeUI;
 class WorldMapActor;
 class WorldMapSelect;
 class StringUI;
+class SoundSystem;
 class WorldMapLevel : public GameEngineLevel
 {
 public:
@@ -30,6 +31,7 @@ private:
 	std::vector<std::vector<WorldMapActor*>> vecWorldMapDatas;
 	WorldMapSelect* WorldMapSelectActor = nullptr;
 	StringUI* InfoStringUI = nullptr;
+	SoundSystem* SoundSystemPtr = nullptr;
 
 	int2 MapSize = int2::Zero;
 	int2 SelectPuzzlePos = int2::Zero;

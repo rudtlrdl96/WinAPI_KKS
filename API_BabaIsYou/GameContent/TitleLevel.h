@@ -6,6 +6,7 @@ class FadeUI;
 class ButtonUI;
 class WiggleGridActor;
 class WiggleMapToolActor;
+class SoundSystem;
 class TitleLevel : public GameEngineLevel
 {
 private:
@@ -35,6 +36,7 @@ private:
 	std::vector<ButtonUI*> vecTitleButtons;
 	WiggleGridActor* BackGroundActors = nullptr;
 
+	SoundSystem* SoundSystemPtr = nullptr;
 	std::vector<float4> vecCameraMovePoint;
 	size_t CameraPointindex = 0;
 

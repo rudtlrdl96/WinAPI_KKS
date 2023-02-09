@@ -98,3 +98,9 @@ enum class RULE_TYPE
 	IS_SUBJECT,
 	IS_DEFINE
 };
+
+enum class SOUND_GROUP
+{
+	BGM,
+
+};

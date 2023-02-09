@@ -16,6 +16,7 @@
 #include "StringUI.h"
 #include "WiggleStringUI.h"
 #include "WiggleMapToolActor.h"
+#include "SoundSystem.h"
 
 WorldMapLevel::WorldMapLevel()
 {
@@ -40,8 +41,10 @@ void WorldMapLevel::Loading()
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("WorldMapLine.BMP"))->Cut(16, 3);
 
 	WorldMapFadeActor = CreateActor<FadeUI>();
+
 	CreateActor<MapBackgroundUI>();
 	CreateActor<GrayBackUI>();
+
 	InfoStringUI = CreateActor<StringUI>();
 	InfoStringUI->SetPos({ 10, 16 });
 	InfoStringUI->SetFontSize({ 28, 28 });
@@ -69,6 +72,15 @@ void WorldMapLevel::Loading()
 		WinText->SetPos({ 1215, 665 });
 	}
 
+	GameEngineDirectory SoundDir;
+
+	SoundDir.MoveParentToDirectory("ContentsResources");
+	SoundDir.Move("ContentsResources");
+	SoundDir.Move("Sound");
+	SoundDir.Move("BGM");
+
+	SoundSystemPtr = CreateActor<SoundSystem>();
+	SoundSystemPtr->SoundLoad(SoundDir.GetPlusFileName("map.ogg"), SOUND_GROUP::BGM);
 	WorldMapSelectActor = CreateActor<WorldMapSelect>();
 
 	if (false == GameEngineInput::IsKey("LevelChange"))
@@ -167,6 +179,7 @@ void WorldMapLevel::Update(float _DT)
 		PuzzleLevel::SetPuzzleMapInfo(MapActor->GetPuzzleInfo());
 		PuzzleLevel::SetPuzzleMapLevel(MapActor->GetPuzzleNumber());
 		WorldMapFadeActor->Fade({ .State = FADE_STATE::FADEIN, .Func = ContentFunc::ChangePuzzleLevel });
+		SoundSystemPtr->BgmStop();
 	}
 }
 
@@ -174,6 +187,7 @@ void WorldMapLevel::Update(float _DT)
 void WorldMapLevel::LevelChangeStart(GameEngineLevel* _PrevLevel)
 {
 	WorldMapFadeActor->Fade({ .State = FADE_STATE::FADEOUT, .WaitTime = 0.5f });
+	SoundSystemPtr->BgmPlay("map.ogg");
 }
 
 void WorldMapLevel::MoveWorldMap(const int2& _Move)

@@ -12,10 +12,11 @@
 #include "ContentFunc.h"
 #include "ContentConst.h"
 #include "ParticleSystem.h"
-#include "CameraSystem.h"
 #include "TutorialUI.h"
 #include "ContentRand.h"
 #include "AppearParticle.h"
+#include "CameraSystem.h"
+#include "SoundSystem.h"
 
 std::string PuzzleLevel::LoadPuzzleName = "";
 std::string PuzzleLevel::LoadPuzzleInfo = "";
@@ -75,6 +76,19 @@ void PuzzleLevel::Loading()
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("FlashedParticle.BMP"))->Cut(2, 1);
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("WiggleDot.BMP"))->Cut(3, 1);
 		
+
+
+	GameEngineDirectory SoundDir;
+
+	SoundDir.MoveParentToDirectory("ContentsResources");
+	SoundDir.Move("ContentsResources");
+	SoundDir.Move("Sound");
+	SoundDir.Move("BGM");
+
+	SoundSystemPtr = CreateActor<SoundSystem>();
+	SoundSystemPtr->SoundLoad(SoundDir.GetPlusFileName("baba.ogg"), SOUND_GROUP::BGM);
+	SoundSystemPtr->SoundLoad(SoundDir.GetPlusFileName("noise.ogg"), SOUND_GROUP::BGM);
+
 	CreateActor<GrayBackUI>();
 	PuzzleFadeActor = CreateActor<FadeUI>();
 	CongratulationActor = CreateActor<CongratulationsUI>();
@@ -102,6 +116,7 @@ void PuzzleLevel::Update(float _DT)
 	if (false == PuzzleFadeActor->IsProgress() && true == IsExitValue)
 	{
 		PuzzleFadeActor->Fade({ .State = FADE_STATE::FADEIN, .Func = ContentFunc::ChangeWorldmapLevel });
+		SoundSystemPtr->BgmStop();
 	}
 
 	if (true == IsExitValue)
@@ -115,8 +130,11 @@ void PuzzleLevel::Update(float _DT)
 	}
 	else
 	{
-		PuzzleActorManager::GetInst()->Input(_DT);
-		PuzzleActorManager::GetInst()->clear();
+		if (false == PuzzleFadeActor->IsProgress())
+		{
+			PuzzleActorManager::GetInst()->Input(_DT);
+			PuzzleActorManager::GetInst()->clear();
+		}	
 	}
 }
 

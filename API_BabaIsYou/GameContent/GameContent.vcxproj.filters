@@ -60,9 +60,6 @@
     <ClInclude Include="PuzzleLevel.h">
       <Filter>03.Level</Filter>
     </ClInclude>
-    <ClInclude Include="EndingLevel.h">
-      <Filter>03.Level</Filter>
-    </ClInclude>
     <ClInclude Include="LogoLevel.h">
       <Filter>03.Level</Filter>
     </ClInclude>
@@ -187,6 +184,9 @@
     <ClInclude Include="DeathRestartUI.h">
       <Filter>01.Actor\UIActor\PuzzleLevel</Filter>
     </ClInclude>
+    <ClInclude Include="SoundSystem.h">
+      <Filter>02.Manager,System</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="PuzzleActorManager.cpp">
@@ -202,9 +202,6 @@
       <Filter>03.Level</Filter>
     </ClCompile>
     <ClCompile Include="PuzzleLevel.cpp">
-      <Filter>03.Level</Filter>
-    </ClCompile>
-    <ClCompile Include="EndingLevel.cpp">
       <Filter>03.Level</Filter>
     </ClCompile>
     <ClCompile Include="LogoLevel.cpp">
@@ -330,6 +327,9 @@
     </ClCompile>
     <ClCompile Include="DeathRestartUI.cpp">
       <Filter>01.Actor\UIActor\PuzzleLevel</Filter>
+    </ClCompile>
+    <ClCompile Include="SoundSystem.cpp">
+      <Filter>02.Manager,System</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

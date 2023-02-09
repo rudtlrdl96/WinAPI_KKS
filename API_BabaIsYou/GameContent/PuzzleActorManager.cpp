@@ -16,6 +16,7 @@
 #include "DeathUndoUI.h"
 #include "DeathRestartUI.h"
 #include "AppearParticle.h"
+#include "SoundSystem.h"
 
 PuzzleActorManager::PuzzleActorManager()
 {
@@ -74,16 +75,31 @@ void PuzzleActorManager::Input(float _DT)
 	{
 		DeathTime = 0.0f;
 
+		if ("baba.ogg" != SoundSystem::GetLevelSoundSystem()->GetBGMName())
+		{
+			SoundSystem::GetLevelSoundSystem()->BgmStop();
+			SoundSystem::GetLevelSoundSystem()->BgmPlay("baba.ogg");
+		}
+
 		if (true == DeathUndoUIPtr->IsUpdate() || true == DeathRestartUIPtr->IsUpdate())
 		{
 			DeathUndoUIPtr->Off();
 			DeathRestartUIPtr->Off();
 			DeathParticleOn(0);
+			SoundSystem::GetLevelSoundSystem()->BgmStop();
 		}
 	}
 	else
 	{
 		DeathTime += _DT;
+
+		std::string_view test = SoundSystem::GetLevelSoundSystem()->GetBGMName();
+
+		if ("noise.ogg" != SoundSystem::GetLevelSoundSystem()->GetBGMName())
+		{
+			SoundSystem::GetLevelSoundSystem()->BgmStop();
+			SoundSystem::GetLevelSoundSystem()->BgmPlay("noise.ogg");
+		}
 
 		if (false == DeathUndoUIPtr->IsUpdate() && false == DeathRestartUIPtr->IsUpdate() && 3.0f <= DeathTime)
 		{

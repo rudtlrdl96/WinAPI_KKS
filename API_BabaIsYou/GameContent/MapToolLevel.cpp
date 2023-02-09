@@ -13,6 +13,7 @@
 #include "WiggleGridActor.h"
 #include "ContentDataLoader.h"
 #include "CameraSystem.h"
+#include "SoundSystem.h"
 
 MapToolLevel::MapToolLevel() :
 	MapToolFadeActor(nullptr)
@@ -108,6 +109,7 @@ void MapToolLevel::Loading()
 	WiggleGridActors->InitGrid(ContentConst::GRID_SIZE);
 
 	CameraSystemPtr = CreateActor<CameraSystem>();
+	CreateActor<SoundSystem>();
 
 	ResizeMap({10, 10});
 	SelectBrush(MAPTOOL_BRUSH::PEN);

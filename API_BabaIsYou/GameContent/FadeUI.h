@@ -54,6 +54,11 @@ public:
 		return IsProgressValue;
 	}
 
+	inline bool IsWait() const
+	{
+		return IsWaitValue;
+	}
+
 protected:
 	void Start() override;
 	void Update(float _Time) override;
@@ -75,7 +80,7 @@ private:
 
 	float FadeRatio = 0.0f;
 
-	bool IsWait = false;
+	bool IsWaitValue = false;
 	bool IsDelay = false;
 
 	FADE_STATE State = FADE_STATE::NONE;

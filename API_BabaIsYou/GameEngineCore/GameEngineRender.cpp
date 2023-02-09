@@ -16,6 +16,12 @@ GameEngineRender::~GameEngineRender()
 void GameEngineRender::SetImage(const std::string_view& _ImageName) 
 {
 	Image = GameEngineResources::GetInst().ImageFind(_ImageName);
+	// SetScaleToImage();
+}
+
+void GameEngineRender::SetImageToScaleToImage(const std::string_view& _ImageName)
+{
+	Image = GameEngineResources::GetInst().ImageFind(_ImageName);
 	SetScaleToImage();
 }
 
@@ -24,7 +30,6 @@ void GameEngineRender::SetScaleToImage()
 	if (nullptr == Image)
 	{
 		MsgAssert("이미지를 세팅하지 않았는데 이미지의 크기로 변경하려고 했습니다.");
-		return;
 	}
 
 	SetScale(Image->GetImageScale());
@@ -32,8 +37,7 @@ void GameEngineRender::SetScaleToImage()
 
 void GameEngineRender::SetOrder(int _Order) 
 {
-	GameEngineObject::SetOrder(_Order);
-	GetActor()->GetLevel()->PushRender(this);
+	GetActor()->GetLevel()->PushRender(this, _Order);
 }
 
 void GameEngineRender::SetFrame(int _Frame)
@@ -85,9 +89,42 @@ void GameEngineRender::FrameAnimation::Render(float _DeltaTime)
 	}
 }
 
+void GameEngineRender::SetText(const std::string_view& _Text)
+{
+	RenderText = _Text;
+}
+
 void GameEngineRender::Render(float _DeltaTime)
 {
+	if (RenderText != "")
+	{
+		TextRender(_DeltaTime);
+	}
+	else 
+	{
+		ImageRender(_DeltaTime);
+	}
+}
 
+void GameEngineRender::TextRender(float _DeltaTime)
+{
+
+	float4 CameraPos = float4::Zero;
+
+	if (true == IsEffectCamera)
+	{
+		CameraPos = GetActor()->GetLevel()->GetCameraPos();
+	}
+
+	float4 RenderPos = GetActorPlusPos() - CameraPos;
+
+	TextOutA(GameEngineWindow::GetDoubleBufferImage()->GetImageDC(), RenderPos.ix(), RenderPos.iy(), RenderText.c_str(), static_cast<int>(RenderText.size()));
+
+	return;
+}
+
+void GameEngineRender::ImageRender(float _DeltaTime)
+{
 	if (nullptr != CurrentAnimation)
 	{
 		CurrentAnimation->Render(_DeltaTime);
@@ -113,9 +150,9 @@ void GameEngineRender::Render(float _DeltaTime)
 	{
 		GameEngineWindow::GetDoubleBufferImage()->TransCopy(Image, Frame, RenderPos, GetScale(), TransColor);
 	}
-	else 
+	else
 	{
-		GameEngineWindow::GetDoubleBufferImage()->TransCopy(Image, RenderPos, GetScale(), {0, 0}, Image->GetImageScale(), TransColor);
+		GameEngineWindow::GetDoubleBufferImage()->TransCopy(Image, RenderPos, GetScale(), { 0, 0 }, Image->GetImageScale(), TransColor);
 	}
 }
 
