@@ -50,6 +50,16 @@ void MapToolLevel::Loading()
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("DirLeftButton.BMP"))->Cut(2, 2);
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("DirRightButton.BMP"))->Cut(2, 2);
 
+	GameEngineDirectory SoundDir;
+
+	SoundDir.MoveParentToDirectory("ContentsResources");
+	SoundDir.Move("ContentsResources");
+	SoundDir.Move("Sound");
+	SoundDir.Move("BGM");
+
+	SoundSystemPtr = CreateActor<SoundSystem>();
+	SoundSystemPtr->SoundLoad(SoundDir.GetPlusFileName("editorsong.ogg"), SOUND_GROUP::BGM);
+
 	if (false == GameEngineInput::IsKey("MapEscape"))
 	{
 		GameEngineInput::CreateKey("MapEscape", VK_ESCAPE);
@@ -109,7 +119,6 @@ void MapToolLevel::Loading()
 	WiggleGridActors->InitGrid(ContentConst::GRID_SIZE);
 
 	CameraSystemPtr = CreateActor<CameraSystem>();
-	CreateActor<SoundSystem>();
 
 	ResizeMap({10, 10});
 	SelectBrush(MAPTOOL_BRUSH::PEN);
@@ -209,6 +218,7 @@ void MapToolLevel::Update(float _DT)
 void MapToolLevel::LevelChangeStart(GameEngineLevel* _PrevLevel)
 {
 	MapToolFadeActor->Fade({ .State = FADE_STATE::FADEOUT, .WaitTime = 0.5f});
+	SoundSystemPtr->BgmPlay("editorsong.ogg");
 }
 
 void MapToolLevel::LevelChangeEnd(GameEngineLevel* _NextLevel)

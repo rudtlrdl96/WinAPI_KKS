@@ -10,6 +10,7 @@ class PalletActor;
 class GridActor;
 class WiggleGridActor;
 class CameraSystem;
+class SoundSystem;
 class MapToolLevel : public GameEngineLevel
 {
 private:
@@ -54,6 +55,7 @@ private:
 	MAPTOOL_BRUSH BrushType = MAPTOOL_BRUSH::NONE;
 	WiggleGridActor* WiggleGridActors = nullptr;
 	CameraSystem* CameraSystemPtr = nullptr;
+	SoundSystem* SoundSystemPtr = nullptr;
 
 	float SaveLoadWaitTime = 0.0f;
 

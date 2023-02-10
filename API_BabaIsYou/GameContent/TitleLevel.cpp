@@ -124,7 +124,8 @@ void TitleLevel::Loading()
 		GameEngineInput::CreateKey("MouseLeft", VK_LBUTTON);
 		GameEngineInput::CreateKey("ButtonUp", VK_UP);
 		GameEngineInput::CreateKey("ButtonDown", VK_DOWN);
-		GameEngineInput::CreateKey("ButtonUse", VK_SPACE);
+		GameEngineInput::CreateKey("ButtonUseSpace", VK_SPACE);
+		GameEngineInput::CreateKey("ButtonUseEnter", VK_RETURN);
 	}
 
 	BaBaSetPos();
@@ -152,7 +153,7 @@ void TitleLevel::Update(float _DT)
 	{
 		ButtonDown();
 	}
-	else if (true == GameEngineInput::IsDown("ButtonUse"))
+	else if (true == GameEngineInput::IsDown("ButtonUseSpace") || true == GameEngineInput::IsDown("ButtonUseEnter"))
 	{
 		ButtonUse();
 	}
