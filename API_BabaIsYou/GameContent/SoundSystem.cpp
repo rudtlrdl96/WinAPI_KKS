@@ -83,9 +83,9 @@ void SoundSystem::BgmPlay(const std::string_view& _SoundName)
 	BGMPlayer->getSystemObject(&SoundSys);
 	SoundSys->getSoftwareFormat(&Rate, 0, 0);
 	BGMPlayer->getDSPClock(nullptr, &ParentClock);
-	BGMPlayer->removeFadePoints(ParentClock, static_cast<unsigned long long>(ParentClock + (Rate * 1.2)));
+	BGMPlayer->removeFadePoints(0, INT64_MAX);
 	BGMPlayer->addFadePoint(ParentClock, 0.0f);
-	BGMPlayer->addFadePoint(static_cast<unsigned long long>(ParentClock + (Rate * 1.2)), 1.0f);
+	BGMPlayer->addFadePoint(static_cast<unsigned long long>(ParentClock + (Rate * 0.5)), 1.0f);
 }
 
 void SoundSystem::BgmStop()
@@ -97,15 +97,18 @@ void SoundSystem::BgmStop()
 
 	int Rate = 0;
 	unsigned long long ParentClock = 0u;
+	float CurVolume = 0.0f;
 
 	FMOD::System* SoundSys = nullptr;
 	BGMPlayer->getSystemObject(&SoundSys);
 	SoundSys->getSoftwareFormat(&Rate, 0, 0);
 	BGMPlayer->getDSPClock(nullptr, &ParentClock);
-	BGMPlayer->removeFadePoints(ParentClock, static_cast<unsigned long long>(ParentClock + (Rate * 0.6)));
-	BGMPlayer->addFadePoint(ParentClock, 1.0f);
-	BGMPlayer->addFadePoint(static_cast<unsigned long long>(ParentClock + (Rate * 0.6)), 0.0f);
-	BGMPlayer->setDelay(static_cast<unsigned long long>(ParentClock + (Rate * 0.6)), true);
+	BGMPlayer->getVolume(&CurVolume);
+
+	BGMPlayer->removeFadePoints(0, INT64_MAX);
+	BGMPlayer->addFadePoint(ParentClock, CurVolume);
+	BGMPlayer->addFadePoint(static_cast<unsigned long long>(ParentClock + (Rate * 0.5)), 0.0f);
+
 	CurBGMName = "";
 	BGMPlayer = nullptr;
 }
