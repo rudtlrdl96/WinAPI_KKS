@@ -72,6 +72,7 @@ private:
 	static size_t ObjectPoolCount;
 	static bool AnyActorMoveCheck;
 	static bool AnyActorUndoCheck;
+	static bool AnyRuleCreateCheck;
 	static bool WinCheckValue;
 	static int YouActorCount;
 
@@ -137,6 +138,7 @@ private:
 	std::vector<BehavoirData> CurFramesBehaviorBuffer;
 	std::vector<std::vector<BehavoirData>> vecBehaviorBuffer;
 
+	size_t RuleCount = 0;
 	const int ActorKey = 0;
 
 	float ParticleTime = 0.0f;

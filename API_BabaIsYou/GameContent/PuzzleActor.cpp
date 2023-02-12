@@ -44,6 +44,7 @@ void PuzzleActor::Start()
 void PuzzleActor::Update(float _DT)
 {
 	WiggleActor::Update(_DT);
+	RuleCount = mapRules.size();
 
 	if (true == IsOver(GridPos))
 	{
@@ -479,6 +480,11 @@ bool PuzzleActor::Move(bool _IsInputMove)
 		AddRule();
 	}
 
+	if (RuleCount < mapRules.size())
+	{
+		AnyRuleCreateCheck = true;
+	}
+
 	vecGridDatas[GridPos.y][GridPos.x].push_back(this);
 	vecGridDatas[PrevPos.y][PrevPos.x].erase(this);
 
@@ -521,6 +527,11 @@ void PuzzleActor::UndoMove()
 		AddRule();
 	}
 
+	if (RuleCount < mapRules.size())
+	{
+		AnyRuleCreateCheck = true;
+	}
+
 	vecGridDatas[GridPos.y][GridPos.x].push_back(this);
 	vecGridDatas[PrevPos.y][PrevPos.x].erase(this);
 
@@ -533,6 +544,7 @@ void PuzzleActor::Push()
 	{
 		return;
 	}
+
 	if (ACTOR_TYPE::ACTOR != ActorType)
 	{
 		RemoveRule();
@@ -552,6 +564,11 @@ void PuzzleActor::Push()
 	{
 		vecTextDatas[GridPos.y][GridPos.x] = this;
 		AddRule();
+	}
+
+	if (RuleCount < mapRules.size())
+	{
+		AnyRuleCreateCheck = true;
 	}
 
 	float4 MoveParticlePos = GetPos();
@@ -591,6 +608,11 @@ void PuzzleActor::UndoPush()
 	{
 		vecTextDatas[GridPos.y][GridPos.x] = this;
 		AddRule();
+	}
+
+	if (RuleCount < mapRules.size())
+	{
+		AnyRuleCreateCheck = true;
 	}
 
 	vecGridDatas[GridPos.y][GridPos.x].push_back(this);

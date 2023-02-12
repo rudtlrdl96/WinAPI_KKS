@@ -12,6 +12,7 @@ GameEngineLevel* PuzzleActor::PuzzleLevel = nullptr;
 size_t PuzzleActor::ObjectPoolCount = 0;
 bool PuzzleActor::AnyActorMoveCheck = false;
 bool PuzzleActor::AnyActorUndoCheck = false;
+bool PuzzleActor::AnyRuleCreateCheck = false;
 bool PuzzleActor::WinCheckValue = false;
 int PuzzleActor::YouActorCount = 0;
 int PuzzleActor::NextActorKey = 0;
@@ -165,6 +166,11 @@ void PuzzleActor::AllActorUndo()
 	{
 		SoundSystem::GetLevelSoundSystem()->EffectPlay("Undo_");
 	}
+
+	if (true == AnyRuleCreateCheck)
+	{
+		SoundSystem::GetLevelSoundSystem()->EffectPlay("TextCompletion_");
+	}
 }
 
 void PuzzleActor::AllActorRuleCheck()
@@ -216,6 +222,11 @@ void PuzzleActor::MoveAllYouBehavior(const int2& _Dir)
 	if (true == AnyActorMoveCheck)
 	{
 		SoundSystem::GetLevelSoundSystem()->EffectPlay("Move_");
+	}
+
+	if (true == AnyRuleCreateCheck)
+	{
+		SoundSystem::GetLevelSoundSystem()->EffectPlay("TextCompletion_");
 	}
 }
 
@@ -274,6 +285,7 @@ void PuzzleActor::AnyCheckReset()
 {
 	AnyActorMoveCheck = false;
 	AnyActorUndoCheck = false;
+	AnyRuleCreateCheck = false;
 }
 
 int PuzzleActor::GetYouPuzzleActorCount()

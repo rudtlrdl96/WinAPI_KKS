@@ -174,11 +174,6 @@ void Rule::CheckRule(PuzzleActor* _SubjectActor, PuzzleActor* _VerbActor, Puzzle
 					PuzzleActorManager::GetInst()->AddDefine(Data.second, _DefineActor->ArrowDefine, false);
 				}
 			}
-
-			if (false == _IsInit)
-			{
-				SoundSystem::GetLevelSoundSystem()->EffectPlay("TextCompletion_");
-			}
 		}
 
 		if (ACTOR_TYPE::SUBJECT_TEXT == _DefineActor->GetActorType())
@@ -187,7 +182,6 @@ void Rule::CheckRule(PuzzleActor* _SubjectActor, PuzzleActor* _VerbActor, Puzzle
 			{
 				Data.second->LoadData(_DefineActor->ArrowEnum, Data.second->GetMoveDir(), false);
 			}
-			SoundSystem::GetLevelSoundSystem()->EffectPlay("TextCompletion_");
 		}
 
 		_SubjectActor->mapRules.insert({ CreateRulePtr->RuleKey, CreateRulePtr });
