@@ -2,6 +2,7 @@
 #include <GameEngineBase/GameEngineDebug.h>
 #include <GameEngineCore/GameEngineLevel.h>
 #include "ContentConst.h"
+#include "SoundSystem.h"
 
 
 /// static GridActor
@@ -204,6 +205,11 @@ void PuzzleActor::MoveAllYouBehavior(const int2& _Dir)
 
 		Data.second->SetDir(_Dir);
 		Data.second->Move(true);
+	}
+
+	if (true == AnyActorMoveCheck)
+	{
+		SoundSystem::GetLevelSoundSystem()->EffectPlay("Move_");
 	}
 }
 

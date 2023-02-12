@@ -1,4 +1,5 @@
 #include "PuzzleLevel.h"
+#include <GameEngineBase/GameEnginePath.h>
 #include <GameEngineBase/GameEngineDirectory.h>
 #include <GameEnginePlatform/GameEngineInput.h>
 #include <GameEnginePlatform/GameEngineWindow.h>
@@ -75,9 +76,7 @@ void PuzzleLevel::Loading()
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("DeathRestartUI.BMP"));
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("FlashedParticle.BMP"))->Cut(2, 1);
 	GameEngineResources::GetInst().ImageLoad(Dir.GetPlusFileName("WiggleDot.BMP"))->Cut(3, 1);
-		
-
-
+	
 	GameEngineDirectory SoundDir;
 
 	SoundDir.MoveParentToDirectory("ContentsResources");
@@ -88,6 +87,11 @@ void PuzzleLevel::Loading()
 	SoundSystemPtr = CreateActor<SoundSystem>();
 	SoundSystemPtr->SoundLoad(SoundDir.GetPlusFileName("baba.ogg"), SOUND_GROUP::BGM);
 	SoundSystemPtr->SoundLoad(SoundDir.GetPlusFileName("noise.ogg"), SOUND_GROUP::BGM);
+
+	SoundDir.MoveParent();
+	SoundDir.Move("Effect");
+
+	SoundSystemPtr->EffectSoundLoad(SoundDir.GetPlusFileName("Move_"), ".ogg", SOUND_GROUP::EFFECT, 17);
 
 	CreateActor<GrayBackUI>();
 	PuzzleFadeActor = CreateActor<FadeUI>();

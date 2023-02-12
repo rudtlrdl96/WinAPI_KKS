@@ -28,9 +28,13 @@ public:
 
 	void SoundLoad(const GameEnginePath& _Path, SOUND_GROUP _SoundGroup);
 	void SoundLoad(const std::string_view& _SoundPath, const std::string_view& _SoundName, SOUND_GROUP _SoundGroup);
+	void EffectSoundLoad(const GameEnginePath& _Path, const std::string_view& _Extensions, SOUND_GROUP _SoundGroup, int _Count);
+	void EffectSoundLoad(const std::string_view& _SoundPath, const std::string_view& _SoundName, const std::string_view& _Extensions, SOUND_GROUP _SoundGroup, int _Count);
 
-	void BgmPlay(const std::string_view& _SoundName);
-	void BgmStop();
+	void BgmPlay(const std::string_view& _SoundName, bool _IsPause = false);
+	void BgmStop(bool _IsPause = false);
+	
+	void EffectPlay(const std::string_view& _EffectSoundName);
 
 	std::string_view GetBGMName() const
 	{
@@ -48,4 +52,5 @@ private:
 	static std::string CurBGMName;
 
 	std::map<int, std::vector<GameEngineSound*>> mapSoundDatas;
+	std::map<std::string, std::vector<GameEngineSound*>> mapEffectSoundDatas;
 };

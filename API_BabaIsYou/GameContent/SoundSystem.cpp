@@ -3,6 +3,7 @@
 #include <GameEngineBase/GameEngineDirectory.h>
 #include <GameEngineCore/GameEngineResources.h>
 #include <GameEnginePlatform/GameEngineSound.h>
+#include "ContentRand.h"
 
 SoundSystem* SoundSystem::LevelSoundSystem = nullptr;
 FMOD::Channel* SoundSystem::BGMPlayer = nullptr;
@@ -60,7 +61,25 @@ void SoundSystem::SoundLoad(const std::string_view& _SoundPath, const std::strin
 	mapSoundDatas[static_cast<int>(_SoundGroup)].push_back(Sound);
 }
 
-void SoundSystem::BgmPlay(const std::string_view& _SoundName)
+void SoundSystem::EffectSoundLoad(const GameEnginePath& _Path, const std::string_view& _Extensions, SOUND_GROUP _SoundGroup, int _Count)
+{
+	EffectSoundLoad(_Path.GetPathToString().c_str(), _Path.GetFileName().c_str(), _Extensions, _SoundGroup, _Count);
+}
+
+void SoundSystem::EffectSoundLoad(const std::string_view& _SoundPath, const std::string_view& _SoundName, const std::string_view& _Extensions, SOUND_GROUP _SoundGroup, int _Count)
+{
+	mapEffectSoundDatas[_SoundName.data()].reserve(_Count);
+
+	for (size_t i = 0; i < _Count; i++)
+	{
+		GameEngineSound* Sound = GameEngineResources::GetInst().SoundLoad(_SoundPath.data() + std::to_string(i) + _Extensions.data(), _SoundName.data() + std::to_string(i) + _Extensions.data());
+		mapSoundDatas[static_cast<int>(_SoundGroup)].push_back(Sound);
+
+		mapEffectSoundDatas[_SoundName.data()].push_back(Sound); 
+	}
+}
+
+void SoundSystem::BgmPlay(const std::string_view& _SoundName, bool _IsPause)
 {
 	if (CurBGMName == _SoundName)
 	{
@@ -88,7 +107,7 @@ void SoundSystem::BgmPlay(const std::string_view& _SoundName)
 	BGMPlayer->addFadePoint(static_cast<unsigned long long>(ParentClock + (Rate * 0.5)), 1.0f);
 }
 
-void SoundSystem::BgmStop()
+void SoundSystem::BgmStop(bool _IsPause)
 {
 	if (nullptr == BGMPlayer)
 	{
@@ -107,8 +126,23 @@ void SoundSystem::BgmStop()
 
 	BGMPlayer->removeFadePoints(0, INT64_MAX);
 	BGMPlayer->addFadePoint(ParentClock, CurVolume);
-	BGMPlayer->addFadePoint(static_cast<unsigned long long>(ParentClock + (Rate * 0.5)), 0.0f);
+	BGMPlayer->addFadePoint(static_cast<unsigned long long>(ParentClock + (Rate * 0.5)), static_cast<unsigned __int64>(0.0f));
+	BGMPlayer->setDelay(static_cast<unsigned long long>(ParentClock + (Rate * 0.5)), static_cast<unsigned __int64>(0.0f));
 
 	CurBGMName = "";
 	BGMPlayer = nullptr;
+}
+
+void SoundSystem::EffectPlay(const std::string_view& _EffectSoundName)
+{
+	std::map<std::string, std::vector<GameEngineSound*>>::iterator FindIter = mapEffectSoundDatas.find(_EffectSoundName.data());
+
+	if (FindIter == mapEffectSoundDatas.end())
+	{
+		MsgAssert("이펙트 사운드를 초기화 하지 않고 사용하려 했습니다");
+		return;
+	}
+
+	int RandIndex = ContentRand::RandInt(0, static_cast<int>((*FindIter).second.size() - 1));
+	(*FindIter).second[RandIndex]->Play()->setLoopCount(0);
 }
