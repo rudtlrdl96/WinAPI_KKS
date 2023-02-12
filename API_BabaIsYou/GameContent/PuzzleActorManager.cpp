@@ -275,7 +275,7 @@ void PuzzleActorManager::AddDefine(PuzzleActor* _Actor, ACTOR_DEFINE _Define, bo
 
 void PuzzleActorManager::clear()
 {
-	PuzzleActor::AnyMoveCheckReset();
+	PuzzleActor::AnyCheckReset();
 }
 
 void PuzzleActorManager::Reset()

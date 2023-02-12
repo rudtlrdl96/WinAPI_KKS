@@ -9,6 +9,11 @@ SoundSystem* SoundSystem::LevelSoundSystem = nullptr;
 FMOD::Channel* SoundSystem::BGMPlayer = nullptr;
 std::string SoundSystem::CurBGMName;
 
+std::map<std::string, GameEngineSound*> SoundSystem::mapAllSoundDatas;
+std::map<int, std::vector<GameEngineSound*>> SoundSystem::mapGroupSoundDatas;
+std::map<std::string, std::vector<GameEngineSound*>> SoundSystem::mapEffectSoundDatas;
+
+
 SoundSystem::SoundSystem()
 {
 }
@@ -57,8 +62,15 @@ void SoundSystem::SoundLoad(const GameEnginePath& _Path, SOUND_GROUP _SoundGroup
 
 void SoundSystem::SoundLoad(const std::string_view& _SoundPath, const std::string_view& _SoundName, SOUND_GROUP _SoundGroup)
 {
+	if (mapAllSoundDatas.find(_SoundName.data()) != mapAllSoundDatas.end())
+	{
+		MsgAssert("사운드를 중복 생성했습니다");
+		return;
+	}
+
 	GameEngineSound* Sound = GameEngineResources::GetInst().SoundLoad(_SoundPath, _SoundName);
-	mapSoundDatas[static_cast<int>(_SoundGroup)].push_back(Sound);
+	mapGroupSoundDatas[static_cast<int>(_SoundGroup)].push_back(Sound);
+	mapAllSoundDatas.insert({ _SoundName.data(), Sound });
 }
 
 void SoundSystem::EffectSoundLoad(const GameEnginePath& _Path, const std::string_view& _Extensions, SOUND_GROUP _SoundGroup, int _Count)
@@ -68,14 +80,36 @@ void SoundSystem::EffectSoundLoad(const GameEnginePath& _Path, const std::string
 
 void SoundSystem::EffectSoundLoad(const std::string_view& _SoundPath, const std::string_view& _SoundName, const std::string_view& _Extensions, SOUND_GROUP _SoundGroup, int _Count)
 {
+	if (mapAllSoundDatas.find(_SoundName.data()) != mapAllSoundDatas.end())
+	{
+		MsgAssert("사운드를 중복 생성했습니다");
+		return;
+	}
+
 	mapEffectSoundDatas[_SoundName.data()].reserve(_Count);
 
 	for (size_t i = 0; i < _Count; i++)
 	{
-		GameEngineSound* Sound = GameEngineResources::GetInst().SoundLoad(_SoundPath.data() + std::to_string(i) + _Extensions.data(), _SoundName.data() + std::to_string(i) + _Extensions.data());
-		mapSoundDatas[static_cast<int>(_SoundGroup)].push_back(Sound);
+		std::string SoundName = _SoundName.data() + std::to_string(i) + _Extensions.data();
+		GameEngineSound* Sound = GameEngineResources::GetInst().SoundLoad(_SoundPath.data() + std::to_string(i) + _Extensions.data(), SoundName);
+		mapGroupSoundDatas[static_cast<int>(_SoundGroup)].push_back(Sound);
 
-		mapEffectSoundDatas[_SoundName.data()].push_back(Sound); 
+		mapEffectSoundDatas[_SoundName.data()].push_back(Sound);
+		mapAllSoundDatas.insert({ SoundName.data(), Sound });
+	}
+}
+
+void SoundSystem::Play(const std::string_view& _SoundName, bool _IsLoop)
+{
+	FMOD::Channel* PlaySoundChannel = GameEngineResources::GetInst().SoundFind(_SoundName)->Play();
+
+	if (true == _IsLoop)
+	{
+		PlaySoundChannel->setLoopCount(INT32_MAX);
+	}
+	else
+	{
+		PlaySoundChannel->setLoopCount(0);
 	}
 }
 

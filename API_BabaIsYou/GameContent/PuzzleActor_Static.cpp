@@ -11,6 +11,7 @@
 GameEngineLevel* PuzzleActor::PuzzleLevel = nullptr;
 size_t PuzzleActor::ObjectPoolCount = 0;
 bool PuzzleActor::AnyActorMoveCheck = false;
+bool PuzzleActor::AnyActorUndoCheck = false;
 bool PuzzleActor::WinCheckValue = false;
 int PuzzleActor::YouActorCount = 0;
 int PuzzleActor::NextActorKey = 0;
@@ -159,6 +160,11 @@ void PuzzleActor::AllActorUndo()
 	{
 		vecObjectPool[i]->Undo();
 	}
+
+	if (true == AnyActorUndoCheck)
+	{
+		SoundSystem::GetLevelSoundSystem()->EffectPlay("Undo_");
+	}
 }
 
 void PuzzleActor::AllActorRuleCheck()
@@ -264,9 +270,10 @@ bool PuzzleActor::IsAnyMove()
 	return AnyActorMoveCheck;
 }
 
-void PuzzleActor::AnyMoveCheckReset()
+void PuzzleActor::AnyCheckReset()
 {
 	AnyActorMoveCheck = false;
+	AnyActorUndoCheck = false;
 }
 
 int PuzzleActor::GetYouPuzzleActorCount()

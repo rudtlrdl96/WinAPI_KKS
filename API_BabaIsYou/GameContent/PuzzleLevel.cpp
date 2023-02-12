@@ -92,6 +92,9 @@ void PuzzleLevel::Loading()
 	SoundDir.Move("Effect");
 
 	SoundSystemPtr->EffectSoundLoad(SoundDir.GetPlusFileName("Move_"), ".ogg", SOUND_GROUP::EFFECT, 17);
+	SoundSystemPtr->EffectSoundLoad(SoundDir.GetPlusFileName("Undo_"), ".ogg", SOUND_GROUP::EFFECT, 5);
+	SoundSystemPtr->EffectSoundLoad(SoundDir.GetPlusFileName("TextCompletion_"), ".ogg", SOUND_GROUP::EFFECT, 5);
+	SoundSystemPtr->SoundLoad(SoundDir.GetPlusFileName("Win.ogg"), SOUND_GROUP::EFFECT);
 
 	CreateActor<GrayBackUI>();
 	PuzzleFadeActor = CreateActor<FadeUI>();
@@ -131,6 +134,7 @@ void PuzzleLevel::Update(float _DT)
 	if (true == PuzzleActorManager::GetInst()->IsPuzzleEnd() && false == CongratulationActor->IsProgress())
 	{
 		CongratulationActor->Congratulations(&PuzzleLevelExit);
+		SoundSystemPtr->Play("Win.ogg");
 	}
 	else
 	{

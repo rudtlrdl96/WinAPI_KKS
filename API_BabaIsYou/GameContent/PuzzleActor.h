@@ -61,7 +61,7 @@ public:
 	static std::map<int, PuzzleActor*>& GetActors(ACTOR_DEFINE _Define);
 
 	static bool IsAnyMove();
-	static void AnyMoveCheckReset();
+	static void AnyCheckReset();
 	static int GetYouPuzzleActorCount();
 	static void ResetYouActorCount();
 	static bool IsOver(const int2& _GridPos);
@@ -71,6 +71,7 @@ private:
 	static GameEngineLevel* PuzzleLevel;
 	static size_t ObjectPoolCount;
 	static bool AnyActorMoveCheck;
+	static bool AnyActorUndoCheck;
 	static bool WinCheckValue;
 	static int YouActorCount;
 

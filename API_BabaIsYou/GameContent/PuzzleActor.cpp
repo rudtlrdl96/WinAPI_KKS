@@ -398,6 +398,8 @@ void PuzzleActor::Undo()
 		return;
 	}
 
+	AnyActorUndoCheck = true;
+
 	const std::vector<BehavoirData>& vecUndos = vecBehaviorBuffer.back();
 
 	for (int i = static_cast<int>(vecUndos.size() - 1); i >= 0 ; --i)
@@ -709,6 +711,7 @@ void PuzzleActor::SetDir(const int2& _Dir)
 	while (_Dir != MoveDir)
 	{
 		TurnLeft();
+		AnyActorMoveCheck = true;
 	} 
 }
 
