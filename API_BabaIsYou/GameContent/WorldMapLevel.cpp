@@ -81,6 +81,11 @@ void WorldMapLevel::Loading()
 
 	SoundSystemPtr = CreateActor<SoundSystem>();
 	SoundSystemPtr->SoundLoad(SoundDir.GetPlusFileName("map.ogg"), SOUND_GROUP::BGM);
+
+	SoundDir.MoveParent();
+	SoundDir.Move("Effect");
+	SoundSystemPtr->SoundLoad(SoundDir.GetPlusFileName("PuzzleLoading.ogg"), SOUND_GROUP::EFFECT);
+
 	WorldMapSelectActor = CreateActor<WorldMapSelect>();
 
 	if (false == GameEngineInput::IsKey("LevelChange"))
@@ -127,7 +132,9 @@ void WorldMapLevel::Loading()
 		}
 	}
 
-	MoveWorldMap(int2::Zero);
+	SelectPuzzlePos = int2::Zero;
+	InfoStringUI->WriteText(vecWorldMapDatas[SelectPuzzlePos.y][SelectPuzzlePos.x]->GetPuzzleInfo());
+	WorldMapSelectActor->SetPos(vecWorldMapDatas[SelectPuzzlePos.y][SelectPuzzlePos.x]->GetPos());
 }
 
 void WorldMapLevel::Update(float _DT)
@@ -175,6 +182,7 @@ void WorldMapLevel::Update(float _DT)
 			return;
 		}
 
+		SoundSystemPtr->Play("PuzzleLoading.ogg");
 		PuzzleLevel::SetPuzzleMapName(PuzzleName);
 		PuzzleLevel::SetPuzzleMapInfo(MapActor->GetPuzzleInfo());
 		PuzzleLevel::SetPuzzleMapLevel(MapActor->GetPuzzleNumber());
@@ -219,6 +227,7 @@ void WorldMapLevel::MoveWorldMap(const int2& _Move)
 
 	InfoStringUI->WriteText(vecWorldMapDatas[SelectPuzzlePos.y][SelectPuzzlePos.x]->GetPuzzleInfo());
 	WorldMapSelectActor->SetPos(vecWorldMapDatas[SelectPuzzlePos.y][SelectPuzzlePos.x]->GetPos());
+	SoundSystemPtr->EffectPlay("Move_");
 }
 
 

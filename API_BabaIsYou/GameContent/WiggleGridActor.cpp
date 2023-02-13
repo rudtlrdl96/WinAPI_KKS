@@ -47,7 +47,7 @@ void WiggleGridActor::InitGrid(const int2& _Size)
 	}
 }
 
-bool WiggleGridActor::IsOver(const int2& _Pos)
+bool WiggleGridActor::IsOver(const int2& _Pos) const
 {
 	if (0 > _Pos.x || GridSize.x <= _Pos.x ||
 		0 > _Pos.y || GridSize.y <= _Pos.y)
@@ -60,7 +60,13 @@ bool WiggleGridActor::IsOver(const int2& _Pos)
 
 int WiggleGridActor::GetActorEnum(const int2& _Pos) const
 {
-	return 0;
+	if (true == IsOver(_Pos))
+	{
+		MsgAssert("그리드 밖을 참조하려 했습니다");
+		return -1;
+	}
+
+	return vecWiggleActors[_Pos.y][_Pos.x]->GetIndex();
 }
 
 int WiggleGridActor::GetDir(const int2& _Pos) const

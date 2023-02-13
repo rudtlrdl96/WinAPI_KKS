@@ -102,5 +102,6 @@ enum class RULE_TYPE
 enum class SOUND_GROUP
 {
 	BGM,
-	EFFECT
+	EFFECT,
+	UI
 };

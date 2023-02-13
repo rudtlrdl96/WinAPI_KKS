@@ -56,6 +56,7 @@ void PuzzleLevel::SetPuzzleMapLevel(size_t _Level)
 void PuzzleLevel::Restart()
 {
 	PuzzleFadeActor->Fade({ .State = FADE_STATE::FADEIN, .Func = ContentFunc::ChangePuzzleLevel });
+	IsReStart = true;
 }
 
 void PuzzleLevel::Loading()
@@ -98,6 +99,7 @@ void PuzzleLevel::Loading()
 	SoundSystemPtr->EffectSoundLoad(SoundDir.GetPlusFileName("Melt_"), ".ogg", SOUND_GROUP::EFFECT, 5);
 	SoundSystemPtr->EffectSoundLoad(SoundDir.GetPlusFileName("TextCompletion_"), ".ogg", SOUND_GROUP::EFFECT, 5);
 	SoundSystemPtr->SoundLoad(SoundDir.GetPlusFileName("Win.ogg"), SOUND_GROUP::EFFECT);
+	SoundSystemPtr->SoundLoad(SoundDir.GetPlusFileName("Restart.ogg"), SOUND_GROUP::EFFECT);
 
 	CreateActor<GrayBackUI>();
 	PuzzleFadeActor = CreateActor<FadeUI>();
@@ -153,17 +155,26 @@ void PuzzleLevel::LevelChangeStart(GameEngineLevel* _NextLevel)
 {
 	IsExitValue = false;
 	LoadPuzzleData();
-	PuzzleFadeActor->Fade({ .State = FADE_STATE::FADEOUT, .WaitTime = 4.0f,
-		.ShakeDistance = 7.0f,
-		.ShakeTime = 0.95f,
-		.WriteTopText = "LEVEL " + std::to_string(LevelNumber),
-		.TopTextInterval = {40, 0},
-		.TopTextSize = {35, 35},
-		.TopTextColor = TEXT_COLOR::PINK,
-		.WriteMiddleText = LoadPuzzleInfo,
-		.MiddleTextInterval = {40, 0},
-		.MiddleTextSize = {80, 80},
-		});
+
+	if (true == IsReStart)
+	{
+		PuzzleFadeActor->Fade({ .State = FADE_STATE::FADEOUT, .WaitTime = 0.5f});
+		IsReStart = false;
+	}
+	else
+	{
+		PuzzleFadeActor->Fade({ .State = FADE_STATE::FADEOUT, .WaitTime = 4.0f,
+			.ShakeDistance = 7.0f,
+			.ShakeTime = 0.95f,
+			.WriteTopText = "LEVEL " + std::to_string(LevelNumber),
+			.TopTextInterval = {40, 0},
+			.TopTextSize = {35, 35},
+			.TopTextColor = TEXT_COLOR::PINK,
+			.WriteMiddleText = LoadPuzzleInfo,
+			.MiddleTextInterval = {40, 0},
+			.MiddleTextSize = {80, 80},
+			});
+	}
 }
 
 void PuzzleLevel::LevelChangeEnd(GameEngineLevel* _NextLevel)

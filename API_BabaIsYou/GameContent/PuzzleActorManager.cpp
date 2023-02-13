@@ -114,6 +114,7 @@ void PuzzleActorManager::Input(float _DT)
 	if (GameEngineInput::IsDown("ReStart"))
 	{
 		MainPuzzleLevel->Restart();
+		SoundSystem::GetLevelSoundSystem()->Play("Restart.ogg");
 		return;
 	}
 	else if (GameEngineInput::IsDown("ArrowUp"))

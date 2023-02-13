@@ -54,6 +54,17 @@ void LogoLevel::Loading()
 	SoundSystemPtr = CreateActor<SoundSystem>();
 	SoundSystemPtr->SoundLoad(SoundDir.GetPlusFileName("menu.ogg"), SOUND_GROUP::BGM);
 
+	SoundDir.MoveParent();
+	SoundDir.Move("Effect");	
+
+	SoundSystemPtr->SoundLoad(SoundDir.GetPlusFileName("TitleOut.ogg"), SOUND_GROUP::EFFECT);
+
+	SoundDir.MoveParent();
+	SoundDir.Move("UI");
+	SoundSystemPtr->EffectSoundLoad(SoundDir.GetPlusFileName("ButtonOverlap_"), ".ogg", SOUND_GROUP::EFFECT, 5);
+	SoundSystemPtr->SoundLoad(SoundDir.GetPlusFileName("ButtonClick.ogg"), SOUND_GROUP::EFFECT);
+	SoundSystemPtr->SoundLoad(SoundDir.GetPlusFileName("MapToolPen.ogg"), SOUND_GROUP::EFFECT);
+
 	ContentDataBase::GetInst()->InitDataBase();
 
 	LogoFadeActor = CreateActor<FadeUI>(1);

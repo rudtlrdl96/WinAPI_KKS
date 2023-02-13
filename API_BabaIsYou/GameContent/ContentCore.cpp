@@ -26,7 +26,7 @@ void ContentCore::Start()
 	CreateLevel<WorldMapLevel>("Worldmap");
 	CreateLevel<MapToolLevel>("MapTool");
 
-	ChangeLevel("Worldmap");
+	ChangeLevel("Title");
 }
 
 void ContentCore::Update()

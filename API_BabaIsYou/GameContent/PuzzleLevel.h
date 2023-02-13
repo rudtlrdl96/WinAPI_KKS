@@ -42,6 +42,7 @@ private:
 	static std::string LoadPuzzleName;
 	static std::string LoadPuzzleInfo;
 	static size_t LevelNumber;
+	static bool IsExitValue;
 
 	FadeUI* PuzzleFadeActor = nullptr;
 	CongratulationsUI* CongratulationActor = nullptr;
@@ -49,5 +50,5 @@ private:
 	SoundSystem* SoundSystemPtr = nullptr;
 	TutorialUI* TutorialRender = nullptr;
 
-	static bool IsExitValue;
+	bool IsReStart = false;
 };

@@ -6,6 +6,7 @@
 #include <GameEngineCore/GameEngineRender.h>
 
 #include "ContentEnum.h"
+#include "SoundSystem.h"
 
 ButtonUI::ButtonUI()
 {
@@ -52,7 +53,11 @@ void ButtonUI::Update(float _DT)
 		MousePos.y > CenterPos.y - HalfSize.iy() &&
 		MousePos.y < CenterPos.y + HalfSize.iy())
 	{
-		IsOverlapValue = true;
+		if (false == IsOverlapValue)
+		{
+			IsOverlapValue = true;
+			SoundSystem::GetLevelSoundSystem()->EffectPlay("ButtonOverlap_");
+		}
 	
 		if (nullptr != ImageRender)
 		{
@@ -77,7 +82,11 @@ void ButtonUI::Update(float _DT)
 
 		if (true == GameEngineInput::IsUp("MouseLeft"))
 		{
-			IsUpValue = true;
+			if (IsUpValue == false)
+			{
+				SoundSystem::GetLevelSoundSystem()->Play("ButtonClick.ogg");
+				IsUpValue = true;
+			}
 		}
 		else
 		{

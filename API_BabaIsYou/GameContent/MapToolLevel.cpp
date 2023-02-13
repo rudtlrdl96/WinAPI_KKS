@@ -270,6 +270,11 @@ void MapToolLevel::DrawMap()
 		return;
 	}
 
+	if (Pallet->GetPenEnum() != WiggleGridActors->GetActorEnum(SelectIndex))
+	{
+		SoundSystemPtr->Play("MapToolPen.ogg");
+	}
+
 	WiggleGridActors->SetRender(SelectIndex, Pallet->GetPenEnum(), Pallet->GetPalletDir());
 }
 
@@ -280,6 +285,11 @@ void MapToolLevel::EraseMap()
 	if (true == WiggleGridActors->IsOver(SelectIndex))
 	{
 		return;
+	}
+
+	if (-1 != WiggleGridActors->GetActorEnum(SelectIndex))
+	{
+		SoundSystemPtr->Play("MapToolPen.ogg");
 	}
 
 	WiggleGridActors->SetRender(SelectIndex, -1, Pallet->GetPalletDir());

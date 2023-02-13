@@ -18,7 +18,7 @@ public:
 
 	void InitGrid(const int2& _Size);
 	void SetRender(const int2& _Pos, int _ActorEnum, DIR_FLAG _Dir);
-	bool IsOver(const int2& _Pos);
+	bool IsOver(const int2& _Pos) const;
 
 	int GetActorEnum(const int2& _Pos) const;
 	int GetDir(const int2& _Pos) const;

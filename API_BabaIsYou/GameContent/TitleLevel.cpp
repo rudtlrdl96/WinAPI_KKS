@@ -162,6 +162,7 @@ void TitleLevel::Update(float _DT)
 	{
 		TitleFadeActor->Fade({ .State = FADE_STATE::FADEIN, .Func = ContentFunc::ChangeWorldmapLevel });
 		SoundSystemPtr->BgmStop();
+		SoundSystemPtr->Play("TitleOut.ogg");
 	}
 	else if (true == vecTitleButtons[TB_MAPTOOL]->IsUp())
 	{
@@ -208,6 +209,7 @@ void TitleLevel::ButtonUse()
 	{
 		TitleFadeActor->Fade({ .State = FADE_STATE::FADEIN, .Func = ContentFunc::ChangeWorldmapLevel });
 		SoundSystemPtr->BgmStop();
+		SoundSystemPtr->Play("TitleOut.ogg");
 	}
 	else if (TB_MAPTOOL == SelectButton)
 	{
