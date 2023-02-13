@@ -1,4 +1,6 @@
 #pragma once
+#include "ContentEnum.h"
+#include "ContentMath.h"
 
 class PuzzleActor;
 class RuleManager;

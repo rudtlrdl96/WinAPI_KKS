@@ -12,6 +12,7 @@
 #include "ContentRand.h"
 #include "ParticleActor.h"
 #include "CameraSystem.h"
+#include "SoundSystem.h"
 
 /// static GridActor
 
@@ -759,6 +760,7 @@ void PuzzleActor::ActorDeath(ACTOR_DEFINE _DeathCause)
 		ParticleCount = 5;
 		DeathParticleName = "Smoke";
 		ParticleColor = PARTICLE_COLOR::GRAY;
+		SoundSystem::GetLevelSoundSystem()->EffectPlay("Melt_");
 	}
 		break;
 	case ACTOR_DEFINE::SINK:
@@ -766,12 +768,14 @@ void PuzzleActor::ActorDeath(ACTOR_DEFINE _DeathCause)
 		ParticleCount = 8;
 		DeathParticleName = "Explosion";
 		ParticleColor = PARTICLE_COLOR::JAVA;
+		SoundSystem::GetLevelSoundSystem()->EffectPlay("Sink_");
 	}
 		break;
 	case ACTOR_DEFINE::DEFEAT:
 	{
 		ParticleCount = 5;
 		DeathParticleName = "Explosion";
+		SoundSystem::GetLevelSoundSystem()->EffectPlay("Defeat_");
 	}
 		break;
 	}
@@ -979,6 +983,30 @@ void PuzzleActor::ActorParticleCreate(float _DT)
 			ParticlePtr->MoveParticle(RandPos - GetPos(), ContentRand::RandFloat(5.0f, 15.0f));
 			NextParticleTime = ContentRand::RandFloat(5.0f, 50.0f);
 		}
+	}
+}
+
+void PuzzleActor::CreateRuleParticle()
+{
+	if (RuleCount >= mapRules.size())
+	{
+		return;
+	}
+
+	float4 ActorPos = PuzzleActor::GetScreenPos(GetGridPos());
+
+	for (size_t i = 0; i < 5; i++)
+	{
+		float4 RandPos = float4::Zero;
+		float RandRot = ContentRand::RandFloat(0.0f, GameEngineMath::PIE2);
+		RandPos.x = std::cos(RandRot);
+		RandPos.y = std::sin(RandRot);
+		RandPos *= ContentRand::RandFloat(7.0f, 15.0f);
+
+		RandPos += ActorPos;
+
+		ParticleActor* ParticlePtr = ParticleSystem::GetLevelParticleSystem()->UseParticle("Move", ActorColor, RandPos, { 20.0f, 20.0f });
+		ParticlePtr->MoveParticle((RandPos - ActorPos), ContentRand::RandFloat(40.0f, 60.0f));
 	}
 }
 

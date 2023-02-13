@@ -93,6 +93,9 @@ void PuzzleLevel::Loading()
 
 	SoundSystemPtr->EffectSoundLoad(SoundDir.GetPlusFileName("Move_"), ".ogg", SOUND_GROUP::EFFECT, 17);
 	SoundSystemPtr->EffectSoundLoad(SoundDir.GetPlusFileName("Undo_"), ".ogg", SOUND_GROUP::EFFECT, 5);
+	SoundSystemPtr->EffectSoundLoad(SoundDir.GetPlusFileName("Defeat_"), ".ogg", SOUND_GROUP::EFFECT, 4);
+	SoundSystemPtr->EffectSoundLoad(SoundDir.GetPlusFileName("Sink_"), ".ogg", SOUND_GROUP::EFFECT, 4);
+	SoundSystemPtr->EffectSoundLoad(SoundDir.GetPlusFileName("Melt_"), ".ogg", SOUND_GROUP::EFFECT, 5);
 	SoundSystemPtr->EffectSoundLoad(SoundDir.GetPlusFileName("TextCompletion_"), ".ogg", SOUND_GROUP::EFFECT, 5);
 	SoundSystemPtr->SoundLoad(SoundDir.GetPlusFileName("Win.ogg"), SOUND_GROUP::EFFECT);
 

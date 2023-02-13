@@ -191,4 +191,5 @@ private:
 
 	void SetTileRender();
 	void ActorParticleCreate(float _DT);
+	void CreateRuleParticle();
 };

@@ -5,6 +5,9 @@
 #include "PuzzleActorManager.h"
 #include "RuleManager.h"
 #include "SoundSystem.h"
+#include "ParticleSystem.h"
+#include "ContentRand.h"
+#include "ParticleActor.h"
 
 Rule::Rule(int _Key) :
 	RuleKey(_Key)
@@ -187,5 +190,12 @@ void Rule::CheckRule(PuzzleActor* _SubjectActor, PuzzleActor* _VerbActor, Puzzle
 		_SubjectActor->mapRules.insert({ CreateRulePtr->RuleKey, CreateRulePtr });
 		_VerbActor->mapRules.insert({ CreateRulePtr->RuleKey, CreateRulePtr });
 		_DefineActor->mapRules.insert({ CreateRulePtr->RuleKey, CreateRulePtr });
+
+		if (false == _IsInit)
+		{
+			_SubjectActor->CreateRuleParticle();
+			_VerbActor->CreateRuleParticle();
+			_DefineActor->CreateRuleParticle();
+		}
 	}
 }
