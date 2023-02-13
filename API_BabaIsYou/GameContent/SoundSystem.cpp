@@ -138,7 +138,7 @@ void SoundSystem::BgmPlay(const std::string_view& _SoundName, bool _IsPause)
 	BGMPlayer->getDSPClock(nullptr, &ParentClock);
 	BGMPlayer->removeFadePoints(0, INT64_MAX);
 	BGMPlayer->addFadePoint(ParentClock, 0.0f);
-	BGMPlayer->addFadePoint(static_cast<unsigned long long>(ParentClock + (Rate * 1)), 1.0f);
+	BGMPlayer->addFadePoint(static_cast<unsigned long long>(ParentClock + (Rate * 0.5)), 1.0f);
 }
 
 void SoundSystem::BgmStop(bool _IsPause)
@@ -160,8 +160,8 @@ void SoundSystem::BgmStop(bool _IsPause)
 
 	BGMPlayer->removeFadePoints(0, INT64_MAX);
 	BGMPlayer->addFadePoint(ParentClock, CurVolume);
-	BGMPlayer->addFadePoint(static_cast<unsigned long long>(ParentClock + (Rate * 1)), static_cast<unsigned __int64>(0.0f));
-	BGMPlayer->setDelay(static_cast<unsigned long long>(ParentClock + (Rate * 1)), static_cast<unsigned __int64>(0.0f));
+	BGMPlayer->addFadePoint(static_cast<unsigned long long>(ParentClock + (Rate * 0.5)), static_cast<unsigned __int64>(0.0f));
+	BGMPlayer->setDelay(ParentClock, static_cast<unsigned long long>(ParentClock + (Rate * 0.5)));
 
 	CurBGMName = "";
 	BGMPlayer = nullptr;
