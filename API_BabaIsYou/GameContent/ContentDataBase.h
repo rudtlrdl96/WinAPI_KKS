@@ -12,7 +12,7 @@ public:
 	}
 
 	void InitDataBase();
-	int  GetActorEnum(const std::string_view& _Name);
+	int  GetActorDataIndex(const std::string_view& _Name);
 	const ActorData* GetData(int _Index);
 	const ActorData* GetData(const std::string_view& _Name);
 	const std::map<int, ActorData>& GetAllData();

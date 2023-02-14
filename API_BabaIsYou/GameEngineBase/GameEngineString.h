@@ -2,7 +2,6 @@
 #include <string>
 #include <string_view>
 
-// Ό³Έν :
 class GameEngineString
 {
 public:
@@ -12,7 +11,6 @@ public:
 protected:
 
 private:
-	// constrcuter destructer
 	GameEngineString();
 	~GameEngineString();
 	GameEngineString(const GameEngineString& _Other) = delete;

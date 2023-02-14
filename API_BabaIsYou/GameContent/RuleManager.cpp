@@ -39,7 +39,7 @@ void RuleManager::AddActorRule(PuzzleActor* _Actor, int _ActorIndex)
 {
 	for (const std::pair<int, Rule*>& Data : mapAllRules)
 	{
-		if (_ActorIndex == Data.second->SubjectActor->GetArrowEnum() && ACTOR_TYPE::DEFINE_TEXT == Data.second->DefineActor->GetActorType())
+		if (_ActorIndex == Data.second->SubjectActor->GetArrowDataIndex() && ACTOR_TYPE::DEFINE_TEXT == Data.second->DefineActor->GetActorType())
 		{
 			PuzzleActorManager::GetInst()->AddDefine(_Actor, Data.second->DefineActor->GetArrowDefine(), false);
 		}

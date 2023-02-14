@@ -16,7 +16,6 @@ GameEngineRender::~GameEngineRender()
 void GameEngineRender::SetImage(const std::string_view& _ImageName) 
 {
 	Image = GameEngineResources::GetInst().ImageFind(_ImageName);
-	// SetScaleToImage();
 }
 
 void GameEngineRender::SetImageToScaleToImage(const std::string_view& _ImageName)
@@ -163,7 +162,6 @@ bool GameEngineRender::IsAnimationEnd()
 
 void GameEngineRender::CreateAnimation(const FrameAnimationParameter& _Paramter) 
 {
-	// 애니메이션을 만들기 위해서 이미지를 검증한다.
 	GameEngineImage* Image = GameEngineResources::GetInst().ImageFind(_Paramter.ImageName);
 
 	if (nullptr == Image)
@@ -200,7 +198,6 @@ void GameEngineRender::CreateAnimation(const FrameAnimationParameter& _Paramter)
 		}
 	}
 
-	// 각 프레임별 시간을 계산한다.
 	if (0 != _Paramter.FrameTime.size())
 	{
 		NewAnimation.FrameTime = _Paramter.FrameTime;
@@ -219,8 +216,6 @@ void GameEngineRender::CreateAnimation(const FrameAnimationParameter& _Paramter)
 
 void GameEngineRender::ChangeAnimation(const std::string_view& _AnimationName, bool _ForceChange /*= false*/)
 {
-	// 이미 같은 애니메이션으로 바꾸라고 리턴할껍니다.
-
 	std::string UpperName = GameEngineString::ToUpper(_AnimationName);
 
 	if (Animation.end() == Animation.find(UpperName))
@@ -228,15 +223,12 @@ void GameEngineRender::ChangeAnimation(const std::string_view& _AnimationName, b
 		MsgAssert("존재하지 않는 애니메이션으로 바꾸려고 했습니다." + UpperName);
 	}
 
-	// 강제로 바꾸지 않는 상황에서 애니메이션이 같으면
 	if (false == _ForceChange && CurrentAnimation == &Animation[UpperName])
 	{
 		return;
 	}
 
 	CurrentAnimation = &Animation[UpperName];
-
 	CurrentAnimation->CurrentIndex = 0;
-	// 0.1
 	CurrentAnimation->CurrentTime = CurrentAnimation->FrameTime[CurrentAnimation->CurrentIndex];
 }

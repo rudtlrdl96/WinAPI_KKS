@@ -6,9 +6,6 @@
 #include <vector>
 
 
-// final 더이상 상속내릴지 못한다.
-// 상속도 못하고 만들지도 못하게 만든 상태로
-
 class GameEngineMath final
 {
 public:
@@ -38,7 +35,6 @@ public:
 	float y = 0.0f;
 	float z = 0.0f;
 	float w = 1.0f;
-	// 마지막이 1인지는 3d 때 배우게 될겁니다.
 
 	int ix() const
 	{
@@ -116,8 +112,6 @@ public:
 		return sqrtf(x * x + y * y);
 	}
 
-	// 2, 0
-	// 0, 2
 	void Normalize() 
 	{
 		float SizeValue = Size();
@@ -129,7 +123,6 @@ public:
 
 	static float4 Lerp(const float4& Start, const float4& End, float Ratio)
 	{
-		// 1.5 + 0.5 * 2.5;
 		return Start * (1.0f - Ratio) + (End * Ratio);
 	}
 

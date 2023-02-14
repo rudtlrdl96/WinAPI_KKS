@@ -108,7 +108,7 @@ void Rule::RemoveRule(PuzzleActor* _Actor)
 
 		if (ACTOR_TYPE::DEFINE_TEXT == DefineActor->ActorType)
 		{
-			const std::map<int, PuzzleActor*>& mapSubjectActors = PuzzleActor::GetActors(SubjectActor->ArrowEnum);
+			const std::map<int, PuzzleActor*>& mapSubjectActors = PuzzleActor::GetActors(SubjectActor->ArrowDataIndex);
 
 			for (const std::pair<int, PuzzleActor*> Data : mapSubjectActors)
 			{
@@ -162,7 +162,7 @@ void Rule::CheckRule(PuzzleActor* _SubjectActor, PuzzleActor* _VerbActor, Puzzle
 		CreateRulePtr->VerbActor = _VerbActor;
 		CreateRulePtr->DefineActor = _DefineActor;
 
-		const std::map<int, PuzzleActor*> mapSubjectActors = PuzzleActor::GetActors(_SubjectActor->ArrowEnum);
+		const std::map<int, PuzzleActor*> mapSubjectActors = PuzzleActor::GetActors(_SubjectActor->ArrowDataIndex);
 
 		if (ACTOR_TYPE::DEFINE_TEXT == _DefineActor->GetActorType())
 		{
@@ -183,7 +183,7 @@ void Rule::CheckRule(PuzzleActor* _SubjectActor, PuzzleActor* _VerbActor, Puzzle
 		{
 			for (const std::pair<int, PuzzleActor*>& Data : mapSubjectActors)
 			{
-				Data.second->LoadData(_DefineActor->ArrowEnum, Data.second->GetMoveDir(), false);
+				Data.second->LoadData(_DefineActor->ArrowDataIndex, Data.second->GetMoveDir(), false);
 			}
 		}
 

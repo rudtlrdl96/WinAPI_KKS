@@ -83,7 +83,7 @@ void WiggleMapToolActor::SetRender(int _ActorEnum, DIR_FLAG _Dir)
 
 void WiggleMapToolActor::SetRender(const std::string_view& _Name, DIR_FLAG _Dir)
 {
-	SetRender(ContentDataBase::GetInst()->GetActorEnum(_Name), _Dir);
+	SetRender(ContentDataBase::GetInst()->GetActorDataIndex(_Name), _Dir);
 }
 
 void WiggleMapToolActor::SetDir(int2 _Dir)

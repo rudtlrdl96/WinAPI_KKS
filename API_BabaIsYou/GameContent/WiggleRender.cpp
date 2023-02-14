@@ -29,7 +29,7 @@ void WiggleRender::Wiggle()
 		}
 	}
 
-	SetRenderIndex();
+	CalculationRenderIndex();
 }
 
 void WiggleRender::Reset()
@@ -71,7 +71,7 @@ void WiggleRender::SetRender(GameEngineRender* _WiggleRender)
 	Render = _WiggleRender;
 }
 
-void WiggleRender::SetRenderIndex()
+void WiggleRender::CalculationRenderIndex()
 {
 	CurIndex = StartIndex;
 
@@ -113,32 +113,40 @@ void WiggleRender::SetRenderIndex()
 void WiggleRender::SetStartIndex(int _Index)
 {
 	StartIndex = _Index;
-	SetRenderIndex();
+	CalculationRenderIndex();
 }
 
 void WiggleRender::SetAnimLength(int _Length)
 {
 	AnimLength = _Length;
-	SetRenderIndex();
+	CalculationRenderIndex();
 }
 
-void WiggleRender::SetTextIndex(int _TextIndex)
+void WiggleRender::SetCompletionText(bool _IsCompletion)
 {
-	CurTextIndex = _TextIndex;
-	SetRenderIndex();
+	if (true == _IsCompletion)
+	{
+		CurTextIndex = 0;
+	}
+	else
+	{
+		CurTextIndex = 1;
+	}
+
+	CalculationRenderIndex();
 }
 
 void WiggleRender::SetTileIndex(int _Index)
 {
 	CurTileIndex = _Index;
-	SetRenderIndex();
+	CalculationRenderIndex();
 }
 
 
 void WiggleRender::SetDirInterval(size_t _DirInterval)
 {
 	DirInterval = _DirInterval;
-	SetRenderIndex();
+	CalculationRenderIndex();
 }
 
 void WiggleRender::SetAnimDir(const int2& _Dir)
@@ -160,7 +168,7 @@ void WiggleRender::SetAnimDir(const int2& _Dir)
 		DirIndex = DirInterval * 3;
 	}
 
-	SetRenderIndex();
+	CalculationRenderIndex();
 }
 
 void WiggleRender::SetScale(const float4& _Scale)
@@ -183,7 +191,7 @@ void WiggleRender::PrevAnim()
 		CurAnimationIndex = AnimLength - 1;
 	}
 
-	SetRenderIndex();
+	CalculationRenderIndex();
 }
 
 void WiggleRender::NextAnim()
@@ -195,13 +203,13 @@ void WiggleRender::NextAnim()
 		CurAnimationIndex = 0;
 	}
 
-	SetRenderIndex();
+	CalculationRenderIndex();
 }
 
 void WiggleRender::ResetAnim()
 {
 	CurAnimationIndex = 0;
-	SetRenderIndex();
+	CalculationRenderIndex();
 }
 
 void WiggleRender::RenderOn()

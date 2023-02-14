@@ -68,11 +68,12 @@ public:
 	void Wiggle();
 	void Reset();
 
+	void CalculationRenderIndex();
+
 	void SetRender(GameEngineRender* _WiggleRender);
-	void SetRenderIndex();
 	void SetStartIndex(int _Index);
 	void SetAnimLength(int _Length);
-	void SetTextIndex(int _TextIndex);
+	void SetCompletionText(bool _IsCompletion);
 	void SetTileIndex(int _Index);
 	void SetDirInterval(size_t _DirInterval);
 	void SetAnimDir(const int2& _Dir);

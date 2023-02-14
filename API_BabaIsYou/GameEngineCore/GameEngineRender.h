@@ -2,7 +2,6 @@
 #include <GameEnginePlatform/GameEngineImage.h>
 #include <map>
 #include "GameEngineComponent.h"
-// 랜더링에 관련된 기능을 모두 집약한다.
 
 class FrameAnimationParameter
 {
@@ -18,32 +17,47 @@ public:
 	std::vector<float> FrameTime = std::vector<float>();
 };
 
-
-// 설명 :
 class GameEngineActor;
 class GameEngineLevel;
 class GameEngineRender : public GameEngineComponent
 {
 	friend GameEngineActor;
 	friend GameEngineLevel;
+private:
+	class FrameAnimation
+	{
+	public:
+		GameEngineRender* Parent = nullptr;
+		GameEngineImage* Image = nullptr;
+		std::vector<int> FrameIndex;
+		std::vector<float> FrameTime;
+		int CurrentIndex = 0;
+		float CurrentTime = 0.0f;
+		bool Loop = true;
 
+
+		bool IsEnd();
+
+		void Render(float _DeltaTime);
+
+		void Reset()
+		{
+			CurrentIndex = 0;
+			CurrentTime = 0.0f;
+		}
+	};
 public:
-	// constrcuter destructer
 	GameEngineRender();
 	~GameEngineRender();
 
-	// delete Function
 	GameEngineRender(const GameEngineRender& _Other) = delete;
 	GameEngineRender(GameEngineRender&& _Other) noexcept = delete;
 	GameEngineRender& operator=(const GameEngineRender& _Other) = delete;
 	GameEngineRender& operator=(GameEngineRender&& _Other) noexcept = delete;
 
 	void SetImage(const std::string_view& _ImageName);
-
 	void SetImageToScaleToImage(const std::string_view& _ImageName);
-
 	void SetScaleToImage();
-
 	void SetFrame(int _Frame);
 
 	inline GameEngineImage* GetImage()
@@ -81,7 +95,6 @@ public:
 	void ChangeAnimation(const std::string_view& _AnimationName, bool _ForceChange = false);
 
 	void SetOrder(int _Order) override;
-
 	void SetText(const std::string_view& _Text);
 
 protected:
@@ -91,46 +104,15 @@ private:
 	bool IsEffectCamera = true;
 
 	int TransColor = RGB(255, 0, 255);
-
 	int Frame = 0;
 
 	void Render(float _DeltaTime);
-
 	void TextRender(float _DeltaTime);
 	void ImageRender(float _DeltaTime);
-
-	class FrameAnimation
-	{
-	public:
-		GameEngineRender* Parent = nullptr;
-		// 짤려있는 이미지여야 한다.
-		GameEngineImage* Image = nullptr;
-		std::vector<int> FrameIndex;
-		std::vector<float> FrameTime;
-		int CurrentIndex = 0;
-		float CurrentTime = 0.0f;
-		bool Loop = true;
-
-
-		bool IsEnd();
-
-		void Render(float _DeltaTime);
-
-		void Reset() 
-		{
-			CurrentIndex = 0;
-			CurrentTime = 0.0f;
-		}
-	};
-
+	
 	std::map<std::string, FrameAnimation> Animation;
 	FrameAnimation* CurrentAnimation = nullptr;
 
-	/// <summary>
-	/// TextRender
-	/// </summary>
 	std::string RenderText;
-	// 그런걸 하면 HBRUSH 만드는데 사용하고 나면 Release
-	// GameEngineImage를 참조해라.
 };
 

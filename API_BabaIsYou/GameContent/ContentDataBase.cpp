@@ -28,7 +28,7 @@ void ContentDataBase::InitDataBase()
 	}
 }
 
-int ContentDataBase::GetActorEnum(const std::string_view& _Name)
+int ContentDataBase::GetActorDataIndex(const std::string_view& _Name)
 {
 	return mapActorIndex[_Name.data()];
 }

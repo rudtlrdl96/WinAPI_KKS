@@ -46,10 +46,9 @@ GameEngineRender* GameEngineActor::CreateRender(const std::string_view& _Image, 
 	return Render;
 }
 
-GameEngineRender* GameEngineActor::CreateRender(int _Order /*= 0*/)
+GameEngineRender* GameEngineActor::CreateRender(int _Order)
 {
 	GameEngineRender* Render = new GameEngineRender();
-	// 분명뭔가 좀 보기 좋지 않다.
 	Render->SetOwner(this);
 	Render->SetOrder(_Order);
 	RenderList.push_back(Render);
@@ -59,7 +58,6 @@ GameEngineRender* GameEngineActor::CreateRender(int _Order /*= 0*/)
 GameEngineCollision* GameEngineActor::CreateCollision(int _GroupIndex)
 {
 	GameEngineCollision* Collision = new GameEngineCollision();
-	// 분명뭔가 좀 보기 좋지 않다.
 	Collision->SetOwner(this);
 	Collision->SetOrder(_GroupIndex);
 	CollisionList.push_back(Collision);

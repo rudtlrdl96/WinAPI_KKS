@@ -113,10 +113,11 @@ public:
 	void RemoveDefine(ACTOR_DEFINE _Info);
 	bool IsDefine(ACTOR_DEFINE _Info);
 	void SaveBehaviorInfo();
-	int GetArrowEnum() const;
-	ACTOR_DEFINE GetArrowDefine() const;
+	int GetArrowDataIndex() const;
 
+	ACTOR_DEFINE GetArrowDefine() const;
 	ACTOR_TYPE GetActorType() const;
+
 	int2 GetGridPos() const;
 	int2 GetMoveDir() const;
 
@@ -127,11 +128,11 @@ protected:
 private:
 	std::string ActorName = "";
 
-	int ActorEnum = -1;
+	int ActorDataIndex = -1;
 	ACTOR_TYPE ActorType = ACTOR_TYPE::ACTOR;
 	ACTOR_RENDER_TYPE RenderType = ACTOR_RENDER_TYPE::STATIC;
 
-	int ArrowEnum = -1;
+	int ArrowDataIndex = -1;
 	ACTOR_DEFINE ArrowDefine = ACTOR_DEFINE::NONE;
 
 	std::map<int, Rule*> mapRules;
@@ -141,7 +142,7 @@ private:
 	size_t RuleCount = 0;
 	const int ActorKey = 0;
 
-	float ParticleTime = 0.0f;
+	float WaitParticleTime = 0.0f;
 	float NextParticleTime = 0.0f;
 
 	int2 MoveDir = int2::Right;

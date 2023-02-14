@@ -15,14 +15,12 @@ GameEngineLevel::GameEngineLevel()
 
 GameEngineLevel::~GameEngineLevel() 
 {
-	// 편하게 for문을 돌리게 하기 위해서 17인부터 
 	for (std::pair<int, std::list<GameEngineActor*>> UpdateGroup : Actors)
 	{
 		std::list<GameEngineActor*>& ActorList = UpdateGroup.second;
 
 		for (GameEngineActor* Actor : ActorList)
 		{
-			// Actors.erase()
 			if (nullptr != Actor)
 			{
 				delete Actor;
@@ -38,6 +36,7 @@ float4 GameEngineLevel::GetMousePos()
 {
 	return GameEngineWindow::GetMousePosition();
 }
+
 float4 GameEngineLevel::GetMousePosToCamera()
 {
 	return GameEngineWindow::GetMousePosition() + CameraPos;
@@ -68,7 +67,6 @@ void GameEngineLevel::ActorsUpdate(float _DeltaTime)
 
 			for (GameEngineActor* Actor : ActorList)
 			{
-				// Actors.erase()
 				if (nullptr == Actor || false == Actor->IsUpdate())
 				{
 					continue;
@@ -90,7 +88,6 @@ void GameEngineLevel::ActorsUpdate(float _DeltaTime)
 
 			for (GameEngineActor* Actor : ActorList)
 			{
-				// Actors.erase()
 				if (nullptr == Actor || false == Actor->IsUpdate())
 				{
 					continue;
@@ -104,7 +101,7 @@ void GameEngineLevel::ActorsUpdate(float _DeltaTime)
 
 void GameEngineLevel::Release()
 {
-	{ // 콜리전 삭제
+	{
 		std::map<int, std::list<GameEngineCollision*>>::iterator GroupStartIter = Collisions.begin();
 		std::map<int, std::list<GameEngineCollision*>>::iterator GroupEndIter = Collisions.end();
 
@@ -119,7 +116,6 @@ void GameEngineLevel::Release()
 			{
 				GameEngineCollision* ReleaseCollision = *CollisionIterStart;
 
-				// Actors.erase()
 				if (nullptr != ReleaseCollision && false == ReleaseCollision->IsDeath())
 				{
 					++CollisionIterStart;
@@ -131,7 +127,7 @@ void GameEngineLevel::Release()
 		}
 	}
 
-	{ // 랜더러만 삭제
+	{ 
 		std::map<int, std::list<GameEngineRender*>>::iterator GroupStartIter = Renders.begin();
 		std::map<int, std::list<GameEngineRender*>>::iterator GroupEndIter = Renders.end();
 
@@ -146,7 +142,6 @@ void GameEngineLevel::Release()
 			{
 				GameEngineRender* ReleaseRender = *RenderIterStart;
 
-				// Actors.erase()
 				if (nullptr != ReleaseRender && false == ReleaseRender->IsDeath())
 				{
 					++RenderIterStart;
@@ -158,7 +153,7 @@ void GameEngineLevel::Release()
 		}
 	}
 
-	{ // 액터만 삭제
+	{
 
 		std::map<int, std::list<GameEngineActor*>>::iterator GroupStartIter = Actors.begin();
 		std::map<int, std::list<GameEngineActor*>>::iterator GroupEndIter = Actors.end();
@@ -174,7 +169,6 @@ void GameEngineLevel::Release()
 			{
 				GameEngineActor* ReleaseActor = *ActorIterStart;
 
-				// Actors.erase()
 				if (nullptr != ReleaseActor && false == ReleaseActor->IsDeath())
 				{
 					ReleaseActor->Release();
@@ -203,7 +197,6 @@ void GameEngineLevel::ActorsRender(float _DeltaTime)
 
 			for (GameEngineRender* Renderer : RenderList)
 			{
-				// Actors.erase()
 				if (nullptr == Renderer || false == Renderer->IsUpdate())
 				{
 					continue;
@@ -224,7 +217,6 @@ void GameEngineLevel::ActorsRender(float _DeltaTime)
 
 			for (GameEngineActor* Actor : ActorList)
 			{
-				// Actors.erase()
 				if (nullptr == Actor || false == Actor->IsUpdate())
 				{
 					continue;
@@ -235,8 +227,7 @@ void GameEngineLevel::ActorsRender(float _DeltaTime)
 		}
 	}
 
-	// CollisionDebugRender
-	{ // 콜리전 삭제
+	{
 		if (true == IsDebugRender)
 		{
 			std::map<int, std::list<GameEngineCollision*>>::iterator GroupStartIter = Collisions.begin();
@@ -261,7 +252,6 @@ void GameEngineLevel::ActorsRender(float _DeltaTime)
 		}
 	}
 
-	// 여러분들의 text 출력
 	{
 		TextOutStart = float4::Zero;
 
@@ -314,9 +304,7 @@ void GameEngineLevel::ActorLevelChangeStart(GameEngineLevel* _PrevLevel)
 
 void GameEngineLevel::PushRender(GameEngineRender* _Render, int _ChangeOrder)
 {
-	// 0 => 10
 	Renders[_Render->GetOrder()].remove(_Render);
-
 	_Render->GameEngineObject::SetOrder(_ChangeOrder);
 
 	if (nullptr == _Render)
@@ -324,7 +312,6 @@ void GameEngineLevel::PushRender(GameEngineRender* _Render, int _ChangeOrder)
 		MsgAssert("nullptr인 랜더를 랜더링 그룹속에 넣으려고 했습니다.");
 	}
 
-	// 먼저 이미 들어가있을수도 있다.
 	Renders[_Render->GetOrder()].push_back(_Render);
 }
 
@@ -335,6 +322,5 @@ void GameEngineLevel::PushCollision(GameEngineCollision* _Collision)
 		MsgAssert("nullptr인 충돌체를 충돌 그룹속에 넣으려고 했습니다.");
 	}
 
-	// 먼저 이미 들어가있을수도 있다.
 	Collisions[_Collision->GetOrder()].push_back(_Collision);
 }

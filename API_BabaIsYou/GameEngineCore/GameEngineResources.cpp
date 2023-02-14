@@ -17,7 +17,6 @@ GameEngineResources::~GameEngineResources()
 
 void GameEngineResources::Release()
 {
-	// 내가 원하는 시점에 원하는 순간 정확하게 
 	for (std::pair<std::string, GameEngineImage*> Pair : AllImage)
 	{
 		if (nullptr == Pair.second)
@@ -47,8 +46,6 @@ GameEngineImage* GameEngineResources::ImageLoad(const GameEnginePath& _Path)
 
 GameEngineImage* GameEngineResources::ImageLoad(const std::string_view& _Path, const std::string_view& _Name)
 {
-	// D:\\Project\\AR45\\WINAPI\\APIApp\\ContentsResources\\Image\\Heros.BmP
-
 	std::string UpperName = GameEngineString::ToUpper(_Name);
 
 	if (AllImage.end() != AllImage.find(UpperName))
@@ -78,7 +75,6 @@ GameEngineImage* GameEngineResources::ImageFind(const std::string_view& _Name)
 	return FindIter->second;
 }
 
-/////////////////////////// Sound
 
 GameEngineSound* GameEngineResources::SoundLoad(const GameEnginePath& _Path)
 {
@@ -87,8 +83,6 @@ GameEngineSound* GameEngineResources::SoundLoad(const GameEnginePath& _Path)
 
 GameEngineSound* GameEngineResources::SoundLoad(const std::string_view& _Path, const std::string_view& _Name)
 {
-	// D:\\Project\\AR45\\WINAPI\\APIApp\\ContentsResources\\Sound\\Heros.BmP
-
 	std::string UpperName = GameEngineString::ToUpper(_Name);
 
 	if (AllSound.end() != AllSound.find(UpperName))
@@ -132,7 +126,6 @@ GameEngineSoundPlayer GameEngineResources::SoundPlayToControl(const std::string_
 	return Sound->Play();
 }
 
-// 사운드 플레이어
 GameEngineSoundPlayer::GameEngineSoundPlayer(FMOD::Channel* _Channel) 
 	: ControlChannel(_Channel)
 {

@@ -39,7 +39,6 @@ enum class BEHAVIOR
 	CHANGE_INFO,
 };
 
-
 enum class ACTOR_RENDER_TYPE
 {
 	STATIC,

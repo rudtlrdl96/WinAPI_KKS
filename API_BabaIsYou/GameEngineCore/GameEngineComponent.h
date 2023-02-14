@@ -2,16 +2,13 @@
 #include <GameEngineBase/GameEngineMath.h>
 #include "GameEngineObject.h"
 
-// Ό³Έν :
 class GameEngineActor;
 class GameEngineComponent : public GameEngineObject
 {
 public:
-	// constrcuter destructer
 	GameEngineComponent();
 	~GameEngineComponent();
 
-	// delete Function
 	GameEngineComponent(const GameEngineComponent& _Other) = delete;
 	GameEngineComponent(GameEngineComponent&& _Other) noexcept = delete;
 	GameEngineComponent& operator=(const GameEngineComponent& _Other) = delete;

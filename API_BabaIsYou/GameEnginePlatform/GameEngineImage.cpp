@@ -3,7 +3,6 @@
 #include <GameEngineBase/GameEngineDebug.h>
 #include "GameEngineWindow.h"
 
-// 다른 lib를 사용하겠다.
 #pragma comment(lib, "msimg32.lib")
 
 GameEngineImage::GameEngineImage() 
@@ -73,9 +72,6 @@ bool GameEngineImage::ImageCreate(const float4& _Scale)
 		return false;
 	}
 
-	// ImageDC 1,1 배열이랑 연결되어 있다. 
-
-	// 1, 1
 	OldBitMap = static_cast<HBITMAP>(SelectObject(ImageDC, BitMap));
 
 	ImageScaleCheck();
@@ -94,16 +90,6 @@ bool GameEngineImage::ImageLoad(const GameEnginePath& _Path)
 
 bool GameEngineImage::ImageLoad(const std::string_view& _Path) 
 {
-	//HDC ImageDC;
-	//HBITMAP BitMap;
-	//HBITMAP OldBitMap;
-	//BITMAP Info;
-
-	// 이미지중에 일부만 로드할수 있는데 0을 넣어주면 다 로드하겠다는 이야기가 도힙니다.
-	// LR_LOADFROMFILE 파일에서부터 로드하겠다는 의미가 됩니다.
-
-	// 이미지를 로드한 2차원 배열의 정보고
-	// 윈도우에게 new를 지시한것과 다름이 없다.
 	BitMap = static_cast<HBITMAP>(LoadImageA(nullptr, _Path.data(), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE));
 
 	if (nullptr == BitMap)
@@ -122,9 +108,6 @@ bool GameEngineImage::ImageLoad(const std::string_view& _Path)
 		return false;
 	}
 
-	// ImageDC 1,1 배열이랑 연결되어 있다. 
-
-	// 1, 1
 	OldBitMap = static_cast<HBITMAP>(SelectObject(ImageDC, BitMap));
 
 	ImageScaleCheck();
@@ -139,23 +122,21 @@ void GameEngineImage::ImageScaleCheck()
 }
 
 
-// Copy
 void GameEngineImage::BitCopy(const GameEngineImage* _OtherImage, float4 _CenterPos, float4 _Scale)
 {
 	BitBlt(
-		ImageDC, // 복사 당할 이미지
-		_CenterPos.ix() - _Scale.hix(), // 위치 
+		ImageDC,
+		_CenterPos.ix() - _Scale.hix(), 
 		_CenterPos.iy() - _Scale.hiy(),
 		_Scale.ix(),
 		_Scale.iy(),
-		_OtherImage->GetImageDC(), // 복사할 이미지
+		_OtherImage->GetImageDC(),
 		0,
 		0,
 		SRCCOPY
 	);
 }
 
-// 구현쪽에서는 디폴트 인자를 표시할 필요가 없습니다.
 void GameEngineImage::TransCopy(const GameEngineImage* _OtherImage, int _CutIndex, float4 _CopyCenterPos, float4 _CopySize, int _Color/* = RGB(255, 0, 255)*/)
 {
 	if (false == _OtherImage->IsCut)
@@ -172,15 +153,15 @@ void GameEngineImage::TransCopy(const GameEngineImage* _OtherImage, int _CutInde
 void GameEngineImage::TransCopy(const GameEngineImage* _OtherImage, float4 _CopyCenterPos, float4 _CopySize, float4 _OtherImagePos, float4 _OtherImageSize, int _Color)
 {
 
-	TransparentBlt(ImageDC, // 여기에 그려라.
-		_CopyCenterPos.ix() - _CopySize.hix(), // 여기를 시작으로
+	TransparentBlt(ImageDC,
+		_CopyCenterPos.ix() - _CopySize.hix(),
 		_CopyCenterPos.iy() - _CopySize.hiy(),
-		_CopySize.ix(), // 이 크기로
+		_CopySize.ix(),
 		_CopySize.iy(),
 		_OtherImage->GetImageDC(),
-		_OtherImagePos.ix(),// 이미지의 x y에서부터
+		_OtherImagePos.ix(),
 		_OtherImagePos.iy(),
-		_OtherImageSize.ix(), // 이미지의 x y까지의 위치를
+		_OtherImageSize.ix(),
 		_OtherImageSize.iy(),
 		_Color);
 }

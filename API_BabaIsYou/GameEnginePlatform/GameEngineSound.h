@@ -2,8 +2,6 @@
 #include <GameEnginePlatform/ThirdParty/FMOD/inc/fmod.hpp>
 #include <string_view>
 
-// 설명 :
-// 이녀석 자체가 사운드 파일 역할도 합니다.
 class GameEngineSound
 {
 public:
@@ -12,7 +10,6 @@ public:
 	GameEngineSound();
 	~GameEngineSound();
 
-	// delete Function
 	GameEngineSound(const GameEngineSound& _Other) = delete;
 	GameEngineSound(GameEngineSound&& _Other) noexcept = delete;
 	GameEngineSound& operator=(const GameEngineSound& _Other) = delete;

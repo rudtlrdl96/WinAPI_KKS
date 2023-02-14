@@ -80,11 +80,11 @@ void PuzzleActor::Update(float _DT)
 	{
 		if (0 < mapRules.size())
 		{
-			GetWiggleRender()->SetTextIndex(0);
+			GetWiggleRender()->SetCompletionText(true);
 		}
 		else
 		{
-			GetWiggleRender()->SetTextIndex(1);
+			GetWiggleRender()->SetCompletionText(false);
 		}
 	}
 
@@ -114,7 +114,7 @@ void PuzzleActor::LoadData(int _Actor, int2 _Dir, bool _IsInit)
 	}
 
 	{
-		std::map<int, PuzzleActor*>& PrevMapDatas = mapActorDatas[ActorEnum];
+		std::map<int, PuzzleActor*>& PrevMapDatas = mapActorDatas[ActorDataIndex];
 
 		std::map<int, PuzzleActor*>::iterator FindIter = PrevMapDatas.find(ActorKey);
 		std::map<int, PuzzleActor*>::iterator EndIter = PrevMapDatas.end();
@@ -142,7 +142,7 @@ void PuzzleActor::LoadData(int _Actor, int2 _Dir, bool _IsInit)
 
 	if (false == _IsInit)
 	{
-		CurFramesBehaviorBuffer.push_back({ BEHAVIOR::CHANGE_INFO, static_cast<int>(ActorEnum) });
+		CurFramesBehaviorBuffer.push_back({ BEHAVIOR::CHANGE_INFO, static_cast<int>(ActorDataIndex) });
 	}
 
 	DefineData = 0;
@@ -160,8 +160,8 @@ void PuzzleActor::LoadData(int _Actor, int2 _Dir, bool _IsInit)
 
 	WiggleRenderPtr->Reset();
 
-	ActorEnum = LoadDB->ActorEnum;
-	ArrowEnum = LoadDB->ArrowEnum;
+	ActorDataIndex = LoadDB->ActorEnum;
+	ArrowDataIndex = LoadDB->ArrowEnum;
 	ActorName = LoadDB->ActorName;
 	ActorType = LoadDB->ActorType;
 	RenderType = LoadDB->RenderType;
@@ -169,7 +169,7 @@ void PuzzleActor::LoadData(int _Actor, int2 _Dir, bool _IsInit)
 	ActorColor = LoadDB->Color;
 	MoveDir = _Dir;
 
-	mapActorDatas[ActorEnum][ActorKey] = this;
+	mapActorDatas[ActorDataIndex][ActorKey] = this;
 
 
 	if (ACTOR_TYPE::ACTOR != ActorType)
@@ -368,9 +368,9 @@ void PuzzleActor::SaveBehaviorInfo()
 	CurFramesBehaviorBuffer.clear();
 }
 
-int PuzzleActor::GetArrowEnum() const
+int PuzzleActor::GetArrowDataIndex() const
 {
-	return ArrowEnum;
+	return ArrowDataIndex;
 }
 
 ACTOR_DEFINE PuzzleActor::GetArrowDefine() const
@@ -954,12 +954,12 @@ void PuzzleActor::ActorParticleCreate(float _DT)
 		return;
 	}
 
-	ParticleTime += _DT;
+	WaitParticleTime += _DT;
 
-	if (ParticleTime >= NextParticleTime)
+	if (WaitParticleTime >= NextParticleTime)
 	{
 
-		ParticleTime = 0.0f;
+		WaitParticleTime = 0.0f;
 
 		float4 RandPos = float4::Zero;
 		float RandRot = ContentRand::RandFloat(0.0f, GameEngineMath::PIE2);

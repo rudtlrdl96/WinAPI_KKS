@@ -8,7 +8,6 @@ class GameEngineDebug
 {
 public:
 
-	// delete Function
 	GameEngineDebug(const GameEngineDebug& _Other) = delete;
 	GameEngineDebug(GameEngineDebug&& _Other) noexcept = delete;
 	GameEngineDebug& operator=(const GameEngineDebug& _Other) = delete;
@@ -20,7 +19,6 @@ public:
 protected:
 
 private:
-	// constrcuter destructer
 	GameEngineDebug();
 	~GameEngineDebug();
 

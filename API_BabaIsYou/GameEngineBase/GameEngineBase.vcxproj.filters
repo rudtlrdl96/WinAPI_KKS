@@ -13,9 +13,6 @@
     <ClCompile Include="GameEnginePath.cpp">
       <Filter>IO%28File%29</Filter>
     </ClCompile>
-    <ClCompile Include="GameEngineFile.cpp">
-      <Filter>IO%28File%29</Filter>
-    </ClCompile>
     <ClCompile Include="GameEngineDirectory.cpp">
       <Filter>IO%28File%29</Filter>
     </ClCompile>
@@ -32,9 +29,6 @@
       <Filter>String</Filter>
     </ClInclude>
     <ClInclude Include="GameEnginePath.h">
-      <Filter>IO%28File%29</Filter>
-    </ClInclude>
-    <ClInclude Include="GameEngineFile.h">
       <Filter>IO%28File%29</Filter>
     </ClInclude>
     <ClInclude Include="GameEngineDirectory.h">
