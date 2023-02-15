@@ -166,7 +166,6 @@ void PuzzleActor::LoadData(int _Actor, int2 _Dir, bool _IsInit)
 
 	mapActorDatas[ActorDataIndex][ActorKey] = this;
 
-
 	if (ACTOR_TYPE::ACTOR != ActorType)
 	{
 		GetWiggleRender()->ActiveText();
@@ -179,7 +178,7 @@ void PuzzleActor::LoadData(int _Actor, int2 _Dir, bool _IsInit)
 
 	RuleManager::GetInst()->AddActorRule(this, _Actor);
 
-	WiggleRenderPtr->SetRender(CreateRender("Actor.BMP", static_cast<int>(RENDER_ORDER::ACTORSTART) + LoadDB->RenderOrder));
+	WiggleRenderPtr->SetOrder(static_cast<int>(RENDER_ORDER::ACTORSTART) + LoadDB->RenderOrder);
 	WiggleRenderPtr->SetStartIndex(LoadDB->RenderIndex);
 
 	if (true == IsDeath)

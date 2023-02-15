@@ -71,6 +71,7 @@ public:
 	void CalculationRenderIndex();
 
 	void SetRender(GameEngineRender* _WiggleRender);
+	void SetOrder(int _Order);
 	void SetStartIndex(int _Index);
 	void SetAnimLength(int _Length);
 	void SetCompletionText(bool _IsCompletion);

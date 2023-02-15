@@ -71,6 +71,11 @@ void WiggleRender::SetRender(GameEngineRender* _WiggleRender)
 	Render = _WiggleRender;
 }
 
+void WiggleRender::SetOrder(int _Order)
+{
+	Render->SetOrder(_Order);
+}
+
 void WiggleRender::CalculationRenderIndex()
 {
 	CurIndex = StartIndex;
