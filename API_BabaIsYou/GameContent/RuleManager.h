@@ -17,6 +17,7 @@ public:
 	void AddRule(Rule* _Rule);
 	void RemoveRule(Rule* _Rule);
 	void AddActorRule(PuzzleActor* _Actor, int _ActorIndex);
+	int RuleCountCheck(int _SubjectDataIndex, int _VerbIndex, int _DefineDataIndex);
 
 protected:
 

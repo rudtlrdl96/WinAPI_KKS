@@ -14,8 +14,6 @@
 #include "CameraSystem.h"
 #include "SoundSystem.h"
 
-/// static GridActor
-
 PuzzleActor::PuzzleActor() :
 	ActorKey(NextActorKey++)
 {
@@ -147,9 +145,6 @@ void PuzzleActor::LoadData(int _Actor, int2 _Dir, bool _IsInit)
 
 	DefineData = 0;
 
-	// Todo : File Save/Load 시스템이 완성된 후 데이터베이스 로드
-
-	// 속성 값 초기화
 	WiggleRender* WiggleRenderPtr = GetWiggleRender();
 
 	if (nullptr == WiggleRenderPtr)
@@ -368,6 +363,11 @@ void PuzzleActor::SaveBehaviorInfo()
 	CurFramesBehaviorBuffer.clear();
 }
 
+int PuzzleActor::GetDataIndex() const
+{
+	return ActorDataIndex;
+}
+
 int PuzzleActor::GetArrowDataIndex() const
 {
 	return ArrowDataIndex;
@@ -458,7 +458,7 @@ bool PuzzleActor::Move(bool _IsInputMove)
 	}
 
 	AnyActorMoveCheck = true;
-	AllPushDir(MoveDir, _IsInputMove);
+	AllDirActorPush(MoveDir, _IsInputMove);
 	
 	if (ACTOR_TYPE::ACTOR != ActorType)
 	{
@@ -807,7 +807,7 @@ void PuzzleActor::UndoActorDeath()
 	GetWiggleRender()->RenderOn();
 }
 
-void PuzzleActor::AllPushDir(const int2& _Dir, bool _IsInputMove)
+void PuzzleActor::AllDirActorPush(const int2& _Dir, bool _IsInputMove)
 {
 	int2 PushPos = GridPos + _Dir;
 

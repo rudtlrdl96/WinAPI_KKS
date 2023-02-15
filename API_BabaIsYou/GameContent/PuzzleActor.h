@@ -113,6 +113,8 @@ public:
 	void RemoveDefine(ACTOR_DEFINE _Info);
 	bool IsDefine(ACTOR_DEFINE _Info);
 	void SaveBehaviorInfo();
+
+	int GetDataIndex() const;
 	int GetArrowDataIndex() const;
 
 	ACTOR_DEFINE GetArrowDefine() const;
@@ -184,7 +186,7 @@ private:
 	void ActorDeath(ACTOR_DEFINE _DeathCause);
 	void UndoActorDeath();
 
-	void AllPushDir(const int2& _Dir, bool _IsInputMove);
+	void AllDirActorPush(const int2& _Dir, bool _IsInputMove);
 	bool CanMove(const int2& _NextPos);
 	void WinCheck();
 	void AddRule();

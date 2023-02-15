@@ -108,12 +108,15 @@ void Rule::RemoveRule(PuzzleActor* _Actor)
 
 		if (ACTOR_TYPE::DEFINE_TEXT == DefineActor->ActorType)
 		{
-			const std::map<int, PuzzleActor*>& mapSubjectActors = PuzzleActor::GetActors(SubjectActor->ArrowDataIndex);
-
-			for (const std::pair<int, PuzzleActor*> Data : mapSubjectActors)
+			if (0 == RuleManager::GetInst()->RuleCountCheck(SubjectActor->ActorDataIndex, VerbActor->ActorDataIndex, DefineActor->ActorDataIndex))
 			{
-				PuzzleActorManager::GetInst()->AddDefine(Data.second, DefineActor->ArrowDefine, true);
-			}
+				const std::map<int, PuzzleActor*>& mapSubjectActors = PuzzleActor::GetActors(SubjectActor->ArrowDataIndex);
+
+				for (const std::pair<int, PuzzleActor*> Data : mapSubjectActors)
+				{
+					PuzzleActorManager::GetInst()->AddDefine(Data.second, DefineActor->ArrowDefine, true);
+				}
+			}	
 		}
 
 		std::map<int, Rule*>::iterator SubjectFind = SubjectActor->mapRules.find(DeleteRule->RuleKey);

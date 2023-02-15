@@ -17,6 +17,7 @@
 #include "DeathRestartUI.h"
 #include "AppearParticle.h"
 #include "SoundSystem.h"
+#include "RuleManager.h"
 
 PuzzleActorManager::PuzzleActorManager()
 {
