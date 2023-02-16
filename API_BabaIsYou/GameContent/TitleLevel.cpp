@@ -148,14 +148,17 @@ void TitleLevel::Update(float _DT)
 	if (true == GameEngineInput::IsDown("ButtonUp"))
 	{
 		ButtonUp();
+		SoundSystem::GetLevelSoundSystem()->EffectPlay("ButtonOverlap_");
 	}
 	else if (true == GameEngineInput::IsDown("ButtonDown"))
 	{
 		ButtonDown();
+		SoundSystem::GetLevelSoundSystem()->EffectPlay("ButtonOverlap_");
 	}
 	else if (true == GameEngineInput::IsDown("ButtonUseSpace") || true == GameEngineInput::IsDown("ButtonUseEnter"))
 	{
 		ButtonUse();
+		SoundSystem::GetLevelSoundSystem()->Play("ButtonClick.ogg");
 	}
 
 	if (true == vecTitleButtons[TB_GAME]->IsUp())
