@@ -110,6 +110,7 @@ void PuzzleLevel::Loading()
 
 	if (false == GameEngineInput::IsKey("Wait"))
 	{
+		GameEngineInput::CreateKey("ReturnWorldmap", VK_DELETE);
 		GameEngineInput::CreateKey("ReStart", 'R');
 		GameEngineInput::CreateKey("ArrowUp", VK_UP);
 		GameEngineInput::CreateKey("ArrowDown", VK_DOWN);
@@ -125,6 +126,12 @@ void PuzzleLevel::Loading()
 
 void PuzzleLevel::Update(float _DT)
 {
+	if (false == PuzzleFadeActor->IsProgress() && true == GameEngineInput::IsUp("ReturnWorldmap"))
+	{
+		PuzzleFadeActor->Fade({ .State = FADE_STATE::FADEIN, .Func = ContentFunc::ChangeWorldmapLevel });
+		return;
+	}
+
 	if (false == PuzzleFadeActor->IsProgress() && true == IsExitValue)
 	{
 		PuzzleFadeActor->Fade({ .State = FADE_STATE::FADEIN, .Func = ContentFunc::ChangeWorldmapLevel });
